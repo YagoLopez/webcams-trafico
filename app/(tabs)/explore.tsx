@@ -1,11 +1,11 @@
 import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { Platform } from 'react-native';
 
-import { Collapsible } from '@/components/ui/collapsible';
 import { ExternalLink } from '@/components/external-link';
 import ParallaxScrollView from '@/components/parallax-scroll-view';
 import { ThemedText } from '@/components/themed-text';
 import { ThemedView } from '@/components/themed-view';
+import { Collapsible } from '@/components/ui/collapsible';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Fonts } from '@/constants/theme';
 
@@ -18,10 +18,10 @@ export default function TabTwoScreen() {
           size={310}
           color="#808080"
           name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
+          className="absolute -bottom-[90px] -left-[35px] text-[#808080]"
         />
       }>
-      <ThemedView style={styles.titleContainer}>
+      <ThemedView className="flex-row gap-2">
         <ThemedText
           type="title"
           style={{
@@ -59,7 +59,8 @@ export default function TabTwoScreen() {
         </ThemedText>
         <Image
           source={require('@/assets/images/react-logo.png')}
-          style={{ width: 100, height: 100, alignSelf: 'center' }}
+
+          className="w-[100px] h-[100px] self-center"
         />
         <ExternalLink href="https://reactnative.dev/docs/images">
           <ThemedText type="link">Learn more</ThemedText>
@@ -80,7 +81,7 @@ export default function TabTwoScreen() {
           This template includes an example of an animated component. The{' '}
           <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
           the powerful{' '}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
+          <ThemedText type="defaultSemiBold" className="font-mono">
             react-native-reanimated
           </ThemedText>{' '}
           library to create a waving hand animation.
@@ -98,15 +99,4 @@ export default function TabTwoScreen() {
   );
 }
 
-const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
-  },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-});
+
