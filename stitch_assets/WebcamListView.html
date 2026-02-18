@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Webcam List View</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#137fec",
+                        "background-light": "#f6f7f8",
+                        "background-dark": "#101922",
+                    },
+                    fontFamily: {
+                        "display": ["Inter", "sans-serif"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background-light dark:bg-background-dark font-display text-slate-900 dark:text-white">
+<div class="relative flex h-full min-h-screen w-full flex-col overflow-x-hidden max-w-md mx-auto bg-white dark:bg-background-dark shadow-xl border-x border-slate-100 dark:border-slate-800">
+<!-- Header Section -->
+<div class="sticky top-0 z-20 bg-white/90 dark:bg-background-dark/90 backdrop-blur-md border-b border-slate-100 dark:border-slate-800">
+<div class="flex items-center p-4 pb-2 justify-between">
+<h2 class="text-[#111418] dark:text-white text-2xl font-bold leading-tight tracking-[-0.015em] flex-1">Cámaras DGT</h2>
+<div class="flex items-center justify-end gap-2">
+<button class="flex items-center justify-center rounded-full h-10 w-10 hover:bg-slate-100 dark:hover:bg-slate-800 text-[#111418] dark:text-white transition-colors">
+<span class="material-symbols-outlined text-[24px]">notifications</span>
+</button>
+<button class="flex items-center justify-center rounded-full h-10 w-10 bg-primary/10 text-primary hover:bg-primary/20 transition-colors">
+<span class="material-symbols-outlined text-[24px]">tune</span>
+</button>
+</div>
+</div>
+<!-- Search Bar -->
+<div class="px-4 py-2">
+<label class="flex flex-col h-12 w-full">
+<div class="flex w-full flex-1 items-stretch rounded-xl h-full shadow-sm">
+<div class="text-slate-400 dark:text-slate-500 flex border-none bg-slate-100 dark:bg-slate-800 items-center justify-center pl-4 rounded-l-xl border-r-0">
+<span class="material-symbols-outlined text-[24px]">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-xl text-[#111418] dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/20 border-none bg-slate-100 dark:bg-slate-800 focus:border-none h-full placeholder:text-slate-400 dark:placeholder:text-slate-500 px-4 rounded-l-none border-l-0 pl-2 text-base font-normal leading-normal transition-all" placeholder="Search road (e.g., A-6)..." value=""/>
+</div>
+</label>
+</div>
+<!-- Horizontal Filter Chips -->
+<div class="flex gap-2 px-4 py-3 overflow-x-auto no-scrollbar pb-4 mask-gradient-right">
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-[#111418] dark:bg-white px-4 transition-transform active:scale-95">
+<span class="material-symbols-outlined text-white dark:text-[#111418] text-[18px]">grid_view</span>
+<p class="text-white dark:text-[#111418] text-sm font-medium leading-normal">All</p>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-4 transition-colors">
+<span class="material-symbols-outlined text-[#111418] dark:text-white text-[18px]">location_on</span>
+<p class="text-[#111418] dark:text-white text-sm font-medium leading-normal">Madrid</p>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-4 transition-colors">
+<span class="material-symbols-outlined text-[#111418] dark:text-white text-[18px]">location_on</span>
+<p class="text-[#111418] dark:text-white text-sm font-medium leading-normal">Barcelona</p>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-4 transition-colors">
+<span class="material-symbols-outlined text-[#111418] dark:text-white text-[18px]">location_on</span>
+<p class="text-[#111418] dark:text-white text-sm font-medium leading-normal">Valencia</p>
+</button>
+<button class="flex h-9 shrink-0 items-center justify-center gap-x-2 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 px-4 transition-colors">
+<span class="material-symbols-outlined text-[#111418] dark:text-white text-[18px]">location_on</span>
+<p class="text-[#111418] dark:text-white text-sm font-medium leading-normal">Seville</p>
+</button>
+</div>
+</div>
+<!-- Scrollable Content -->
+<div class="flex-1 overflow-y-auto bg-white dark:bg-background-dark">
+<h3 class="text-[#111418] dark:text-white tracking-tight text-lg font-bold leading-tight px-4 text-left pb-2 pt-4 flex items-center gap-2">
+<span class="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+                A-6 Cameras
+                <span class="ml-auto text-xs font-normal text-slate-500 dark:text-slate-400">Updated 1m ago</span>
+</h3>
+<!-- Grid Layout -->
+<div class="grid grid-cols-1 gap-4 px-4 pb-24">
+<!-- Card 1 -->
+<div class="group relative flex flex-col overflow-hidden rounded-xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm transition-all hover:shadow-md">
+<div class="relative h-48 w-full overflow-hidden bg-slate-200 dark:bg-slate-800">
+<img alt="Highway traffic view with cars moving" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Highway traffic view with cars moving" src="https://lh3.googleusercontent.com/aida-public/AB6AXuByeYHh-K-TYd5c3QjUXwzyXtkiLU7otlxO3XEja9r2MRJguxg_zFn2OosApYPscLERrUPPeYgksklCeahf7f-XktP8m2VOj1N3HRWUQhgMHq7Di76LYVRdmtW_vGuwmMbpN7E3oqdZ2v-jkqBUUXc7p7SUZDIYY9f7f8nwpkQCVNrVtC4dyeCQGIg7dolhp_sZ7cHCcsMIdFvKHu9kknIxZwTZWIdkLvQP_Q0b_IFnPS-4k5xJY4JAh_PLOhV1Jmm9jxjOVzHPxCbX"/>
+<div class="absolute right-3 top-3 rounded-full bg-black/40 p-1.5 backdrop-blur-md">
+<span class="material-symbols-outlined text-white text-[20px]">videocam</span>
+</div>
+<div class="absolute left-3 bottom-3 rounded-lg bg-primary px-2.5 py-1 text-xs font-bold text-white shadow-sm">
+                            A-6
+                        </div>
+</div>
+<div class="flex flex-col p-4">
+<div class="flex items-start justify-between gap-4">
+<div>
+<h4 class="text-base font-semibold text-[#111418] dark:text-white">Pk 12.5 - Salida Aravaca</h4>
+<div class="mt-1 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-slate-400 text-[16px]">location_on</span>
+<p class="text-sm text-slate-500 dark:text-slate-400">Madrid, Moncloa</p>
+</div>
+</div>
+<button class="text-slate-300 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">favorite</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="group relative flex flex-col overflow-hidden rounded-xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm transition-all hover:shadow-md">
+<div class="relative h-48 w-full overflow-hidden bg-slate-200 dark:bg-slate-800">
+<img alt="Blurry traffic lights at night on highway" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Blurry traffic lights at night on highway" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDAl7cmzUf7AlMKTbD1k2KHrAvzNu8bJ0u3cgiVY0G3kT3vfFdguwpMptogER6lstivE07aPr5B3bLUjy-c7h7qfFxhSe6KcZOqw386IYr77imQUqoHWYOFe9D43azgj6Sa2M9tSeMRZWnEpuAlKaY9R22gx5CjVVfd4CGV5GAeoIvNfJl9WkrzMIWsWD3sdqlLCN0ce_bLYKC5WiSFFwo5SYSV_iUTca2lfodhnskC4VJGxWSVgdRXZu4pLpvJqorxZA3WXA3n2bZg"/>
+<div class="absolute right-3 top-3 rounded-full bg-black/40 p-1.5 backdrop-blur-md">
+<span class="material-symbols-outlined text-white text-[20px]">videocam</span>
+</div>
+<div class="absolute left-3 bottom-3 rounded-lg bg-primary px-2.5 py-1 text-xs font-bold text-white shadow-sm">
+                            A-6
+                        </div>
+</div>
+<div class="flex flex-col p-4">
+<div class="flex items-start justify-between gap-4">
+<div>
+<h4 class="text-base font-semibold text-[#111418] dark:text-white">Pk 18.0 - Las Rozas</h4>
+<div class="mt-1 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-slate-400 text-[16px]">location_on</span>
+<p class="text-sm text-slate-500 dark:text-slate-400">Madrid, Las Rozas</p>
+</div>
+</div>
+<button class="text-slate-300 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">favorite</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="group relative flex flex-col overflow-hidden rounded-xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm transition-all hover:shadow-md">
+<div class="relative h-48 w-full overflow-hidden bg-slate-200 dark:bg-slate-800">
+<img alt="Daytime highway multiple lanes traffic" class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="Daytime highway multiple lanes traffic" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3NeIyE9obTaADfFCkBr0NSyJVQk_ZhpTNDEKyianwqa70fd9F5ZTjk_YDBgKuNukfAsjeeMXfRKuZRCScf6Zmu9Qw7HJ8DQx9yCArKyZ5VmPBbDzUnpaKYp8YECTMMuqHA_Vujav4F5DGjUqjoU8RcpDZ_Qur1K5LMEylFYBVjK4lKskogSb5l6ZN5kbTMw7EHSu36Dsee-ZCxsl718qJyY2k-i9Wlha4lDIlu28yYJQZSFuq1qPTTK7fR1h-iDYHq-kdGvnlBWLp"/>
+<div class="absolute right-3 top-3 rounded-full bg-black/40 p-1.5 backdrop-blur-md">
+<span class="material-symbols-outlined text-white text-[20px]">videocam</span>
+</div>
+<div class="absolute left-3 bottom-3 rounded-lg bg-orange-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm">
+                            M-40
+                        </div>
+</div>
+<div class="flex flex-col p-4">
+<div class="flex items-start justify-between gap-4">
+<div>
+<h4 class="text-base font-semibold text-[#111418] dark:text-white">Pk 42.0 - Acceso A-5</h4>
+<div class="mt-1 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-slate-400 text-[16px]">location_on</span>
+<p class="text-sm text-slate-500 dark:text-slate-400">Madrid, Alcorcón</p>
+</div>
+</div>
+<button class="text-slate-300 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">favorite</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Card 4 (Offline State) -->
+<div class="group relative flex flex-col overflow-hidden rounded-xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm transition-all hover:shadow-md opacity-80">
+<div class="relative flex h-48 w-full items-center justify-center bg-slate-100 dark:bg-slate-800">
+<span class="material-symbols-outlined text-slate-300 text-[48px]">videocam_off</span>
+<div class="absolute right-3 top-3 rounded-full bg-slate-200 dark:bg-slate-700 p-1.5">
+<span class="material-symbols-outlined text-slate-400 text-[20px]">videocam_off</span>
+</div>
+<div class="absolute left-3 bottom-3 rounded-lg bg-slate-500 px-2.5 py-1 text-xs font-bold text-white shadow-sm">
+                            M-30
+                        </div>
+</div>
+<div class="flex flex-col p-4">
+<div class="flex items-start justify-between gap-4">
+<div>
+<h4 class="text-base font-semibold text-slate-500 dark:text-slate-400">Nudo Sur - Mendez Álvaro</h4>
+<div class="mt-1 flex items-center gap-1.5">
+<span class="material-symbols-outlined text-slate-400 text-[16px]">error</span>
+<p class="text-sm text-slate-400 dark:text-slate-500">Connection Lost</p>
+</div>
+</div>
+<button class="text-slate-300 hover:text-primary transition-colors">
+<span class="material-symbols-outlined text-[24px]">favorite</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Bottom Navigation Bar -->
+<div class="fixed bottom-0 left-0 right-0 z-50 flex border-t border-[#f0f2f4] dark:border-slate-800 bg-white dark:bg-background-dark px-4 pb-safe pt-2 max-w-md mx-auto">
+<a class="just flex flex-1 flex-col items-center justify-end gap-1 rounded-full text-primary" href="#">
+<div class="text-primary flex h-8 items-center justify-center">
+<span class="material-symbols-outlined text-[24px] fill-current">videocam</span>
+</div>
+<p class="text-primary text-xs font-medium leading-normal tracking-[0.015em]">Webcams</p>
+</a>
+<a class="just flex flex-1 flex-col items-center justify-end gap-1 text-[#617589] dark:text-slate-500 hover:text-[#111418] dark:hover:text-slate-300 transition-colors" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">map</span>
+</div>
+<p class="text-current text-xs font-medium leading-normal tracking-[0.015em]">Map</p>
+</a>
+<a class="just flex flex-1 flex-col items-center justify-end gap-1 text-[#617589] dark:text-slate-500 hover:text-[#111418] dark:hover:text-slate-300 transition-colors" href="#">
+<div class="flex h-8 items-center justify-center">
+<span class="material-symbols-outlined text-[24px]">settings</span>
+</div>
+<p class="text-current text-xs font-medium leading-normal tracking-[0.015em]">Settings</p>
+</a>
+</div>
+<!-- Safe area spacer for bottom nav -->
+<div class="h-[70px] w-full shrink-0"></div>
+</div>
+<style>
+        /* Custom Scrollbar hiding for horizontal scroll */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        
+        /* Safe area handling for iOS */
+        .pb-safe {
+            padding-bottom: env(safe-area-inset-bottom, 20px);
+        }
+
+        /* Material Symbols Filled Variant Helper */
+        .material-symbols-outlined.fill-current {
+            font-variation-settings: 'FILL' 1, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</body></html>
