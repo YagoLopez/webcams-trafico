@@ -8,6 +8,7 @@ import { WebcamCard } from './WebcamCard';
 export const WebcamsListScreen = () => {
   const [selectedRoad, setSelectedRoad] = useState<string | null>(null);
   const [isSelectorVisible, setSelectorVisible] = useState(false);
+  const [roadSearchQuery, setRoadSearchQuery] = useState('');
 
   // Extract unique roads
   const roads = useMemo(() => {
@@ -18,10 +19,21 @@ export const WebcamsListScreen = () => {
     });
   }, []);
 
+  const filteredRoads = useMemo(() => {
+    if (!roadSearchQuery) return ['All Roads', ...roads];
+    const query = roadSearchQuery.toLowerCase();
+    return roads.filter((road) => road.toLowerCase().includes(query));
+  }, [roadSearchQuery, roads]);
+
   const filteredWebcams = useMemo(() => {
     if (!selectedRoad) return MOCK_DATA;
     return MOCK_DATA.filter((w) => w.road === selectedRoad);
   }, [selectedRoad]);
+
+  const handleOpenSelector = () => {
+    setRoadSearchQuery('');
+    setSelectorVisible(true);
+  };
 
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-background-dark">
@@ -55,7 +67,7 @@ export const WebcamsListScreen = () => {
       {/* Road Selector Dropdown Trigger */}
       <View className="bg-white dark:bg-background-dark px-4 py-2">
         <TouchableOpacity
-          onPress={() => setSelectorVisible(true)}
+          onPress={handleOpenSelector}
           className="flex-row items-center justify-between h-12 px-4 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700"
         >
           <View className="flex-row items-center">
@@ -84,10 +96,36 @@ export const WebcamsListScreen = () => {
               </TouchableOpacity>
             </View>
 
+            {/* Filter Input in Modal */}
+            <View className="px-4 py-2 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800">
+              <View className="flex-row items-center h-10 rounded-lg bg-slate-100 dark:bg-slate-800 px-3">
+                <MaterialIcons name="search" size={20} color="#94a3b8" />
+                <TextInput
+                  className="flex-1 ml-2 text-base text-[#111418] dark:text-white"
+                  placeholder="Filter roads..."
+                  placeholderTextColor="#94a3b8"
+                  value={roadSearchQuery}
+                  onChangeText={setRoadSearchQuery}
+                  autoCorrect={false}
+                />
+                {roadSearchQuery.length > 0 && (
+                  <TouchableOpacity onPress={() => setRoadSearchQuery('')}>
+                    <MaterialIcons name="close" size={18} color="#94a3b8" />
+                  </TouchableOpacity>
+                )}
+              </View>
+            </View>
+
             <FlatList
-              data={['All Roads', ...roads]}
+              data={filteredRoads}
               keyExtractor={(item) => item}
               contentContainerStyle={{ padding: 16 }}
+              keyboardShouldPersistTaps="handled"
+              ListEmptyComponent={
+                <View className="flex-1 items-center justify-center py-10">
+                  <Text className="text-slate-500">No roads found</Text>
+                </View>
+              }
               renderItem={({ item }) => (
                 <TouchableOpacity
                   className={`py-4 border-b border-slate-100 dark:border-slate-800 flex-row items-center justify-between`}
