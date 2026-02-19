@@ -1,7 +1,7 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import React from 'react';
 import { Modal, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
-import { SelectBox } from './ui/SelectBox';
+import { SelectBox } from './ui/select-box';
 
 interface FiltersModalProps {
   visible: boolean;
