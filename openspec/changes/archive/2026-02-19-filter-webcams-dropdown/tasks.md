@@ -9,7 +9,7 @@
 - [x] Update state to `selectedRoad` in `WebcamsListScreen`.
 - [x] Implement `uniqueRoads` extraction logic.
 - [x] Wire up filtering logic based on `selectedRoad`.
-- [ ] Verify functionality (Open modal -> Select Road -> Filter Works).
+- [x] Verify functionality (Open modal -> Select Road -> Filter Works).
 </tasks>
 
 </artifact>

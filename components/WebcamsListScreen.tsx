@@ -1,14 +1,14 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import React, { useMemo, useState } from 'react';
-import { FlatList, Modal, SafeAreaView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
 import { MOCK_DATA } from '../data/mockWebcams';
+import { SelectBox } from './ui/SelectBox';
 import { WebcamCard } from './WebcamCard';
 
 export const WebcamsListScreen = () => {
   const [selectedRoad, setSelectedRoad] = useState<string | null>(null);
-  const [isSelectorVisible, setSelectorVisible] = useState(false);
-  const [roadSearchQuery, setRoadSearchQuery] = useState('');
+  const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
 
   // Extract unique roads
   const roads = useMemo(() => {
@@ -19,21 +19,19 @@ export const WebcamsListScreen = () => {
     });
   }, []);
 
-  const filteredRoads = useMemo(() => {
-    if (!roadSearchQuery) return ['All Roads', ...roads];
-    const query = roadSearchQuery.toLowerCase();
-    return roads.filter((road) => road.toLowerCase().includes(query));
-  }, [roadSearchQuery, roads]);
+  // Extract unique provinces
+  const provinces = useMemo(() => {
+    const allProvinces = MOCK_DATA.map((w) => w.location).filter(Boolean);
+    return Array.from(new Set(allProvinces)).sort();
+  }, []);
 
   const filteredWebcams = useMemo(() => {
-    if (!selectedRoad) return MOCK_DATA;
-    return MOCK_DATA.filter((w) => w.road === selectedRoad);
-  }, [selectedRoad]);
-
-  const handleOpenSelector = () => {
-    setRoadSearchQuery('');
-    setSelectorVisible(true);
-  };
+    return MOCK_DATA.filter((w) => {
+      const roadMatch = selectedRoad ? w.road === selectedRoad : true;
+      const provinceMatch = selectedProvince ? w.location === selectedProvince : true;
+      return roadMatch && provinceMatch;
+    });
+  }, [selectedRoad, selectedProvince]);
 
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-background-dark">
@@ -52,106 +50,51 @@ export const WebcamsListScreen = () => {
         </View>
       </View>
 
-      {/* Search Bar - Kept as is, but could be integrated with logic later */}
-      <View className="px-4 py-2 bg-white dark:bg-background-dark">
-        <View className="flex-row items-center h-12 rounded-xl bg-slate-100 dark:bg-slate-800 px-4">
-          <MaterialIcons name="search" size={24} color="#94a3b8" />
-          <TextInput
-            className="flex-1 ml-2 text-base text-[#111418] dark:text-white"
-            placeholder="Search road (e.g., A-6)..."
-            placeholderTextColor="#94a3b8"
+      {/* Filters Section */}
+      <View className="bg-white dark:bg-background-dark px-4 py-4">
+        <View className="mb-4">
+          <SelectBox
+            label="Filtrar carreteras"
+            data={roads}
+            value={selectedRoad}
+            onValueChange={setSelectedRoad}
+            placeholder="Todas las carreteras"
+            searchPlaceholder="Buscar carretera..."
           />
         </View>
-      </View>
 
-      {/* Road Selector Dropdown Trigger */}
-      <View className="bg-white dark:bg-background-dark px-4 py-2">
-        <TouchableOpacity
-          onPress={handleOpenSelector}
-          className="flex-row items-center justify-between h-12 px-4 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700"
-        >
-          <View className="flex-row items-center">
-            <MaterialIcons name="add-road" size={20} color="#64748b" />
-            <Text className="ml-2 text-base font-medium text-[#111418] dark:text-white">
-              {selectedRoad || "All Roads"}
-            </Text>
-          </View>
-          <MaterialIcons name="arrow-drop-down" size={24} color="#64748b" />
-        </TouchableOpacity>
-      </View>
-
-      {/* Road Selector Modal */}
-      <Modal
-        visible={isSelectorVisible}
-        animationType="slide"
-        transparent={true}
-        onRequestClose={() => setSelectorVisible(false)}
-      >
-        <View className="flex-1 bg-black/50 justify-end">
-          <View className="bg-white dark:bg-slate-900 rounded-t-3xl h-[80%] w-full overflow-hidden">
-            <View className="flex-row items-center justify-between px-4 py-4 border-b border-slate-100 dark:border-slate-800">
-              <Text className="text-xl font-bold text-[#111418] dark:text-white">Select Road</Text>
-              <TouchableOpacity onPress={() => setSelectorVisible(false)} className="p-2">
-                <MaterialIcons name="close" size={24} color="#64748b" />
-              </TouchableOpacity>
-            </View>
-
-            {/* Filter Input in Modal */}
-            <View className="px-4 py-2 bg-white dark:bg-slate-900 border-b border-slate-100 dark:border-slate-800">
-              <View className="flex-row items-center h-10 rounded-lg bg-slate-100 dark:bg-slate-800 px-3">
-                <MaterialIcons name="search" size={20} color="#94a3b8" />
-                <TextInput
-                  className="flex-1 ml-2 text-base text-[#111418] dark:text-white"
-                  placeholder="Filter roads..."
-                  placeholderTextColor="#94a3b8"
-                  value={roadSearchQuery}
-                  onChangeText={setRoadSearchQuery}
-                  autoCorrect={false}
-                />
-                {roadSearchQuery.length > 0 && (
-                  <TouchableOpacity onPress={() => setRoadSearchQuery('')}>
-                    <MaterialIcons name="close" size={18} color="#94a3b8" />
-                  </TouchableOpacity>
-                )}
-              </View>
-            </View>
-
-            <FlatList
-              data={filteredRoads}
-              keyExtractor={(item) => item}
-              contentContainerStyle={{ padding: 16 }}
-              keyboardShouldPersistTaps="handled"
-              ListEmptyComponent={
-                <View className="flex-1 items-center justify-center py-10">
-                  <Text className="text-slate-500">No roads found</Text>
-                </View>
-              }
-              renderItem={({ item }) => (
-                <TouchableOpacity
-                  className={`py-4 border-b border-slate-100 dark:border-slate-800 flex-row items-center justify-between`}
-                  onPress={() => {
-                    setSelectedRoad(item === 'All Roads' ? null : item);
-                    setSelectorVisible(false);
-                  }}
-                >
-                  <Text className={`text-base ${selectedRoad === item || (item === 'All Roads' && selectedRoad === null) ? 'font-bold text-blue-600' : 'text-[#111418] dark:text-white'}`}>
-                    {item}
-                  </Text>
-                  {(selectedRoad === item || (item === 'All Roads' && selectedRoad === null)) && (
-                    <MaterialIcons name="check" size={20} color="#2563eb" />
-                  )}
-                </TouchableOpacity>
-              )}
-            />
-          </View>
+        <View>
+          <SelectBox
+            label="Filtrar provincias"
+            data={provinces}
+            value={selectedProvince}
+            onValueChange={setSelectedProvince}
+            placeholder="Todas las provincias"
+            searchPlaceholder="Buscar provincia..."
+          />
         </View>
-      </Modal>
+
+        {(selectedRoad !== null || selectedProvince !== null) && (
+          <TouchableOpacity
+            onPress={() => {
+              setSelectedRoad(null);
+              setSelectedProvince(null);
+            }}
+            className="mt-4 flex-row items-center justify-center py-2 bg-red-50 dark:bg-red-900/20 rounded-lg"
+          >
+            <MaterialIcons name="delete-outline" size={20} color="#ef4444" />
+            <Text className="ml-2 text-sm font-medium text-red-500 dark:text-red-400">
+              Borrar filtros
+            </Text>
+          </TouchableOpacity>
+        )}
+      </View>
 
       {/* Scrollable Content Header */}
       <View className="flex-row items-center px-4 py-2 bg-white dark:bg-background-dark">
         <View className="w-2 h-2 rounded-full bg-green-500 mr-2" />
         <Text className="text-lg font-bold text-[#111418] dark:text-white">
-          {selectedRoad ? `${selectedRoad} Cameras` : 'All Cameras'}
+          {filteredWebcams.length} Cámaras
         </Text>
         <Text className="ml-auto text-xs text-slate-500 dark:text-slate-400">Updated 1m ago</Text>
       </View>
