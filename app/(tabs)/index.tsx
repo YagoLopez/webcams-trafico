@@ -1,4 +1,4 @@
-import { WebcamsListScreen } from '@/components/WebcamsListScreen';
+import { WebcamsListScreen } from '@/components/webcams-list-screen';
 import { View } from 'react-native';
 
 export default function HomeScreen() {

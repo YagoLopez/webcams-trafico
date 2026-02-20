@@ -2,10 +2,10 @@ import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import React, { useCallback, useMemo, useState } from 'react';
 import { FlatList, Pressable, SafeAreaView, Text, View } from 'react-native';
-import { MOCK_DATA } from '../data/mockWebcams';
+import { MOCK_DATA } from '../data/mock-webcams';
 import { WebcamData } from '../types/webcam';
 import { FiltersModal } from './filters-modal';
-import { WebcamCard } from './WebcamCard';
+import { WebcamCard } from './webcam-card';
 
 export const WebcamsListScreen = () => {
   const [selectedRoad, setSelectedRoad] = useState<string | null>(null);
