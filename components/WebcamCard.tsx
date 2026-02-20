@@ -51,14 +51,14 @@ export const WebcamCard: React.FC<WebcamCardProps> = React.memo(({ item }) => {
             <View className="mt-1 flex flex-row items-center gap-1.5">
               {isOffline ? (
                 <>
-                  <MaterialIcons name="error" size={16} color="#94a3b8" />
+                  <MaterialIcons name="error" size={16} />
                   <Text className="text-sm text-slate-400 dark:text-slate-500">
                     Connection Lost
                   </Text>
                 </>
               ) : (
                 <>
-                  <MaterialIcons name="location-on" size={16} color="#94a3b8" />
+                  <MaterialIcons name="location-on" size={16} />
                   <Text className="text-sm text-slate-500 dark:text-slate-400">
                     {item.location}
                   </Text>
@@ -67,7 +67,7 @@ export const WebcamCard: React.FC<WebcamCardProps> = React.memo(({ item }) => {
             </View>
           </View>
 
-          <TouchableOpacity className="text-slate-300">
+          <TouchableOpacity onPress={() => alert('Favorite toggled!')}>
             <MaterialIcons name="favorite-border" size={24} color="#cbd5e1" />
           </TouchableOpacity>
         </View>

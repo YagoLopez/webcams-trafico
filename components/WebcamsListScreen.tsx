@@ -49,8 +49,7 @@ export const WebcamsListScreen = () => {
         </Text>
         <View className="flex-row items-center gap-2">
           <Pressable className="h-10 w-10 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
-            <MaterialIcons name="notifications-none" size={24} color="#111418" />
-          </Pressable>
+            <MaterialIcons name="notifications-none" size={24} className="text-[#111418] dark:text-white" />          </Pressable>
           <Pressable
             onPress={() => setIsFiltersModalVisible(true)}
             className="h-10 w-10 items-center justify-center rounded-full bg-primary/10"
