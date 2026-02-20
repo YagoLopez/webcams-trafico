@@ -1,5 +1,6 @@
 import React, { useCallback, useMemo, useState } from 'react';
-import { FlatList, SafeAreaView } from 'react-native';
+import { FlatList } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { MOCK_DATA } from '../data/mock-webcams';
 import { WebcamData } from '../types/webcam';
 import { FiltersModal } from './filters-modal';
@@ -42,7 +43,11 @@ export const WebcamsListScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-background-dark">
+      {/* Header */}
       <WebcamsListHeader onOpenFilters={() => setIsFiltersModalVisible(true)} />
+
+      {/* Subheader */}
+      <WebcamsListSubheader cameraCount={filteredWebcams.length} />
 
 
       {/* Filters Modal */}
@@ -56,9 +61,6 @@ export const WebcamsListScreen = () => {
         onSelectRoad={setSelectedRoad}
         onSelectProvince={setSelectedProvince}
       />
-
-      {/* Scrollable Content Header */}
-      <WebcamsListSubheader cameraCount={filteredWebcams.length} />
 
       {/* List */}
       <FlatList
