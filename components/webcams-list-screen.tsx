@@ -1,16 +1,16 @@
-import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import React, { useCallback, useMemo, useState } from 'react';
-import { FlatList, Pressable, SafeAreaView, Text, View } from 'react-native';
+import { FlatList, SafeAreaView } from 'react-native';
 import { MOCK_DATA } from '../data/mock-webcams';
 import { WebcamData } from '../types/webcam';
 import { FiltersModal } from './filters-modal';
 import { WebcamCard } from './webcam-card';
+import { WebcamsListHeader } from './webcams-list-header';
+import { WebcamsListSubheader } from './webcams-list-subheader';
+
 
 export const WebcamsListScreen = () => {
   const [selectedRoad, setSelectedRoad] = useState<string | null>(null);
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
-
   const [isFiltersModalVisible, setIsFiltersModalVisible] = useState(false);
 
   // Extract unique roads
@@ -42,22 +42,8 @@ export const WebcamsListScreen = () => {
 
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-background-dark">
-      {/* Header Section */}
-      <View className="flex-row items-center justify-between px-4 py-2 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-background-dark">
-        <Text className="text-2xl font-bold text-[#111418] dark:text-white">
-          Cámaras DGT
-        </Text>
-        <View className="flex-row items-center gap-2">
-          <Pressable className="h-10 w-10 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
-            <MaterialIcons name="notifications-none" size={24} className="text-[#111418] dark:text-white" />          </Pressable>
-          <Pressable
-            onPress={() => setIsFiltersModalVisible(true)}
-            className="h-10 w-10 items-center justify-center rounded-full bg-primary/10"
-          >
-            <MaterialCommunityIcons name="tune-vertical" size={24} color="#137fec" />
-          </Pressable>
-        </View>
-      </View>
+      <WebcamsListHeader onOpenFilters={() => setIsFiltersModalVisible(true)} />
+
 
       {/* Filters Modal */}
       <FiltersModal
@@ -72,13 +58,7 @@ export const WebcamsListScreen = () => {
       />
 
       {/* Scrollable Content Header */}
-      <View className="flex-row items-center px-4 py-2 bg-white dark:bg-background-dark">
-        <View className="w-2 h-2 rounded-full bg-green-500 mr-2" />
-        <Text className="text-lg font-bold text-[#111418] dark:text-white">
-          {filteredWebcams.length} Cámaras
-        </Text>
-        <Text className="ml-auto text-xs text-slate-500 dark:text-slate-400">Updated 1m ago</Text>
-      </View>
+      <WebcamsListSubheader cameraCount={filteredWebcams.length} />
 
       {/* List */}
       <FlatList
