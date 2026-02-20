@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MOCK_DATA } from '../data/mock-webcams';
-import { WebcamData } from '../types/webcam';
+import { Cam } from '../types/cam';
 import { FiltersModal } from './filters-modal';
 import { WebcamCard } from './webcam-card';
 import { WebcamsListHeader } from './webcams-list-header';
@@ -37,7 +37,7 @@ export const WebcamsListScreen = () => {
     });
   }, [selectedRoad, selectedProvince]);
 
-  const renderItem = useCallback(({ item }: { item: WebcamData }) => (
+  const renderItem = useCallback(({ item }: { item: Cam }) => (
     <WebcamCard item={item} />
   ), []);
 
