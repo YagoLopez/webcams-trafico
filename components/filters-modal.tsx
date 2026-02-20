@@ -1,6 +1,6 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import React from 'react';
-import { Modal, Text, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native';
+import { Modal, Pressable, Text, TouchableWithoutFeedback, View } from 'react-native';
 import { SelectBox } from './ui/select-box';
 
 interface FiltersModalProps {
@@ -40,9 +40,9 @@ export const FiltersModal = ({
 
               <View className="flex-row items-center justify-between mb-6">
                 <Text className="text-xl font-bold text-[#111418] dark:text-white">Filtros</Text>
-                <TouchableOpacity onPress={onClose}>
+                <Pressable onPress={onClose}>
                   <MaterialIcons name="close" size={24} color="#64748b" />
-                </TouchableOpacity>
+                </Pressable>
               </View>
 
               {/* Filters Content */}
@@ -70,7 +70,7 @@ export const FiltersModal = ({
                 </View>
 
                 {(selectedRoad !== null || selectedProvince !== null) && (
-                  <TouchableOpacity
+                  <Pressable
                     onPress={() => {
                       onSelectRoad(null);
                       onSelectProvince(null);
@@ -81,15 +81,15 @@ export const FiltersModal = ({
                     <Text className="ml-2 text-sm font-semibold text-red-500 dark:text-red-400">
                       Borrar filtros
                     </Text>
-                  </TouchableOpacity>
+                  </Pressable>
                 )}
 
-                <TouchableOpacity
+                <Pressable
                   onPress={onClose}
                   className="mt-4 bg-[#137fec] py-4 rounded-xl items-center"
                 >
                   <Text className="text-white font-bold text-base">Aplicar Filtros</Text>
-                </TouchableOpacity>
+                </Pressable>
               </View>
             </View>
           </TouchableWithoutFeedback>

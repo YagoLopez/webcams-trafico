@@ -1,10 +1,12 @@
 import MaterialCommunityIcons from '@expo/vector-icons/MaterialCommunityIcons';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import React, { useMemo, useState } from 'react';
-import { FlatList, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import React, { useCallback, useMemo, useState } from 'react';
+import { FlatList, Pressable, SafeAreaView, Text, View } from 'react-native';
 import { MOCK_DATA } from '../data/mockWebcams';
+import { WebcamData } from '../types/webcam';
 import { FiltersModal } from './filters-modal';
 import { WebcamCard } from './WebcamCard';
+
 export const WebcamsListScreen = () => {
   const [selectedRoad, setSelectedRoad] = useState<string | null>(null);
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
@@ -34,6 +36,10 @@ export const WebcamsListScreen = () => {
     });
   }, [selectedRoad, selectedProvince]);
 
+  const renderItem = useCallback(({ item }: { item: WebcamData }) => (
+    <WebcamCard item={item} />
+  ), []);
+
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-background-dark">
       {/* Header Section */}
@@ -42,15 +48,15 @@ export const WebcamsListScreen = () => {
           Cámaras DGT
         </Text>
         <View className="flex-row items-center gap-2">
-          <TouchableOpacity className="h-10 w-10 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
+          <Pressable className="h-10 w-10 items-center justify-center rounded-full hover:bg-slate-100 dark:hover:bg-slate-800">
             <MaterialIcons name="notifications-none" size={24} color="#111418" />
-          </TouchableOpacity>
-          <TouchableOpacity
+          </Pressable>
+          <Pressable
             onPress={() => setIsFiltersModalVisible(true)}
             className="h-10 w-10 items-center justify-center rounded-full bg-primary/10"
           >
             <MaterialCommunityIcons name="tune-vertical" size={24} color="#137fec" />
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
 
@@ -79,7 +85,7 @@ export const WebcamsListScreen = () => {
       <FlatList
         className="flex-1 bg-white dark:bg-background-dark px-4"
         data={filteredWebcams}
-        renderItem={({ item }) => <WebcamCard item={item} />}
+        renderItem={renderItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ paddingBottom: 100 }}
         showsVerticalScrollIndicator={false}

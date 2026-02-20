@@ -1,5 +1,5 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
-import React, { useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { FlatList, Modal, Text, TextInput, TouchableOpacity, View } from 'react-native';
 
 interface SelectBoxProps {
@@ -10,6 +10,30 @@ interface SelectBoxProps {
   placeholder?: string;
   searchPlaceholder?: string;
 }
+
+interface SelectItemProps {
+  item: string;
+  isSelected: boolean;
+  onSelect: (item: string) => void;
+}
+
+const SelectItem = React.memo(({ item, isSelected, onSelect }: SelectItemProps) => {
+  const handlePress = useCallback(() => {
+    onSelect(item);
+  }, [item, onSelect]);
+
+  return (
+    <TouchableOpacity
+      className="py-4 border-b border-slate-100 dark:border-slate-800 flex-row items-center justify-between"
+      onPress={handlePress}
+    >
+      <Text className={`text-base ${isSelected ? 'font-bold text-blue-600' : 'text-[#111418] dark:text-white'}`}>
+        {item}
+      </Text>
+      {isSelected && <MaterialIcons name="check" size={20} color="#2563eb" />}
+    </TouchableOpacity>
+  );
+});
 
 export const SelectBox: React.FC<SelectBoxProps> = ({
   label,
@@ -28,18 +52,29 @@ export const SelectBox: React.FC<SelectBoxProps> = ({
     return data.filter((item) => item.toLowerCase().includes(query));
   }, [data, searchQuery, placeholder]);
 
-  const handleSelect = (item: string) => {
+  const handleSelect = useCallback((item: string) => {
     onValueChange(item === placeholder ? null : item);
     setModalVisible(false);
     setSearchQuery('');
-  };
+  }, [onValueChange, placeholder]);
+
+  const renderItem = useCallback(({ item }: { item: string }) => {
+    const isSelected = value === item || (item === placeholder && value === null);
+    return (
+      <SelectItem
+        item={item}
+        isSelected={isSelected}
+        onSelect={handleSelect}
+      />
+    );
+  }, [value, placeholder, handleSelect]);
 
   return (
     <View className="mb-4">
       <Text className="mb-2 text-sm font-medium text-slate-500 dark:text-slate-400">
         {label}
       </Text>
-      
+
       <TouchableOpacity
         onPress={() => {
           setSearchQuery('');
@@ -100,20 +135,7 @@ export const SelectBox: React.FC<SelectBoxProps> = ({
                   <Text className="text-slate-500">No results found</Text>
                 </View>
               }
-              renderItem={({ item }) => {
-                const isSelected = value === item || (item === placeholder && value === null);
-                return (
-                  <TouchableOpacity
-                    className="py-4 border-b border-slate-100 dark:border-slate-800 flex-row items-center justify-between"
-                    onPress={() => handleSelect(item)}
-                  >
-                    <Text className={`text-base ${isSelected ? 'font-bold text-blue-600' : 'text-[#111418] dark:text-white'}`}>
-                      {item}
-                    </Text>
-                    {isSelected && <MaterialIcons name="check" size={20} color="#2563eb" />}
-                  </TouchableOpacity>
-                );
-              }}
+              renderItem={renderItem}
             />
           </View>
         </View>

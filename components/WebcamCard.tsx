@@ -7,7 +7,7 @@ interface WebcamCardProps {
   item: WebcamData;
 }
 
-export const WebcamCard: React.FC<WebcamCardProps> = ({ item }) => {
+export const WebcamCard: React.FC<WebcamCardProps> = React.memo(({ item }) => {
   return (
     <View className="flex flex-col overflow-hidden rounded-xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm mb-4">
       {/* Image Container */}
@@ -53,4 +53,4 @@ export const WebcamCard: React.FC<WebcamCardProps> = ({ item }) => {
       </View>
     </View>
   );
-};
+});
