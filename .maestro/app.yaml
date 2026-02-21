@@ -1,4 +1,0 @@
-appId: com.yago.webcamapp
----
-- launchApp
-- assertVisible: ".*Webcams.*" # Reemplace con un texto visible en su pantalla principal
