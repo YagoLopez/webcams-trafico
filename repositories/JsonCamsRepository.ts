@@ -7,7 +7,6 @@ export class JsonCamsRepository implements ICamsRepository {
   private readonly data: Cam[];
 
   private constructor() {
-    console.log('JsonCamsRepository constructor');
     this.data = webcamsData as Cam[];
   }
 

@@ -6,19 +6,19 @@ import { useFilteredCams, useProvinces, useRoads } from '../hooks/use-cams';
 import { Cam } from '../types/cam';
 import { CamCard } from './cam-card';
 import { CamListHeader } from './cam-list-header';
-import { FiltersModal } from './filters-modal';
 import { CamListSubheader } from './cam-list-subheader';
+import { FiltersModal } from './filters-modal';
 
 
 export const CamListScreen = () => {
   const [selectedRoad, setSelectedRoad] = useState<string | null>(null);
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
   const [isFiltersModalVisible, setIsFiltersModalVisible] = useState(false);
-  const camsRepo = JsonCamsRepository.getInstance();
+  const cams = JsonCamsRepository.getInstance();
 
-  const { data: roads = [] } = useRoads(camsRepo);
-  const { data: provinces = [] } = useProvinces(camsRepo);
-  const { data: filteredCams = [], isLoading } = useFilteredCams(camsRepo, {
+  const { data: roads = [] } = useRoads(cams);
+  const { data: provinces = [] } = useProvinces(cams);
+  const { data: filteredCams = [], isLoading } = useFilteredCams(cams, {
     road: selectedRoad,
     province: selectedProvince,
   });
