@@ -3,10 +3,19 @@ import { Cam } from '../types/cam';
 import { CamFilters, ICamsRepository } from './ICamsRepository';
 
 export class JsonCamsRepository implements ICamsRepository {
+  private static instance: JsonCamsRepository;
   private readonly data: Cam[];
 
-  constructor() {
+  private constructor() {
+    console.log('JsonCamsRepository constructor');
     this.data = webcamsData as Cam[];
+  }
+
+  public static getInstance(): JsonCamsRepository {
+    if (!JsonCamsRepository.instance) {
+      JsonCamsRepository.instance = new JsonCamsRepository();
+    }
+    return JsonCamsRepository.instance;
   }
 
   async getAllCams(): Promise<Cam[]> {

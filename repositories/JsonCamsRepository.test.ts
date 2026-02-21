@@ -5,7 +5,7 @@ describe('JsonCamsRepository', () => {
   let repository: JsonCamsRepository;
 
   beforeEach(() => {
-    repository = new JsonCamsRepository();
+    repository = JsonCamsRepository.getInstance();
   });
 
   test('getAllCams should return all cameras from json', async () => {

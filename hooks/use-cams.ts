@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 import { CamFilters, ICamsRepository } from '../repositories/ICamsRepository';
 import { JsonCamsRepository } from '../repositories/JsonCamsRepository';
 
-const camsRepo = new JsonCamsRepository();
+const camsRepo = JsonCamsRepository.getInstance();
 
 export const useRoads = (repo: ICamsRepository) => {
   return useQuery({
