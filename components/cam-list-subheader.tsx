@@ -5,7 +5,7 @@ interface WebcamsListSubheaderProps {
   cameraCount: number;
 }
 
-export const WebcamsListSubheader = ({ cameraCount }: WebcamsListSubheaderProps) => {
+export const CamListSubheader = ({ cameraCount }: WebcamsListSubheaderProps) => {
   return (
     <View className="flex-row items-center px-4 py-2 bg-white dark:bg-background-dark">
       <View className="w-2 h-2 rounded-full bg-green-500 mr-2" />

@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react-native';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { WebcamsListScreen } from './webcams-list-screen';
+import { CamListScreen } from './cam-list-screen';
 
 jest.mock('expo-image', () => {
   const { View } = require('react-native');
@@ -45,7 +45,7 @@ describe('WebcamsListScreen', () => {
     // We don't need QueryClientProvider if we mock the hooks returning data!
     render(
       <SafeAreaProvider>
-        <WebcamsListScreen />
+        <CamListScreen />
       </SafeAreaProvider>
     );
 

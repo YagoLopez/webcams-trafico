@@ -3,11 +3,11 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 
-interface WebcamsHeaderProps {
+interface CamsListHeaderProps {
   onOpenFilters: () => void;
 }
 
-export const WebcamsListHeader: React.FC<WebcamsHeaderProps> = ({ onOpenFilters }) => {
+export const CamListHeader: React.FC<CamsListHeaderProps> = ({ onOpenFilters }) => {
   return (
     <View className="flex-row items-center justify-between px-4 py-2 border-b border-slate-100 dark:border-slate-800 bg-white dark:bg-background-dark">
       <Text className="text-2xl font-bold text-[#111418] dark:text-white">

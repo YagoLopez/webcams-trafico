@@ -4,13 +4,13 @@ import { ActivityIndicator, FlatList, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFilteredCams, useProvinces, useRoads } from '../hooks/use-cams';
 import { Cam } from '../types/cam';
+import { CamCard } from './cam-card';
+import { CamListHeader } from './cam-list-header';
 import { FiltersModal } from './filters-modal';
-import { WebcamCard } from './webcam-card';
-import { WebcamsListHeader } from './webcams-list-header';
-import { WebcamsListSubheader } from './webcams-list-subheader';
+import { CamListSubheader } from './cam-list-subheader';
 
 
-export const WebcamsListScreen = () => {
+export const CamListScreen = () => {
   const [selectedRoad, setSelectedRoad] = useState<string | null>(null);
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
   const [isFiltersModalVisible, setIsFiltersModalVisible] = useState(false);
@@ -24,16 +24,16 @@ export const WebcamsListScreen = () => {
   });
 
   const renderItem = useCallback(({ item }: { item: Cam }) => (
-    <WebcamCard item={item} />
+    <CamCard item={item} />
   ), []);
 
   return (
     <SafeAreaView className="flex-1 bg-white dark:bg-background-dark">
       {/* Header */}
-      <WebcamsListHeader onOpenFilters={() => setIsFiltersModalVisible(true)} />
+      <CamListHeader onOpenFilters={() => setIsFiltersModalVisible(true)} />
 
       {/* Subheader */}
-      <WebcamsListSubheader cameraCount={filteredCams.length} />
+      <CamListSubheader cameraCount={filteredCams.length} />
 
       {/* Filters Modal */}
       <FiltersModal
