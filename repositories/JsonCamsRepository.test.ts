@@ -1,5 +1,5 @@
-import webcamsData from '../../data/webcams.json';
-import { JsonCamsRepository } from '../JsonCamsRepository';
+import webcamsData from '../data/webcams.json';
+import { JsonCamsRepository } from './JsonCamsRepository';
 
 describe('JsonCamsRepository', () => {
   let repository: JsonCamsRepository;

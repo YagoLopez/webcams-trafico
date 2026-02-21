@@ -74,7 +74,8 @@
       "@testing-library/jest-native/extend-expect"
     ],
     "testPathIgnorePatterns": [
-      "<rootDir>/tests/"
+      "<rootDir>/tests/",
+      "<rootDir>/e2e/"
     ]
   }
 }

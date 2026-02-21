@@ -1,9 +1,5 @@
+import { CamFilters } from '@/types/cam-filters';
 import { Cam } from '../types/cam';
-
-export interface CamFilters {
-  road?: string | null;
-  province?: string | null;
-}
 
 export interface ICamsRepository {
   /** Obtiene una lista de todas las cámaras */
