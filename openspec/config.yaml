@@ -1,0 +1,33 @@
+# openspec/config.yaml
+
+schema: "feature-with-tests"
+
+context: |
+  Project: Traffic Webcams (webcams-trafico)
+  Tech Stack:
+    - Expo (SDK 54)
+    - React Native 0.81.5
+    - React 19.1.0
+    - NativeWind (Tailwind CSS 4.2.1)
+    - TypeScript 5.9.2
+    - Expo Router (file-based)
+  Coding Rules:
+    - Los componentes deben usar kebab-case (ej: submit-button.tsx)
+    - Priorizar clases de Tailwind mediante className (NativeWind)
+    - Evitar StyleSheet.create y estilos inline
+    - Usar expo-image para carga optimizada de imágenes
+    - Rendimiento en listas: evitar funciones anónimas en renderItem y usar memoización
+
+rules:
+  proposal:
+    - "Incluir un resumen claro del cambio"
+    - "Identificar componentes y archivos afectados"
+  spec:
+    - "Definir criterios de aceptación claros"
+    - "Asegurar que los tipos de TypeScript estén documentados si cambian"
+  unit-tests:
+    - "Indicar claramente la técnica o patrón de testing a usar para cada unidad"
+    - "Documentar los mocks y spies necesarios"
+  e2e-tests:
+    - "Describir el paso a paso del usuario en cada flujo"
+    - "Asegurar que se contemplan los casos de error más comunes"
