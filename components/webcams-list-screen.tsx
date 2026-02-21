@@ -16,7 +16,6 @@ export const WebcamsListScreen = () => {
   // Use the new custom hooks to fetch data asynchronously
   const { data: roads = [] } = useRoads();
   const { data: provinces = [] } = useProvinces();
-
   const { data: filteredCams = [], isLoading } = useFilteredCams({
     road: selectedRoad,
     province: selectedProvince,

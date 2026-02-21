@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { GET } from '../get-remote-cams-data+api';
+import { GET } from './get-remote-cams-data+api';
 
 // Properly type Axios mock
 jest.mock('axios');
