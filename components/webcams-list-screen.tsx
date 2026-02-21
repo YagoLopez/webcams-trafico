@@ -1,41 +1,26 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { FlatList } from 'react-native';
+import React, { useCallback, useState } from 'react';
+import { ActivityIndicator, FlatList, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { MOCK_DATA } from '../data/mock-webcams';
+import { useFilteredCams, useProvinces, useRoads } from '../hooks/use-cams';
 import { Cam } from '../types/cam';
 import { FiltersModal } from './filters-modal';
 import { WebcamCard } from './webcam-card';
 import { WebcamsListHeader } from './webcams-list-header';
 import { WebcamsListSubheader } from './webcams-list-subheader';
 
-
 export const WebcamsListScreen = () => {
   const [selectedRoad, setSelectedRoad] = useState<string | null>(null);
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
   const [isFiltersModalVisible, setIsFiltersModalVisible] = useState(false);
 
-  // Extract unique roads
-  const getAllRoads = useMemo(() => {
-    const allRoads = MOCK_DATA.map((w) => w.road).filter(Boolean);
-    return Array.from(new Set(allRoads)).sort((a, b) => {
-      // Numeric sort for roads is better if possible (A-1 vs A-10), but alphanumeric is fine for now
-      return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' });
-    });
-  }, []);
+  // Use the new custom hooks to fetch data asynchronously
+  const { data: roads = [] } = useRoads();
+  const { data: provinces = [] } = useProvinces();
 
-  // Extract unique provinces
-  const getAllProvinces = useMemo(() => {
-    const allProvinces = MOCK_DATA.map((w) => w.location).filter(Boolean);
-    return Array.from(new Set(allProvinces)).sort();
-  }, []);
-
-  const getFilteredCams = useMemo(() => {
-    return MOCK_DATA.filter((w) => {
-      const roadMatch = selectedRoad ? w.road === selectedRoad : true;
-      const provinceMatch = selectedProvince ? w.location === selectedProvince : true;
-      return roadMatch && provinceMatch;
-    });
-  }, [selectedRoad, selectedProvince]);
+  const { data: filteredCams = [], isLoading } = useFilteredCams({
+    road: selectedRoad,
+    province: selectedProvince,
+  });
 
   const renderItem = useCallback(({ item }: { item: Cam }) => (
     <WebcamCard item={item} />
@@ -47,30 +32,35 @@ export const WebcamsListScreen = () => {
       <WebcamsListHeader onOpenFilters={() => setIsFiltersModalVisible(true)} />
 
       {/* Subheader */}
-      <WebcamsListSubheader cameraCount={getFilteredCams.length} />
-
+      <WebcamsListSubheader cameraCount={filteredCams.length} />
 
       {/* Filters Modal */}
       <FiltersModal
         visible={isFiltersModalVisible}
         onClose={() => setIsFiltersModalVisible(false)}
-        roads={getAllRoads}
-        provinces={getAllProvinces}
+        roads={roads}
+        provinces={provinces}
         selectedRoad={selectedRoad}
         selectedProvince={selectedProvince}
         onSelectRoad={setSelectedRoad}
         onSelectProvince={setSelectedProvince}
       />
 
-      {/* List */}
-      <FlatList
-        className="flex-1 bg-white dark:bg-background-dark px-4"
-        data={getFilteredCams}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={{ paddingBottom: 100 }}
-        showsVerticalScrollIndicator={false}
-      />
+      {/* List / Loading indicator */}
+      {isLoading ? (
+        <View className="flex-1 items-center justify-center">
+          <ActivityIndicator size="large" className="text-primary" />
+        </View>
+      ) : (
+        <FlatList
+          className="flex-1 bg-white dark:bg-background-dark px-4"
+          data={filteredCams}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={{ paddingBottom: 100 }}
+          showsVerticalScrollIndicator={false}
+        />
+      )}
     </SafeAreaView>
   );
 };
