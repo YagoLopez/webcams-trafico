@@ -1,10 +1,10 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
-import { WebcamData } from '../types/webcam';
+import { Cam } from '../types/cam';
 
 interface WebcamCardProps {
-  item: WebcamData;
+  item: Cam;
 }
 
 export const WebcamCard: React.FC<WebcamCardProps> = React.memo(({ item }) => {

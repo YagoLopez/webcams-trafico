@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { FlatList } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { MOCK_DATA } from '../data/mock-webcams';
-import { WebcamData } from '../types/webcam';
+import { Cam } from '../types/cam';
 import { FiltersModal } from './filters-modal';
 import { WebcamCard } from './webcam-card';
 import { WebcamsListHeader } from './webcams-list-header';
@@ -15,7 +15,7 @@ export const WebcamsListScreen = () => {
   const [isFiltersModalVisible, setIsFiltersModalVisible] = useState(false);
 
   // Extract unique roads
-  const roads = useMemo(() => {
+  const getAllRoads = useMemo(() => {
     const allRoads = MOCK_DATA.map((w) => w.road).filter(Boolean);
     return Array.from(new Set(allRoads)).sort((a, b) => {
       // Numeric sort for roads is better if possible (A-1 vs A-10), but alphanumeric is fine for now
@@ -24,12 +24,12 @@ export const WebcamsListScreen = () => {
   }, []);
 
   // Extract unique provinces
-  const provinces = useMemo(() => {
+  const getAllProvinces = useMemo(() => {
     const allProvinces = MOCK_DATA.map((w) => w.location).filter(Boolean);
     return Array.from(new Set(allProvinces)).sort();
   }, []);
 
-  const filteredWebcams = useMemo(() => {
+  const getFilteredCams = useMemo(() => {
     return MOCK_DATA.filter((w) => {
       const roadMatch = selectedRoad ? w.road === selectedRoad : true;
       const provinceMatch = selectedProvince ? w.location === selectedProvince : true;
@@ -37,7 +37,7 @@ export const WebcamsListScreen = () => {
     });
   }, [selectedRoad, selectedProvince]);
 
-  const renderItem = useCallback(({ item }: { item: WebcamData }) => (
+  const renderItem = useCallback(({ item }: { item: Cam }) => (
     <WebcamCard item={item} />
   ), []);
 
@@ -47,15 +47,15 @@ export const WebcamsListScreen = () => {
       <WebcamsListHeader onOpenFilters={() => setIsFiltersModalVisible(true)} />
 
       {/* Subheader */}
-      <WebcamsListSubheader cameraCount={filteredWebcams.length} />
+      <WebcamsListSubheader cameraCount={getFilteredCams.length} />
 
 
       {/* Filters Modal */}
       <FiltersModal
         visible={isFiltersModalVisible}
         onClose={() => setIsFiltersModalVisible(false)}
-        roads={roads}
-        provinces={provinces}
+        roads={getAllRoads}
+        provinces={getAllProvinces}
         selectedRoad={selectedRoad}
         selectedProvince={selectedProvince}
         onSelectRoad={setSelectedRoad}
@@ -65,7 +65,7 @@ export const WebcamsListScreen = () => {
       {/* List */}
       <FlatList
         className="flex-1 bg-white dark:bg-background-dark px-4"
-        data={filteredWebcams}
+        data={getFilteredCams}
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         contentContainerStyle={{ paddingBottom: 100 }}

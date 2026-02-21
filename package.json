@@ -11,7 +11,8 @@
     "lint": "expo lint",
     "build:apk:local": "eas build --platform android --profile preview --local",
     "build:apk:remote": "eas build --platform android --profile preview",
-    "fetch-webcams": "tsx scripts/fetch-webcams.ts"
+    "fetch-webcams": "tsx scripts/fetch-webcams.ts",
+    "test": "jest"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
@@ -46,9 +47,13 @@
     "tailwindcss": "^3.3.2"
   },
   "devDependencies": {
+    "@types/jest": "^30.0.0",
     "@types/react": "~19.1.0",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~10.0.0",
+    "jest": "^29.7.0",
+    "jest-expo": "^54.0.17",
+    "ts-node": "^10.9.2",
     "tsx": "^4.21.0",
     "typescript": "~5.9.2"
   },
