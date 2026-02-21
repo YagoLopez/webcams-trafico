@@ -13,6 +13,7 @@
     "build:apk:remote": "eas build --platform android --profile preview",
     "fetch-webcams": "tsx scripts/fetch-webcams.ts",
     "test": "jest",
+    "test:watch": "jest --watch",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui"
   },

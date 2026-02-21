@@ -1,5 +1,6 @@
 import { CamFilters } from '@/types/cam-filters';
 import { Cam } from '../types/cam';
+export type { CamFilters };
 
 export interface ICamsRepository {
   /** Obtiene una lista de todas las cámaras */

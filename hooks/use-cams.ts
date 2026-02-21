@@ -1,26 +1,26 @@
 import { useQuery } from '@tanstack/react-query';
-import { CamFilters } from '../repositories/ICamsRepository';
+import { CamFilters, ICamsRepository } from '../repositories/ICamsRepository';
 import { JsonCamsRepository } from '../repositories/JsonCamsRepository';
 
 const camsRepo = new JsonCamsRepository();
 
-export const useRoads = () => {
+export const useRoads = (repo: ICamsRepository) => {
   return useQuery({
     queryKey: ['roads'],
-    queryFn: () => camsRepo.getAllRoads(),
+    queryFn: () => repo.getAllRoads(),
   });
 };
 
-export const useProvinces = () => {
+export const useProvinces = (repo: ICamsRepository) => {
   return useQuery({
     queryKey: ['provinces'],
-    queryFn: () => camsRepo.getAllProvinces(),
+    queryFn: () => repo.getAllProvinces(),
   });
 };
 
-export const useFilteredCams = (filters: CamFilters) => {
+export const useFilteredCams = (repo: ICamsRepository, filters: CamFilters) => {
   return useQuery({
     queryKey: ['filteredCams', filters],
-    queryFn: () => camsRepo.getFilteredCams(filters),
+    queryFn: () => repo.getFilteredCams(filters),
   });
 };

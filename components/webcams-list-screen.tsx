@@ -1,3 +1,4 @@
+import { JsonCamsRepository } from '@/repositories/JsonCamsRepository';
 import React, { useCallback, useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -8,15 +9,17 @@ import { WebcamCard } from './webcam-card';
 import { WebcamsListHeader } from './webcams-list-header';
 import { WebcamsListSubheader } from './webcams-list-subheader';
 
+
 export const WebcamsListScreen = () => {
   const [selectedRoad, setSelectedRoad] = useState<string | null>(null);
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
   const [isFiltersModalVisible, setIsFiltersModalVisible] = useState(false);
+  const camsRepo = new JsonCamsRepository();
 
   // Use the new custom hooks to fetch data asynchronously
-  const { data: roads = [] } = useRoads();
-  const { data: provinces = [] } = useProvinces();
-  const { data: filteredCams = [], isLoading } = useFilteredCams({
+  const { data: roads = [] } = useRoads(camsRepo);
+  const { data: provinces = [] } = useProvinces(camsRepo);
+  const { data: filteredCams = [], isLoading } = useFilteredCams(camsRepo, {
     road: selectedRoad,
     province: selectedProvince,
   });
