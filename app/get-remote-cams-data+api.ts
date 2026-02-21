@@ -44,52 +44,47 @@ export async function GET(request: Request) {
 
     const findKey = (obj: any, partial: string) => obj ? Object.keys(obj).find((k: string) => k.includes(partial)) : undefined;
 
+    const navigate = (obj: any, paths: string[]) => {
+      let current = obj;
+      for (const path of paths) {
+        const key = findKey(current, path);
+        if (!key) return undefined;
+        current = current[key];
+      }
+      return current;
+    };
+
     for (const device of deviceList) {
       const id = device['@_id'];
 
-      const urlKey = Object.keys(device).find(key => key.includes('deviceUrl'));
+      const urlKey = findKey(device, 'deviceUrl');
       const imageUrl = urlKey ? device[urlKey] : null;
 
       if (!id || !imageUrl) continue;
 
-      const pointLocKey = Object.keys(device).find(key => key.includes('pointLocation'));
+      const pointLocKey = findKey(device, 'pointLocation');
       const pointLocation = pointLocKey ? device[pointLocKey] : {};
 
       let roadName = 'Unknown Road';
       let roadDest = '';
 
-      const suppKey = findKey(pointLocation, 'supplementaryPositionalDescription');
-      if (suppKey) {
-        const roadInfoKey = findKey(pointLocation[suppKey], 'roadInformation');
-        if (roadInfoKey) {
-          const info = pointLocation[suppKey][roadInfoKey];
-          const nameKey = findKey(info, 'roadName');
-          const destKey = findKey(info, 'roadDestination');
-          if (nameKey) roadName = info[nameKey];
-          if (destKey) roadDest = info[destKey];
-        }
+      const info = navigate(pointLocation, ['supplementaryPositionalDescription', 'roadInformation']);
+      if (info) {
+        const nameKey = findKey(info, 'roadName');
+        const destKey = findKey(info, 'roadDestination');
+        if (nameKey) roadName = info[nameKey];
+        if (destKey) roadDest = info[destKey];
       }
 
       let km = '';
       let province = '';
 
-      const tpegKey = findKey(pointLocation, 'tpegPointLocation');
-      if (tpegKey) {
-        const pointKey = findKey(pointLocation[tpegKey], 'point');
-        if (pointKey) {
-          const point = pointLocation[tpegKey][pointKey];
-          const extKey = Object.keys(point).find(k => k.includes('Extension'));
-          if (extKey) {
-            const innerExtKey = findKey(point[extKey], 'extendedTpegNonJunctionPoint');
-            if (innerExtKey) {
-              const data = point[extKey][innerExtKey];
-              const kmKey = findKey(data, 'kilometerPoint');
-              const provKey = findKey(data, 'province');
-              if (kmKey) km = data[kmKey];
-              if (provKey) province = data[provKey];
-            }
-          }
-        }
+      const data = navigate(pointLocation, ['tpegPointLocation', 'point', 'Extension', 'extendedTpegNonJunctionPoint']);
+      if (data) {
+        const kmKey = findKey(data, 'kilometerPoint');
+        const provKey = findKey(data, 'province');
+        if (kmKey) km = data[kmKey];
+        if (provKey) province = data[provKey];
       }
 
       const webcam: WebcamData = {
