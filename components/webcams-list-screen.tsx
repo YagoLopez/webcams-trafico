@@ -16,7 +16,6 @@ export const WebcamsListScreen = () => {
   const [isFiltersModalVisible, setIsFiltersModalVisible] = useState(false);
   const camsRepo = JsonCamsRepository.getInstance();
 
-  // Use the new custom hooks to fetch data asynchronously
   const { data: roads = [] } = useRoads(camsRepo);
   const { data: provinces = [] } = useProvinces(camsRepo);
   const { data: filteredCams = [], isLoading } = useFilteredCams(camsRepo, {
