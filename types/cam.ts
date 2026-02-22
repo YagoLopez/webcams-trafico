@@ -5,7 +5,9 @@ export class Cam {
     public road: string,
     public kilometer: string,
     public location: string,
-    public status: 'active' | 'offline' = 'active'
+    public status: 'active' | 'offline' = 'active',
+    public latitude?: number,
+    public longitude?: number
   ) { }
 }
 

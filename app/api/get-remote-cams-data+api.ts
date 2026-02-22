@@ -9,6 +9,8 @@ export interface WebcamData {
   kilometer: string;
   location: string;
   status: 'active' | 'offline';
+  latitude?: number;
+  longitude?: number;
 }
 
 const URL = 'https://nap.dgt.es/datex2/v3/dgt/DevicePublication/camaras_datex2_v36.xml';
@@ -65,6 +67,16 @@ export async function GET(request: Request) {
       const pointLocKey = findKey(device, 'pointLocation');
       const pointLocation = pointLocKey ? device[pointLocKey] : {};
 
+      const coords = navigate(pointLocation, ['tpegPointLocation', 'point', 'pointCoordinates']);
+      let latitude: number | undefined;
+      let longitude: number | undefined;
+      if (coords) {
+        const latKey = findKey(coords, 'latitude');
+        const lonKey = findKey(coords, 'longitude');
+        if (latKey) latitude = Number(coords[latKey]);
+        if (lonKey) longitude = Number(coords[lonKey]);
+      }
+
       let roadName = 'Unknown Road';
       let roadDest = '';
 
@@ -93,7 +105,9 @@ export async function GET(request: Request) {
         road: String(roadName),
         kilometer: km ? `Pk ${km}${roadDest ? ' - ' + roadDest : ''}` : (roadDest || ''),
         location: province || 'Unknown',
-        status: 'active'
+        status: 'active',
+        latitude,
+        longitude
       };
 
       webcams.push(webcam);
