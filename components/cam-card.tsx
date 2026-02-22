@@ -3,11 +3,11 @@ import React from 'react';
 import { Image, Text, TouchableOpacity, View } from 'react-native';
 import { Cam } from '../types/cam';
 
-interface WebcamCardProps {
+interface CamCardProps {
   item: Cam;
 }
 
-export const WebcamCard: React.FC<WebcamCardProps> = React.memo(({ item }) => {
+export const CamCard: React.FC<CamCardProps> = React.memo(({ item }) => {
   const isOffline = item.status === 'offline';
 
   return (
@@ -75,3 +75,5 @@ export const WebcamCard: React.FC<WebcamCardProps> = React.memo(({ item }) => {
     </View>
   );
 });
+
+CamCard.displayName = 'CamCard';

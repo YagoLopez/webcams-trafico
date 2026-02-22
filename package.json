@@ -12,13 +12,18 @@
     "build:apk:local": "eas build --platform android --profile preview --local",
     "build:apk:remote": "eas build --platform android --profile preview",
     "fetch-webcams": "tsx scripts/fetch-webcams.ts",
-    "test": "jest"
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:all": "concurrently \"npm run test\" \"npm run test:e2e\""
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",
     "@react-navigation/bottom-tabs": "^7.4.0",
     "@react-navigation/elements": "^2.6.3",
     "@react-navigation/native": "^7.1.8",
+    "@tanstack/react-query": "^5.90.21",
     "axios": "^1.13.5",
     "expo": "~54.0.33",
     "expo-constants": "~18.0.13",
@@ -47,8 +52,13 @@
     "tailwindcss": "^3.3.2"
   },
   "devDependencies": {
-    "@types/jest": "^30.0.0",
+    "@playwright/test": "^1.58.2",
+    "@testing-library/jest-native": "^5.4.3",
+    "@testing-library/react-native": "^13.3.3",
+    "@types/jest": "29.5.14",
+    "@types/node": "^25.3.0",
     "@types/react": "~19.1.0",
+    "concurrently": "^9.2.1",
     "eslint": "^9.25.0",
     "eslint-config-expo": "~10.0.0",
     "jest": "^29.7.0",
@@ -57,5 +67,18 @@
     "tsx": "^4.21.0",
     "typescript": "~5.9.2"
   },
-  "private": true
+  "private": false,
+  "jest": {
+    "preset": "jest-expo",
+    "transformIgnorePatterns": [
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@exponent/.*|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@sentry/react-native|nativewind|react-native-css-interop|@tanstack/react-query)"
+    ],
+    "setupFilesAfterEnv": [
+      "@testing-library/jest-native/extend-expect"
+    ],
+    "testPathIgnorePatterns": [
+      "<rootDir>/tests/",
+      "<rootDir>/e2e/"
+    ]
+  }
 }

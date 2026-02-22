@@ -1,0 +1,35 @@
+
+Running 2 tests using 2 workers
+
+[1A[2K[1/2] [chromium] ÔÇ║ e2e\app.spec.ts:3:5 ÔÇ║ load home screen and check title
+[1A[2K[2/2] [chromium] ÔÇ║ e2e\app.spec.ts:11:5 ÔÇ║ open filters modal
+[1A[2K  1) [chromium] ÔÇ║ e2e\app.spec.ts:11:5 ÔÇ║ open filters modal ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+
+    Error: [2mexpect([22m[31mlocator[39m[2m).[22mtoBeVisible[2m([22m[2m)[22m failed
+
+    Locator: getByText('Filtros')
+    Expected: visible
+    Timeout: 5000ms
+    Error: element(s) not found
+
+    Call log:
+    [2m  - Expect "toBeVisible" with timeout 5000ms[22m
+    [2m  - waiting for getByText('Filtros')[22m
+
+
+      16 |
+      17 |   // Assert that the modal is visible by checking for its title.
+    > 18 |   await expect(page.getByText('Filtros')).toBeVisible();
+         |                                           ^
+      19 | });
+      20 |
+        at C:\Users\Yago\WebstormProjects\expo-android-project-3\e2e\app.spec.ts:18:43
+
+    Error Context: test-results\app-open-filters-modal-chromium\error-context.md
+
+
+[1A[2K  1 failed
+    [chromium] ÔÇ║ e2e\app.spec.ts:11:5 ÔÇ║ open filters modal ÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇÔöÇ
+  1 passed (9.5s)
+
+[36m  Serving HTML report at http://localhost:65093. Press Ctrl+C to quit.[39m
