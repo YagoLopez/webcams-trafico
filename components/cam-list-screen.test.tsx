@@ -4,6 +4,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { CamListScreen } from './cam-list-screen';
 
 jest.mock('expo-image', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { View } = require('react-native');
   return { Image: (props: any) => <View {...props} /> };
 });
@@ -40,7 +41,7 @@ jest.mock('../hooks/use-cams', () => ({
   }),
 }));
 
-describe('WebcamsListScreen', () => {
+describe('CamsListScreen', () => {
   test('renders the list cards directly based on mocked hooks', () => {
     // We don't need QueryClientProvider if we mock the hooks returning data!
     render(

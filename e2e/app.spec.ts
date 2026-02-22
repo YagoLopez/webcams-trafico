@@ -11,11 +11,12 @@ test('load home screen and check title', async ({ page }) => {
 test('open filters modal', async ({ page }) => {
   await page.goto('/');
 
-  // Click on the filters button (MaterialCommunityIcons "tune-vertical")
-  // Since it's an icon, we might need to find it by its accessibility label or a testId if available.
-  // Looking at webcams-list-header.tsx, there's no testId or label.
-  // I'll try to find it by its container if possible, or just skip for now to have a basic green test.
-
-  // Actually, I'll just check if the list header is there.
+  // Wait for the app to be fully rendered
   await expect(page.getByText('Cámaras DGT')).toBeVisible();
+
+  // Click the filters button until the modal appears to handle any hydration delays
+  await expect(async () => {
+    await page.getByTestId('open-filters-button').click();
+    await expect(page.getByText('Filtros', { exact: true })).toBeVisible({ timeout: 1000 });
+  }).toPass();
 });

@@ -35,6 +35,8 @@ const SelectItem = React.memo(({ item, isSelected, onSelect }: SelectItemProps) 
   );
 });
 
+SelectItem.displayName = 'SelectItem';
+
 export const SelectBox: React.FC<SelectBoxProps> = ({
   label,
   data,
@@ -143,3 +145,5 @@ export const SelectBox: React.FC<SelectBoxProps> = ({
     </View>
   );
 };
+
+SelectBox.displayName = 'SelectBox';

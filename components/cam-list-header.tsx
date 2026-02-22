@@ -19,6 +19,7 @@ export const CamListHeader: React.FC<CamsListHeaderProps> = ({ onOpenFilters }) 
         </Pressable>
         <Pressable
           onPress={onOpenFilters}
+          testID="open-filters-button"
           className="h-10 w-10 items-center justify-center rounded-full bg-primary/10"
         >
           <MaterialCommunityIcons name="tune-vertical" size={24} color="#137fec" />

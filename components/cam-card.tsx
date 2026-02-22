@@ -75,3 +75,5 @@ export const CamCard: React.FC<CamCardProps> = React.memo(({ item }) => {
     </View>
   );
 });
+
+CamCard.displayName = 'CamCard';

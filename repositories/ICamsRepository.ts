@@ -3,18 +3,18 @@ import { Cam } from '../types/cam';
 export type { CamFilters };
 
 export interface ICamsRepository {
-  /** Obtiene una lista de todas las cámaras */
+  /** Gets a list of all cameras */
   getAllCams(): Promise<Cam[]>;
 
-  /** Obtiene una cámara específica por su ID */
+  /** Gets a specific camera by its ID */
   getCamById(id: string): Promise<Cam | null>;
 
-  /** Obtiene una lista única y ordenada de todas las carreteras */
+  /** Gets a unique and sorted list of all roads */
   getAllRoads(): Promise<string[]>;
 
-  /** Obtiene una lista única y ordenada de todas las provincias */
+  /** Gets a unique and sorted list of all provinces */
   getAllProvinces(): Promise<string[]>;
 
-  /** Obtiene las cámaras aplicando los filtros de carretera y/o provincia */
+  /** Gets the cameras applying the road and/or province filters */
   getFilteredCams(filters: CamFilters): Promise<Cam[]>;
 }
