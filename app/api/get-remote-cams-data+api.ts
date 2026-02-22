@@ -70,36 +70,18 @@ export async function GET(request: Request) {
       const pointLocation = pointLocKey ? device[pointLocKey] : {};
 
       const coords = navigate(pointLocation, ['tpegPointLocation', 'point', 'pointCoordinates']);
-      let latitude: number | undefined;
-      let longitude: number | undefined;
-      if (coords) {
-        const latKey = findKey(coords, 'latitude');
-        const lonKey = findKey(coords, 'longitude');
-        if (latKey) latitude = Number(coords[latKey]);
-        if (lonKey) longitude = Number(coords[lonKey]);
-      }
-
-      let roadName = 'Unknown Road';
-      let roadDest = '';
+      const latRaw = navigate(coords, ['latitude']);
+      const lonRaw = navigate(coords, ['longitude']);
+      const latitude = latRaw !== undefined ? Number(latRaw) : undefined;
+      const longitude = lonRaw !== undefined ? Number(lonRaw) : undefined;
 
       const info = navigate(pointLocation, ['supplementaryPositionalDescription', 'roadInformation']);
-      if (info) {
-        const nameKey = findKey(info, 'roadName');
-        const destKey = findKey(info, 'roadDestination');
-        if (nameKey) roadName = info[nameKey];
-        if (destKey) roadDest = info[destKey];
-      }
-
-      let km = '';
-      let province = '';
+      const roadName = navigate(info, ['roadName']) ?? 'Unknown Road';
+      const roadDest = navigate(info, ['roadDestination']) ?? '';
 
       const data = navigate(pointLocation, ['tpegPointLocation', 'point', 'Extension', 'extendedTpegNonJunctionPoint']);
-      if (data) {
-        const kmKey = findKey(data, 'kilometerPoint');
-        const provKey = findKey(data, 'province');
-        if (kmKey) km = data[kmKey];
-        if (provKey) province = data[provKey];
-      }
+      const km = navigate(data, ['kilometerPoint']) ?? '';
+      const province = navigate(data, ['province']) ?? '';
 
       const webcam: CamData = {
         id: String(id),
