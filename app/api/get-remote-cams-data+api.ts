@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { XMLParser } from 'fast-xml-parser';
+import fs from 'fs';
+import path from 'path';
 
 // Internal type definition so the route depends entirely on itself
-export interface WebcamData {
+export interface CamData {
   id: string;
   imageUrl: string;
   road: string;
@@ -42,7 +44,7 @@ export async function GET(request: Request) {
     const devicesRaw = payload[deviceKey];
     const deviceList = Array.isArray(devicesRaw) ? devicesRaw : [devicesRaw];
 
-    const webcams: WebcamData[] = [];
+    const cams: CamData[] = [];
 
     const findKey = (obj: any, partial: string) => obj ? Object.keys(obj).find((k: string) => k.includes(partial)) : undefined;
 
@@ -99,7 +101,7 @@ export async function GET(request: Request) {
         if (provKey) province = data[provKey];
       }
 
-      const webcam: WebcamData = {
+      const webcam: CamData = {
         id: String(id),
         imageUrl: String(imageUrl),
         road: String(roadName),
@@ -110,10 +112,21 @@ export async function GET(request: Request) {
         longitude
       };
 
-      webcams.push(webcam);
+      cams.push(webcam);
     }
 
-    return Response.json(webcams);
+    const filePath = path.join(process.cwd(), 'data', 'webcams.json');
+    try {
+      const dir = path.dirname(filePath);
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir, { recursive: true });
+      }
+      await fs.promises.writeFile(filePath, JSON.stringify(cams, null, 2), 'utf-8');
+    } catch (writeError) {
+      console.error('Error writing webcams.json:', writeError);
+    }
+
+    return Response.json(cams);
 
   } catch (error) {
     console.error('Error fetching webcams API:', error);
