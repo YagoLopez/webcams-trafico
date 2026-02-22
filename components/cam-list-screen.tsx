@@ -1,4 +1,4 @@
-import { JsonCamsRepository } from '@/repositories/JsonCamsRepository';
+import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
 import React, { useCallback, useState } from 'react';
 import { ActivityIndicator, FlatList, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';

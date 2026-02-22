@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { CamFilters, ICamsRepository } from '../repositories/ICamsRepository';
+import { CamFilters, ICamsRepository } from '../lib/ICamsRepository';
 
 export const useRoads = (cams: ICamsRepository) => {
   return useQuery({
