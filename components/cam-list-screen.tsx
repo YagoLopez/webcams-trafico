@@ -28,7 +28,7 @@ export const CamListScreen = () => {
   ), []);
 
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-background-dark">
+    <SafeAreaView className="flex-1 w-full sm:w-[50%] bg-white dark:bg-background-dark">
       {/* Header */}
       <CamListHeader onOpenFilters={() => setIsFiltersModalVisible(true)} />
 
