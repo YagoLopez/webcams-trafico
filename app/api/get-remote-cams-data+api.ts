@@ -96,18 +96,6 @@ export async function GET(request: Request) {
 
       cams.push(webcam);
     }
-
-    const filePath = path.join(process.cwd(), 'data', 'webcams.json');
-    try {
-      const dir = path.dirname(filePath);
-      if (!fs.existsSync(dir)) {
-        fs.mkdirSync(dir, { recursive: true });
-      }
-      await fs.promises.writeFile(filePath, JSON.stringify(cams, null, 2), 'utf-8');
-    } catch (writeError) {
-      console.error('Error writing webcams.json:', writeError);
-    }
-
     return Response.json(cams);
 
   } catch (error) {
