@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react-native';
 import React from 'react';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
-import { CamListScreen } from './cam-list-screen';
+import { CamListScreen } from '../cam-list-screen';
 
 jest.mock('expo-image', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
@@ -25,7 +25,7 @@ jest.mock('react-native-safe-area-context', () => {
 });
 
 // Mock the custom hooks completely
-jest.mock('../hooks/use-cams', () => ({
+jest.mock('../../hooks/use-cams', () => ({
   useRoads: () => ({ data: ['A-1', 'A-2'], isLoading: false }),
   useProvinces: () => ({ data: ['MADRID', 'BARCELONA'], isLoading: false }),
   useFilteredCams: () => ({
