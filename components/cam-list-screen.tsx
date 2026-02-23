@@ -16,7 +16,7 @@ export const CamListScreen = () => {
   const [isFiltersModalVisible, setIsFiltersModalVisible] = useState(false);
   const cams = JsonCamsRepository.getInstance();
   const { width } = useWindowDimensions();
-  const numColumns = width >= 640 ? 2 : 1;
+  const numColumns = width >= 1280 ? 3 : width >= 640 ? 2 : 1;
 
   const { data: roads = [] } = useRoads(cams);
   const { data: provinces = [] } = useProvinces(cams);
@@ -26,7 +26,7 @@ export const CamListScreen = () => {
   });
 
   const renderItem = useCallback(({ item }: { item: Cam }) => (
-    <View className="px-1" style={{ width: numColumns === 2 ? '50%' : '100%' }}>
+    <View className="px-1" style={{ width: numColumns === 3 ? '33.33%' : numColumns === 2 ? '50%' : '100%' }}>
       <CamCard item={item} />
     </View>
   ), [numColumns]);
