@@ -35,7 +35,7 @@ export const CamCard: React.FC<CamCardProps> = React.memo(({ item }) => {
 
         {/* Road Badge Bottom Left */}
         <View className={`absolute left-3 bottom-3 rounded-lg px-2.5 py-1 shadow-sm ${isOffline ? 'bg-slate-500' : 'bg-primary'}`}>
-          <Text className="text-xs font-bold text-white">
+          <Text className="text-xs font-bold text-white" numberOfLines={1}>
             {item.road}
           </Text>
         </View>
@@ -45,21 +45,21 @@ export const CamCard: React.FC<CamCardProps> = React.memo(({ item }) => {
       <View className="flex flex-col p-4">
         <View className="flex flex-row items-start justify-between gap-4">
           <View className="flex-1">
-            <Text className={`text-base font-semibold ${isOffline ? 'text-slate-500 dark:text-slate-400' : 'text-[#111418] dark:text-white'}`}>
+            <Text className={`text-base font-semibold ${isOffline ? 'text-slate-500 dark:text-slate-400' : 'text-[#111418] dark:text-white'}`} numberOfLines={1}>
               {item.kilometer}
             </Text>
             <View className="mt-1 flex flex-row items-center gap-1.5">
               {isOffline ? (
                 <>
                   <MaterialIcons name="error" size={16} />
-                  <Text className="text-sm text-slate-400 dark:text-slate-500">
+                  <Text className="text-sm text-slate-400 dark:text-slate-500 flex-shrink" numberOfLines={1}>
                     Connection Lost
                   </Text>
                 </>
               ) : (
                 <>
                   <MaterialIcons name="location-on" size={16} />
-                  <Text className="text-sm text-slate-500 dark:text-slate-400">
+                  <Text className="text-sm text-slate-500 dark:text-slate-400 flex-shrink" numberOfLines={1}>
                     {item.location}
                   </Text>
                 </>
