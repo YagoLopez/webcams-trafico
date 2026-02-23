@@ -32,7 +32,7 @@ export const CamListScreen = () => {
   ), [numColumns]);
 
   return (
-    <SafeAreaView className="flex-1 w-full lg:w-[70%] bg-white dark:bg-background-dark">
+    <SafeAreaView className="flex-1 w-full md:w-[80%] lg:w-[70%] bg-white dark:bg-background-dark">
       {/* Header */}
       <CamListHeader onOpenFilters={() => setIsFiltersModalVisible(true)} />
 
