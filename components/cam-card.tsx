@@ -11,7 +11,7 @@ export const CamCard: React.FC<CamCardProps> = React.memo(({ item }) => {
   const isOffline = item.status === 'offline';
 
   return (
-    <View className={`flex flex-col overflow-hidden rounded-xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-sm mb-4 ${isOffline ? 'opacity-80' : ''}`}>
+    <View className={`flex flex-col overflow-hidden rounded-xl border border-slate-100 dark:border-slate-800 bg-white dark:bg-slate-900 shadow-md mb-4 ${isOffline ? 'opacity-80' : ''}`}>
       {/* Image Container */}
       <View className={`relative h-48 w-full overflow-hidden bg-slate-200 dark:bg-slate-800 ${isOffline ? 'items-center justify-center' : ''}`}>
         {isOffline ? (
