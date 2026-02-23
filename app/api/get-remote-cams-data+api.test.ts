@@ -5,6 +5,14 @@ import { GET } from './get-remote-cams-data+api';
 jest.mock('axios');
 const mockedAxios = axios as jest.Mocked<typeof axios>;
 
+jest.mock('fs', () => ({
+  existsSync: jest.fn().mockReturnValue(true),
+  mkdirSync: jest.fn(),
+  promises: {
+    writeFile: jest.fn().mockResolvedValue(undefined),
+  },
+}));
+
 describe('GET /get-remote-cams-data', () => {
   beforeEach(() => {
     jest.clearAllMocks();
