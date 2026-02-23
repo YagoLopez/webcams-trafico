@@ -1,6 +1,6 @@
 import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
 import React, { useCallback, useState } from 'react';
-import { ActivityIndicator, FlatList, View } from 'react-native';
+import { ActivityIndicator, FlatList, View, useWindowDimensions } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useFilteredCams, useProvinces, useRoads } from '../hooks/use-cams';
 import { Cam } from '../types/cam';
@@ -15,6 +15,8 @@ export const CamListScreen = () => {
   const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
   const [isFiltersModalVisible, setIsFiltersModalVisible] = useState(false);
   const cams = JsonCamsRepository.getInstance();
+  const { width } = useWindowDimensions();
+  const numColumns = width >= 1280 ? 3 : width >= 640 ? 2 : 1;
 
   const { data: roads = [] } = useRoads(cams);
   const { data: provinces = [] } = useProvinces(cams);
@@ -24,11 +26,13 @@ export const CamListScreen = () => {
   });
 
   const renderItem = useCallback(({ item }: { item: Cam }) => (
-    <CamCard item={item} />
-  ), []);
+    <View className="px-1" style={{ width: numColumns === 3 ? '33.33%' : numColumns === 2 ? '50%' : '100%' }}>
+      <CamCard item={item} />
+    </View>
+  ), [numColumns]);
 
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-background-dark">
+    <SafeAreaView className="flex-1 w-full md:w-[80%] lg:w-[70%] bg-white dark:bg-background-dark">
       {/* Header */}
       <CamListHeader onOpenFilters={() => setIsFiltersModalVisible(true)} />
 
@@ -54,10 +58,12 @@ export const CamListScreen = () => {
         </View>
       ) : (
         <FlatList
-          className="flex-1 bg-white dark:bg-background-dark px-4"
+          key={`camera-list-${numColumns}-cols`}
+          className="flex-1 bg-white dark:bg-background-dark px-2"
           data={filteredCams}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
+          numColumns={numColumns}
           contentContainerStyle={{ paddingBottom: 100 }}
           showsVerticalScrollIndicator={false}
         />

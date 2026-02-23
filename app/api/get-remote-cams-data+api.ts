@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { XMLParser } from 'fast-xml-parser';
+import fs from 'fs';
+import path from 'path';
 
 // Internal type definition so the route depends entirely on itself
-export interface WebcamData {
+export interface CamData {
   id: string;
   imageUrl: string;
   road: string;
@@ -42,7 +44,7 @@ export async function GET(request: Request) {
     const devicesRaw = payload[deviceKey];
     const deviceList = Array.isArray(devicesRaw) ? devicesRaw : [devicesRaw];
 
-    const webcams: WebcamData[] = [];
+    const cams: CamData[] = [];
 
     const findKey = (obj: any, partial: string) => obj ? Object.keys(obj).find((k: string) => k.includes(partial)) : undefined;
 
@@ -68,38 +70,20 @@ export async function GET(request: Request) {
       const pointLocation = pointLocKey ? device[pointLocKey] : {};
 
       const coords = navigate(pointLocation, ['tpegPointLocation', 'point', 'pointCoordinates']);
-      let latitude: number | undefined;
-      let longitude: number | undefined;
-      if (coords) {
-        const latKey = findKey(coords, 'latitude');
-        const lonKey = findKey(coords, 'longitude');
-        if (latKey) latitude = Number(coords[latKey]);
-        if (lonKey) longitude = Number(coords[lonKey]);
-      }
-
-      let roadName = 'Unknown Road';
-      let roadDest = '';
+      const latRaw = navigate(coords, ['latitude']);
+      const lonRaw = navigate(coords, ['longitude']);
+      const latitude = latRaw !== undefined ? Number(latRaw) : undefined;
+      const longitude = lonRaw !== undefined ? Number(lonRaw) : undefined;
 
       const info = navigate(pointLocation, ['supplementaryPositionalDescription', 'roadInformation']);
-      if (info) {
-        const nameKey = findKey(info, 'roadName');
-        const destKey = findKey(info, 'roadDestination');
-        if (nameKey) roadName = info[nameKey];
-        if (destKey) roadDest = info[destKey];
-      }
-
-      let km = '';
-      let province = '';
+      const roadName = navigate(info, ['roadName']) ?? 'Unknown Road';
+      const roadDest = navigate(info, ['roadDestination']) ?? '';
 
       const data = navigate(pointLocation, ['tpegPointLocation', 'point', 'Extension', 'extendedTpegNonJunctionPoint']);
-      if (data) {
-        const kmKey = findKey(data, 'kilometerPoint');
-        const provKey = findKey(data, 'province');
-        if (kmKey) km = data[kmKey];
-        if (provKey) province = data[provKey];
-      }
+      const km = navigate(data, ['kilometerPoint']) ?? '';
+      const province = navigate(data, ['province']) ?? '';
 
-      const webcam: WebcamData = {
+      const webcam: CamData = {
         id: String(id),
         imageUrl: String(imageUrl),
         road: String(roadName),
@@ -110,10 +94,9 @@ export async function GET(request: Request) {
         longitude
       };
 
-      webcams.push(webcam);
+      cams.push(webcam);
     }
-
-    return Response.json(webcams);
+    return Response.json(cams);
 
   } catch (error) {
     console.error('Error fetching webcams API:', error);
