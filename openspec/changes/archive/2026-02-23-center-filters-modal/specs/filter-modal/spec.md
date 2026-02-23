@@ -1,8 +1,4 @@
-<spec id="filter-modal">
-
-# Spec: Filter Modal
-
-## Requirements
+## MODIFIED Requirements
 
 ### Requirement: Acceso a Filtros vía Modal
 El sistema DEBE permitir al usuario acceder a los filtros de carretera y provincia a través de un botón que abre un modal, en lugar de mostrarlos directamente en la pantalla.
@@ -16,12 +12,7 @@ El modal DEBE aparecer centrado en la pantalla (horizontal y verticalmente) con 
 - **WHEN** el modal está abierto.
 - **THEN** deben ser visibles los SelectBox de "Filtrar carreteras" y "Filtrar provincias", así como el botón de "Borrar filtros" (si hay alguno aplicado).
 
-### Requirement: Persistencia de Selección
-La selección de filtros DEBE persistir tras cerrar el modal y actualizar la lista de cámaras.
-
-#### Scenario: Aplicación de Filtros
-- **WHEN** el usuario selecciona una carretera en el modal y lo cierra.
-- **THEN** la lista de cámaras en `WebcamsListScreen` debe mostrar solo las de esa carretera.
+## ADDED Requirements
 
 ### Requirement: Presentación del SelectBox Modal
 El modal interno del componente `SelectBox` (usado para buscar y seleccionar opciones dentro del `FiltersModal`) DEBE aparecer centrado horizontalmente pero posicionado hacia la parte superior de la pantalla. DEBE utilizar una animación de fundido (fade), tener bordes redondeados en todos sus lados, y tener un ancho y alto máximos.
@@ -30,5 +21,3 @@ El modal interno del componente `SelectBox` (usado para buscar y seleccionar opc
 - **WHEN** el usuario toca el selector de carretera o provincia para abrir las opciones.
 - **THEN** el modal interno del SelectBox aparece con animación fade.
 - **THEN** el modal interno se posiciona cerca de la parte superior de la pantalla para evitar que sea cubierto por el teclado virtual en dispositivos móviles.
-
-</spec>

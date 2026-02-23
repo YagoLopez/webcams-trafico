@@ -26,15 +26,15 @@ export const FiltersModal = ({
 }: FiltersModalProps) => {
   return (
     <Modal
-      animationType="slide"
+      animationType="fade"
       transparent={true}
       visible={visible}
       onRequestClose={onClose}
     >
       <TouchableWithoutFeedback onPress={onClose}>
-        <View className="flex-1 justify-end bg-black/50">
+        <View className="flex-1 justify-center items-center p-4 bg-black/50">
           <TouchableWithoutFeedback>
-            <View className="bg-white dark:bg-background-dark rounded-t-[32px] px-6 pt-4 pb-12 shadow-xl">
+            <View className="bg-white dark:bg-background-dark rounded-3xl w-full max-w-md px-6 pt-4 pb-12 shadow-xl">
               {/* Modal Header */}
               <View className="w-12 h-1.5 bg-slate-200 dark:bg-slate-700 rounded-full self-center mb-6" />
 
