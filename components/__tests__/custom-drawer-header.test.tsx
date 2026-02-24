@@ -14,6 +14,10 @@ jest.mock('@react-navigation/native', () => ({
   },
 }));
 
+jest.mock('../../hooks/use-color-scheme', () => ({
+  useColorScheme: jest.fn(() => 'light'),
+}));
+
 jest.mock('../../store/use-app-store', () => ({
   useAppStore: jest.fn(),
 }));
@@ -43,5 +47,23 @@ describe('CustomDrawerHeader', () => {
     fireEvent.press(button);
 
     expect(mockDispatch).toHaveBeenCalled();
+  });
+
+  it('opens filter modal on filter icon press', () => {
+    const mockSetIsFilterModalVisible = jest.fn();
+    (useAppStore as unknown as jest.Mock).mockImplementation((selector) => {
+      // Return the mock function for setIsFilterModalVisible, and an arbitrary number for camCount
+      if (selector.toString().includes('setIsFilterModalVisible')) {
+        return mockSetIsFilterModalVisible;
+      }
+      return 5;
+    });
+
+    render(<CustomDrawerHeader title="Test Title" />);
+
+    const filterButton = screen.getByTestId('open-filters-button');
+    fireEvent.press(filterButton);
+
+    expect(mockSetIsFilterModalVisible).toHaveBeenCalledWith(true);
   });
 });

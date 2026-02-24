@@ -1,3 +1,4 @@
+import { useColorScheme } from '@/hooks/use-color-scheme';
 import { useAppStore } from '@/store/use-app-store';
 import { DrawerActions } from '@react-navigation/native';
 import { useNavigation } from 'expo-router';
@@ -13,6 +14,9 @@ interface CustomDrawerHeaderProps {
 export function CustomDrawerHeader({ title }: CustomDrawerHeaderProps) {
   const navigation = useNavigation();
   const camCount = useAppStore((state) => state.camCount);
+  const setIsFilterModalVisible = useAppStore((state) => state.setIsFilterModalVisible);
+  const colorScheme = useColorScheme();
+  const iconColor = colorScheme === 'dark' ? '#fff' : '#333';
 
   return (
     <SafeAreaView edges={['top']} className="bg-white dark:bg-background-dark">
@@ -22,14 +26,23 @@ export function CustomDrawerHeader({ title }: CustomDrawerHeaderProps) {
             testID="drawer-menu-button"
             onPress={() => navigation.dispatch(DrawerActions.openDrawer())}
           >
-            <IconSymbol size={28} name="line.3.horizontal" color="#333" />
+            <IconSymbol size={28} name="line.3.horizontal" color={iconColor} />
           </TouchableOpacity>
           <Text className="text-xl font-semibold dark:text-white">{title}</Text>
         </View>
-        <View className="bg-blue-100 dark:bg-blue-900/40 px-3 py-1 rounded-full">
-          <Text className="text-blue-700 dark:text-blue-300 font-medium">
-            {camCount} cámaras
-          </Text>
+        <View className="flex-row items-center gap-3">
+          <View className="bg-blue-100 dark:bg-blue-900/40 px-3 py-1 rounded-full">
+            <Text className="text-blue-700 dark:text-blue-300 font-medium">
+              {camCount} cámaras
+            </Text>
+          </View>
+          <TouchableOpacity
+            testID="open-filters-button"
+            onPress={() => setIsFilterModalVisible(true)}
+            className="p-1"
+          >
+            <IconSymbol size={24} name="line.3.horizontal.decrease.circle" color={iconColor} />
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
