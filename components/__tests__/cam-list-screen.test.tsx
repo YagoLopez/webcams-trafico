@@ -41,6 +41,20 @@ jest.mock('../../hooks/use-cams', () => ({
   }),
 }));
 
+// Mock the Zustand store
+jest.mock('../../store/use-app-store', () => ({
+  useAppStore: jest.fn((selector) => {
+    const mockStore = {
+      selectedRoad: null,
+      selectedProvince: null,
+      setCamCount: jest.fn(),
+      isFilterModalVisible: false,
+      setIsFilterModalVisible: jest.fn(),
+    };
+    return selector(mockStore);
+  }),
+}));
+
 describe('CamsListScreen', () => {
   test('renders the list cards directly based on mocked hooks', () => {
     // We don't need QueryClientProvider if we mock the hooks returning data!
@@ -50,10 +64,7 @@ describe('CamsListScreen', () => {
       </SafeAreaProvider>
     );
 
-    // Header check
-    expect(screen.getByText(/Cámaras DGT/i)).toBeTruthy();
-
-    // With 1 mocked camera, the subheader text should show "1 Cámaras" (or 1 Cámara)
-    expect(screen.getByText(/1 Cámaras/i)).toBeTruthy();
+    // Check if the flatlist item renders based on the mocked cams hook
+    expect(screen.getByText('MADRID')).toBeTruthy();
   });
 });

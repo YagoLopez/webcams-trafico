@@ -20,6 +20,8 @@ const MAPPING = {
   'chevron.right': 'chevron-right',
   'video.fill': 'videocam',
   'list.bullet': 'list',
+  'line.3.horizontal': 'menu',
+  'line.3.horizontal.decrease.circle': 'filter-list',
 } as IconMapping;
 
 /**
