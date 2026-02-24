@@ -92,12 +92,12 @@ export const SelectBox: React.FC<SelectBoxProps> = ({
 
       <Modal
         visible={modalVisible}
-        animationType="slide"
+        animationType="fade"
         transparent={true}
         onRequestClose={() => setModalVisible(false)}
       >
-        <View className="flex-1 bg-black/50 justify-end">
-          <View className="bg-white dark:bg-slate-900 rounded-t-3xl h-[80%] w-full overflow-hidden">
+        <View className="flex-1 bg-black/50 justify-start pt-20 items-center">
+          <View className="bg-white dark:bg-slate-900 rounded-3xl max-h-[80%] max-w-md w-[90%] overflow-hidden">
             {/* Header */}
             <View className="flex-row items-center justify-between px-4 py-4 border-b border-slate-100 dark:border-slate-800">
               <Text className="text-xl font-bold text-[#111418] dark:text-white">{label}</Text>
