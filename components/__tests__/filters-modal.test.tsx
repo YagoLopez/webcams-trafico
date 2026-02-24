@@ -30,7 +30,7 @@ describe('<FiltersModal />', () => {
   });
 
   it('applies the correct centered layout classes to container views', () => {
-    const { getByText } = render(
+    const { getByTestId, getByText } = render(
       <FiltersModal
         visible={true}
         onClose={jest.fn()}
@@ -43,8 +43,18 @@ describe('<FiltersModal />', () => {
       />
     );
 
-    // Testing dynamic CSS classes applied via NativeWind can be tricky in Jest without a full layout mock.
-    // At minimum, we ensure it renders without crashing by checking for an expected element.
+    // Verify it renders without crashing by checking for an expected element
     expect(getByText('Aplicar Filtros')).toBeTruthy();
+
+    const overlay = getByTestId('filters-modal-overlay');
+    const content = getByTestId('filters-modal-content');
+
+    // Assert overlay layout classes
+    expect(overlay.props.className).toContain('justify-center');
+    expect(overlay.props.className).toContain('items-center');
+    expect(overlay.props.className).toContain('p-4');
+
+    // Assert content layout classes
+    expect(content.props.className).toContain('max-w-md');
   });
 });

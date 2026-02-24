@@ -28,6 +28,3 @@ rules:
   unit-tests:
     - "Clearly indicate the testing technique or pattern to use for each unit"
     - "Document necessary mocks and spies"
-  e2e-tests:
-    - "Describe the user's step-by-step in each flow"
-    - "Ensure the most common error cases are covered"

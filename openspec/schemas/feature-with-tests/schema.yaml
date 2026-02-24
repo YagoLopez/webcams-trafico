@@ -155,22 +155,10 @@ artifacts:
     requires:
       - tasks
 
-  - id: e2e-tests
-    generates: tests/e2e.md
-    description: Plan and record of end-to-end (E2E) tests for the change
-    template: e2e-tests.md
-    instruction: |
-      Create a plan for the end-to-end tests to verify user flows and scenarios 
-      described in the specs. 
-      Ensure critical flows are tested from the user's perspective.
-    requires:
-      - tasks
-      - unit-tests
-
 apply:
-  requires: [e2e-tests]
+  requires: [unit-tests]
   tracks: tasks.md
   instruction: |
     Read context files, work through pending tasks, mark complete as you go.
-    Ensure you also implement and verify the unit tests and E2E tests.
+    Ensure you also implement and verify the unit tests.
     Pause if you hit blockers or need clarification.
