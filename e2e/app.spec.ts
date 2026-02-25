@@ -5,14 +5,14 @@ test('load home screen and check title', async ({ page }) => {
 
   // Look for the title "Mis Cámaras"
   // Note: react-native-web might render this as a div or span depending on the implementation
-  await expect(page.getByText('Mis Cámaras').first()).toBeVisible();
+  await expect(page.getByText('Listado Cámaras').first()).toBeVisible();
 });
 
 test('open filters modal', async ({ page }) => {
   await page.goto('/');
 
   // Wait for the app to be fully rendered
-  await expect(page.getByText('Mis Cámaras').first()).toBeVisible();
+  await expect(page.getByText('Listado Cámaras').first()).toBeVisible();
 
   // Click the filters button until the modal appears to handle any hydration delays
   await expect(async () => {
@@ -25,7 +25,7 @@ test('open drawer menu', async ({ page }) => {
   await page.goto('/');
 
   // Wait for the app to be fully rendered
-  await expect(page.getByText('Mis Cámaras').first()).toBeVisible();
+  await expect(page.getByText('Listado Cámaras').first()).toBeVisible();
 
   // Click the hamburger menu
   await page.getByTestId('drawer-menu-button').click();
@@ -39,7 +39,7 @@ test('filter icon changes background color when filters are applied', async ({ p
   await page.goto('/');
 
   // Wait for the app to be fully rendered
-  await expect(page.getByText('Mis Cámaras').first()).toBeVisible();
+  await expect(page.getByText('Listado Cámaras').first()).toBeVisible();
 
   const filterButton = page.getByTestId('open-filters-button');
 
@@ -65,7 +65,7 @@ test('filter icon changes background color when filters are applied', async ({ p
   await optionToClick.click();
 
   // 5. Apply filters (Close modal button)
-  await page.getByText('Aplicar Filtros').click();
+  await page.getByText('Aplicar').click();
 
   // 6. Verify the filter button now has the red background
   await expect(filterButton).toHaveCSS('background-color', 'rgb(220, 38, 38)');

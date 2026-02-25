@@ -1,5 +1,6 @@
 import { fireEvent, render } from '@testing-library/react-native';
 import React from 'react';
+import { Modal } from 'react-native';
 import { SelectBox } from '../ui/select-box';
 
 // Mock MaterialIcons to avoid font loading issues in Jest
@@ -36,7 +37,6 @@ describe('<SelectBox />', () => {
     fireEvent.press(getByText('Select Option'));
 
     // Check if Modal has animationType="fade"
-    const { Modal } = require('react-native');
     const modal = UNSAFE_getByType(Modal);
     expect(modal.props.animationType).toBe('fade');
 

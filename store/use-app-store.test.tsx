@@ -1,4 +1,4 @@
-import { act } from '@testing-library/react-hooks';
+import { act } from '@testing-library/react-native';
 import { useAppStore } from './use-app-store';
 
 describe('useAppStore', () => {

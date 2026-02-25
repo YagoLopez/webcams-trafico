@@ -23,8 +23,6 @@ describe('JsonCamsRepository', () => {
 
     // Check sorting (simple check)
     if (roads.length >= 2) {
-      const roadA = roads[0];
-      const roadB = roads[1];
       // Basic check that it doesn't throw and looks sorted
       expect(roads).toEqual([...roads].sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' })));
     }

@@ -1,5 +1,6 @@
 import { render } from '@testing-library/react-native';
 import React from 'react';
+import { Modal } from 'react-native';
 import { FiltersModal } from '../filters-modal';
 
 // Mock MaterialIcons to avoid font loading issues in Jest
@@ -24,7 +25,6 @@ describe('<FiltersModal />', () => {
     expect(getByText('Filtros')).toBeTruthy();
 
     // Check if Modal has animationType="fade"
-    const { Modal } = require('react-native');
     const modal = UNSAFE_getByType(Modal);
     expect(modal.props.animationType).toBe('fade');
   });
@@ -44,7 +44,7 @@ describe('<FiltersModal />', () => {
     );
 
     // Verify it renders without crashing by checking for an expected element
-    expect(getByText('Aplicar Filtros')).toBeTruthy();
+    expect(getByText('Aplicar')).toBeTruthy();
 
     const overlay = getByTestId('filters-modal-overlay');
     const content = getByTestId('filters-modal-content');

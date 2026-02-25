@@ -2,7 +2,7 @@ import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
 import { useAppStore } from '@/store/use-app-store';
 import React, { useCallback, useEffect } from 'react';
 import { ActivityIndicator, FlatList, View, useWindowDimensions } from 'react-native';
-import { useFilteredCams, useProvinces, useRoads } from '../hooks/use-cams';
+import { useFilteredCams } from '../hooks/use-cams';
 import { Cam } from '../types/cam';
 import { CamCard } from './cam-card';
 
@@ -14,8 +14,6 @@ export const CamListScreen = () => {
   const { width } = useWindowDimensions();
   const numColumns = width >= 1280 ? 3 : width >= 640 ? 2 : 1;
 
-  const { data: roads = [] } = useRoads(cams);
-  const { data: provinces = [] } = useProvinces(cams);
   const { data: filteredCams = [], isLoading } = useFilteredCams(cams, {
     road: selectedRoad,
     province: selectedProvince,

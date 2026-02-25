@@ -52,8 +52,8 @@ export default function DrawerLayout() {
         <Drawer.Screen
           name="index"
           options={{
-            title: 'Listado Camaras',
-            drawerLabel: 'Listado Camaras',
+            title: 'Listado Cámaras',
+            drawerLabel: 'Listado Cámaras',
             drawerIcon: ({ color }) => <IconSymbol size={28} name="list.bullet" color={color} />,
           }}
         />
