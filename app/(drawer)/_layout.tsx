@@ -29,6 +29,13 @@ export default function DrawerLayout() {
         screenOptions={{
           drawerActiveTintColor: Colors[colorScheme ?? 'light'].tint,
           headerShown: true,
+          drawerStyle: {
+            borderTopRightRadius: 0,
+            borderBottomRightRadius: 0,
+          },
+          drawerItemStyle: {
+            borderRadius: 10,
+          },
           header: ({ route, options }) => {
             const title =
               typeof options.headerTitle === 'string'
