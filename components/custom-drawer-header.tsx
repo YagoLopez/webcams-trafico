@@ -14,6 +14,10 @@ export function CustomDrawerHeader({ title }: CustomDrawerHeaderProps) {
   const navigation = useNavigation();
   const camCount = useAppStore((state) => state.camCount);
   const setIsFilterModalVisible = useAppStore((state) => state.setIsFilterModalVisible);
+  const selectedRoad = useAppStore((state) => state.selectedRoad);
+  const selectedProvince = useAppStore((state) => state.selectedProvince);
+
+  const isFilterActive = !!(selectedRoad || selectedProvince);
 
   return (
     <SafeAreaView
@@ -41,7 +45,7 @@ export function CustomDrawerHeader({ title }: CustomDrawerHeaderProps) {
           <Pressable
             testID="open-filters-button"
             onPress={() => setIsFilterModalVisible(true)}
-            className="p-1 active:opacity-60"
+            className={`p-1.5 rounded-full active:opacity-60 ${isFilterActive ? 'bg-red-600' : ''}`}
           >
             <IconSymbol size={24} name="slider.horizontal.3" color="#fff" />
           </Pressable>

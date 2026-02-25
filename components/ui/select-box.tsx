@@ -24,6 +24,7 @@ const SelectItem = React.memo(({ item, isSelected, onSelect }: SelectItemProps) 
 
   return (
     <Pressable
+      testID={`select-item-${item.replace(/\s+/g, '-').toLowerCase()}`}
       className="py-4 border-b border-slate-100 dark:border-slate-800 flex-row items-center justify-between active:opacity-70"
       onPress={handlePress}
     >
