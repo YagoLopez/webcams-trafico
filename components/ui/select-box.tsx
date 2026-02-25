@@ -1,6 +1,6 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import React, { useCallback, useMemo, useState } from 'react';
-import { FlatList, Modal, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { FlatList, Modal, Pressable, Text, TextInput, View } from 'react-native';
 
 interface SelectBoxProps {
   label: string;
@@ -23,15 +23,15 @@ const SelectItem = React.memo(({ item, isSelected, onSelect }: SelectItemProps) 
   }, [item, onSelect]);
 
   return (
-    <TouchableOpacity
-      className="py-4 border-b border-slate-100 dark:border-slate-800 flex-row items-center justify-between"
+    <Pressable
+      className="py-4 border-b border-slate-100 dark:border-slate-800 flex-row items-center justify-between active:opacity-70"
       onPress={handlePress}
     >
       <Text className={`text-base ${isSelected ? 'font-bold text-blue-600' : 'text-[#111418] dark:text-white'}`}>
         {item}
       </Text>
       {isSelected && <MaterialIcons name="check" size={20} color="#2563eb" />}
-    </TouchableOpacity>
+    </Pressable>
   );
 });
 
@@ -77,18 +77,18 @@ export const SelectBox: React.FC<SelectBoxProps> = ({
         {label}
       </Text>
 
-      <TouchableOpacity
+      <Pressable
         onPress={() => {
           setSearchQuery('');
           setModalVisible(true);
         }}
-        className="flex-row items-center justify-between h-12 px-4 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700"
+        className="flex-row items-center justify-between h-12 px-4 bg-slate-100 dark:bg-slate-800 rounded-xl border border-slate-200 dark:border-slate-700 active:opacity-70"
       >
         <Text className="text-base font-medium text-[#111418] dark:text-white">
           {value || placeholder}
         </Text>
         <MaterialIcons name="arrow-drop-down" size={24} color="#64748b" />
-      </TouchableOpacity>
+      </Pressable>
 
       <Modal
         visible={modalVisible}
@@ -101,9 +101,9 @@ export const SelectBox: React.FC<SelectBoxProps> = ({
             {/* Header */}
             <View className="flex-row items-center justify-between px-4 py-4 border-b border-slate-100 dark:border-slate-800">
               <Text className="text-xl font-bold text-[#111418] dark:text-white">{label}</Text>
-              <TouchableOpacity onPress={() => setModalVisible(false)} className="p-2">
+              <Pressable onPress={() => setModalVisible(false)} className="p-2 active:opacity-60">
                 <MaterialIcons name="close" size={24} color="#64748b" />
-              </TouchableOpacity>
+              </Pressable>
             </View>
 
             {/* Search Input */}
@@ -119,9 +119,9 @@ export const SelectBox: React.FC<SelectBoxProps> = ({
                   autoCorrect={false}
                 />
                 {searchQuery.length > 0 && (
-                  <TouchableOpacity onPress={() => setSearchQuery('')}>
+                  <Pressable onPress={() => setSearchQuery('')} className="active:opacity-60">
                     <MaterialIcons name="close" size={18} color="#94a3b8" />
-                  </TouchableOpacity>
+                  </Pressable>
                 )}
               </View>
             </View>

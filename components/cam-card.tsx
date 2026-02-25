@@ -1,6 +1,6 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import React from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Pressable, Text, View } from 'react-native';
 import { Cam } from '../types/cam';
 
 interface CamCardProps {
@@ -67,9 +67,9 @@ export const CamCard: React.FC<CamCardProps> = React.memo(({ item }) => {
             </View>
           </View>
 
-          <TouchableOpacity onPress={() => alert('Favorite toggled!')}>
+          <Pressable onPress={() => alert('Favorite toggled!')} className="active:opacity-60">
             <MaterialIcons name="favorite-border" size={24} color="#cbd5e1" />
-          </TouchableOpacity>
+          </Pressable>
         </View>
       </View>
     </View>
