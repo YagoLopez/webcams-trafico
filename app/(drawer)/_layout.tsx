@@ -75,8 +75,8 @@ export default function DrawerLayout() {
         provinces={provinces}
         selectedRoad={useAppStore((state) => state.selectedRoad)}
         selectedProvince={useAppStore((state) => state.selectedProvince)}
-        onSelectRoad={(road) => useAppStore.getState().setSelectedRoad(road)}
-        onSelectProvince={(province) => useAppStore.getState().setSelectedProvince(province)}
+        onSelectRoad={useAppStore.getState().setSelectedRoad}
+        onSelectProvince={useAppStore.getState().setSelectedProvince}
       />
     </>
   );
