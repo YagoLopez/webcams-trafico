@@ -39,7 +39,7 @@ export function CustomDrawerHeader({ title }: CustomDrawerHeaderProps) {
         <View className="flex-row items-center gap-3">
           <View className="bg-white/20 dark:bg-blue-900/40 px-3 py-1 rounded-lg">
             <Text className="text-white dark:text-blue-300 font-medium">
-              {camCount} cámaras
+              {camCount} cams
             </Text>
           </View>
           <Pressable

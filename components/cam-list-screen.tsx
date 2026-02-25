@@ -32,7 +32,7 @@ export const CamListScreen = () => {
   ), [numColumns]);
 
   return (
-    <View className="flex-1 w-full bg-white dark:bg-background-dark">
+    <View className="flex-1 w-full lg:w-[70%] bg-white dark:bg-background-dark">
       {/* List / Loading indicator */}
       {isLoading ? (
         <View className="flex-1 items-center justify-center">

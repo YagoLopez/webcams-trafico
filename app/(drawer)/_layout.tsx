@@ -9,6 +9,7 @@ import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
 import { useAppStore } from '@/store/use-app-store';
 import { Drawer } from 'expo-router/drawer';
 import React from 'react';
+import { Dimensions } from 'react-native';
 
 export default function DrawerLayout() {
   const colorScheme = useColorScheme();
@@ -36,6 +37,8 @@ export default function DrawerLayout() {
           drawerItemStyle: {
             borderRadius: 10,
           },
+          swipeEnabled: true,
+          swipeEdgeWidth: Dimensions.get('window').width, // Allows swiping from ANYWHERE on the screen
           header: ({ route, options }) => {
             const title =
               typeof options.headerTitle === 'string'
@@ -49,8 +52,8 @@ export default function DrawerLayout() {
         <Drawer.Screen
           name="index"
           options={{
-            title: 'Mis Cámaras',
-            drawerLabel: 'Mis Cámaras',
+            title: 'Listado Camaras',
+            drawerLabel: 'Listado Camaras',
             drawerIcon: ({ color }) => <IconSymbol size={28} name="list.bullet" color={color} />,
           }}
         />
