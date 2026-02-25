@@ -1,6 +1,7 @@
 ---
 description: Archive multiple completed changes at once
 ---
+// turbo-all
 
 Archive multiple completed changes in a single operation.
 

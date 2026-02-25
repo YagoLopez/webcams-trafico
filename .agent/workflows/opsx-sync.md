@@ -1,6 +1,7 @@
 ---
 description: Sync delta specs from a change to main specs
 ---
+// turbo-all
 
 Sync delta specs from a change to main specs.
 

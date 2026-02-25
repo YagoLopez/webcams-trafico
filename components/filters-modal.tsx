@@ -88,7 +88,7 @@ export const FiltersModal = ({
                   onPress={onClose}
                   className="mt-4 bg-[#137fec] py-4 rounded-xl items-center"
                 >
-                  <Text className="text-white font-bold text-base">Aplicar Filtros</Text>
+                  <Text className="text-white font-bold text-base">Aplicar</Text>
                 </Pressable>
               </View>
             </View>
