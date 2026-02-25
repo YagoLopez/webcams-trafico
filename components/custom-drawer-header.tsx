@@ -41,7 +41,7 @@ export function CustomDrawerHeader({ title }: CustomDrawerHeaderProps) {
             onPress={() => setIsFilterModalVisible(true)}
             className="p-1"
           >
-            <IconSymbol size={24} name="line.3.horizontal.decrease.circle" color={iconColor} />
+            <IconSymbol size={24} name="slider.horizontal.3" color={iconColor} />
           </TouchableOpacity>
         </View>
       </View>
