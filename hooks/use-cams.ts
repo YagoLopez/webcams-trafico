@@ -21,3 +21,11 @@ export const useFilteredCams = (cams: ICamsRepository, filters: CamFilters) => {
     queryFn: () => cams.getFilteredCams(filters),
   });
 };
+
+export const useCamById = (cams: ICamsRepository, id: string) => {
+  return useQuery({
+    queryKey: ['cam', id],
+    queryFn: () => cams.getCamById(id),
+    enabled: !!id,
+  });
+};
