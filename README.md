@@ -1,50 +1,104 @@
-# Welcome to your Expo app 👋
+# Traffic Webcams App
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A universal React Native application built with [Expo](https://expo.dev) that allows users to browse and view traffic webcams across different platforms.
 
-## Get started
+## 🚀 Features
 
-1. Install dependencies
+- **Cross-Platform Support**: Seamlessly runs on Web, Android, and iOS.
+- **Modern Navigation**: Implements file-based routing with Expo Router and custom drawer navigation.
+- **State & Data Management**: Leverages `zustand` for efficient global state and `@tanstack/react-query` for asynchronous data handling.
+- **Styling**: Beautiful and responsive UI crafted with `nativewind` (Tailwind CSS for React Native).
+- **Robust Testing**: Comprehensive testing strategy including unit tests and end-to-end (E2E) tests.
+- **Offline/Local Data Management**: Built-in scripts to fetch, parse, and store webcam data locally for fast access.
 
-   ```bash
-   npm install
-   ```
+## 🛠️ Technologies Used
 
-2. Start the app
+- **Framework**: [React Native](https://reactnative.dev/) & [Expo](https://expo.dev/) (SDK 54)
+- **Routing**: [Expo Router](https://docs.expo.dev/router/introduction/)
+- **State Management**: [Zustand](https://zustand-demo.pmnd.rs/)
+- **Data Fetching**: [TanStack React Query](https://tanstack.com/query/latest)
+- **Styling**: [Nativewind](https://www.nativewind.dev/) (Tailwind CSS 3.x)
+- **Testing**: [Jest](https://jestjs.io/) (Unit) & [Playwright](https://playwright.dev/) (E2E)
+- **Build Service**: [EAS Build](https://expo.dev/eas)
 
-   ```bash
-   npx expo start
-   ```
+## 📦 Installation
 
-In the output, you'll find options to open the app in a
-
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
+1. Ensure you have Node.js and npm installed.
+2. Clone the repository and navigate to the project directory.
+3. Install the dependencies:
 
 ```bash
-npm run reset-project
+npm install
 ```
 
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
+## 🎮 Usage
 
-## Learn more
+### Development Server
 
-To learn more about developing your project with Expo, look at the following resources:
+To start the Expo development server, run:
 
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
+```bash
+npm start
+```
 
-## Join the community
+### Running on Specific Platforms
 
-Join our community of developers creating universal apps.
+- **Web**: `npm run web` (Starts the app in the browser)
+- **Android**: `npm run android` (Requires an Android emulator or connected device)
+- **iOS**: `npm run ios` (Requires macOS and Xcode simulator)
 
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+### Fetching Webcam Data
+
+To synchronize or update the local `webcams.json` file with the most recent remote data, run:
+
+```bash
+npm run fetch-webcams
+```
+
+## 🧪 Testing
+
+The project is highly tested to ensure code reliability across the board.
+
+- **Run all tests** (Unit + E2E simultaneously):
+  ```bash
+  npm run test:all
+  ```
+
+- **Run Unit Tests (Jest)**:
+  ```bash
+  npm run test
+  # To run tests in watch mode:
+  npm run test:watch
+  ```
+
+- **Run End-to-End Tests (Playwright)**:
+  ```bash
+  npm run test:e2e
+  # To run E2E tests with the Playwright UI:
+  npm run test:e2e:ui
+  ```
+
+## 🏗️ Building for Production
+
+This project is configured to use Expo Application Services (EAS) for building.
+
+To build an Android APK:
+
+- **Local Build** (Requires local Android SDK environment):
+  ```bash
+  npm run build:apk:local
+  ```
+
+- **Remote Build (EAS)**:
+  ```bash
+  npm run build:apk:remote
+  ```
+
+## 📂 Project Structure Overview
+
+- `/app` - Contains the screens and file-based routing logic (Expo Router).
+- `/components` - Reusable UI components used throughout the application.
+- `/e2e` - Playwright configuration and End-to-End test suites.
+- `/scripts` - Utilities such as the `fetch-webcams.ts` script for managing data.
+- `/tests` - Jest configuration and unit tests.
+- `/assets` - Static resources like images, icons, and fonts.
