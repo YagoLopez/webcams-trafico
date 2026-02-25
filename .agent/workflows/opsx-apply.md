@@ -1,6 +1,7 @@
 ---
 description: Implement tasks from an OpenSpec change (Experimental)
 ---
+// turbo-all
 
 Implement tasks from an OpenSpec change.
 

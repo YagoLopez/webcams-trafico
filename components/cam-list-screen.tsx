@@ -1,29 +1,27 @@
 import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
-import React, { useCallback, useState } from 'react';
+import { useAppStore } from '@/store/use-app-store';
+import React, { useCallback, useEffect } from 'react';
 import { ActivityIndicator, FlatList, View, useWindowDimensions } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { useFilteredCams, useProvinces, useRoads } from '../hooks/use-cams';
+import { useFilteredCams } from '../hooks/use-cams';
 import { Cam } from '../types/cam';
 import { CamCard } from './cam-card';
-import { CamListHeader } from './cam-list-header';
-import { CamListSubheader } from './cam-list-subheader';
-import { FiltersModal } from './filters-modal';
-
 
 export const CamListScreen = () => {
-  const [selectedRoad, setSelectedRoad] = useState<string | null>(null);
-  const [selectedProvince, setSelectedProvince] = useState<string | null>(null);
-  const [isFiltersModalVisible, setIsFiltersModalVisible] = useState(false);
+  const selectedRoad = useAppStore((state) => state.selectedRoad);
+  const selectedProvince = useAppStore((state) => state.selectedProvince);
+  const setCamCount = useAppStore((state) => state.setCamCount);
   const cams = JsonCamsRepository.getInstance();
   const { width } = useWindowDimensions();
   const numColumns = width >= 1280 ? 3 : width >= 640 ? 2 : 1;
 
-  const { data: roads = [] } = useRoads(cams);
-  const { data: provinces = [] } = useProvinces(cams);
   const { data: filteredCams = [], isLoading } = useFilteredCams(cams, {
     road: selectedRoad,
     province: selectedProvince,
   });
+
+  useEffect(() => {
+    setCamCount(filteredCams.length);
+  }, [filteredCams.length, setCamCount]);
 
   const renderItem = useCallback(({ item }: { item: Cam }) => (
     <View className="px-1" style={{ width: numColumns === 3 ? '33.33%' : numColumns === 2 ? '50%' : '100%' }}>
@@ -32,25 +30,7 @@ export const CamListScreen = () => {
   ), [numColumns]);
 
   return (
-    <SafeAreaView className="flex-1 w-full md:w-[80%] lg:w-[70%] bg-white dark:bg-background-dark">
-      {/* Header */}
-      <CamListHeader onOpenFilters={() => setIsFiltersModalVisible(true)} />
-
-      {/* Subheader */}
-      <CamListSubheader cameraCount={filteredCams.length} />
-
-      {/* Filters Modal */}
-      <FiltersModal
-        visible={isFiltersModalVisible}
-        onClose={() => setIsFiltersModalVisible(false)}
-        roads={roads}
-        provinces={provinces}
-        selectedRoad={selectedRoad}
-        selectedProvince={selectedProvince}
-        onSelectRoad={setSelectedRoad}
-        onSelectProvince={setSelectedProvince}
-      />
-
+    <View className="flex-1 w-full lg:w-[70%] bg-white dark:bg-background-dark">
       {/* List / Loading indicator */}
       {isLoading ? (
         <View className="flex-1 items-center justify-center">
@@ -68,6 +48,6 @@ export const CamListScreen = () => {
           showsVerticalScrollIndicator={false}
         />
       )}
-    </SafeAreaView>
+    </View>
   );
 };

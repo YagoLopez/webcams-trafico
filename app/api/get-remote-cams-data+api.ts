@@ -1,7 +1,5 @@
 import axios from 'axios';
 import { XMLParser } from 'fast-xml-parser';
-import fs from 'fs';
-import path from 'path';
 
 // Internal type definition so the route depends entirely on itself
 export interface CamData {

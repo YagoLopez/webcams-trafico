@@ -1,6 +1,7 @@
 ---
 description: Guided onboarding - walk through a complete OpenSpec workflow cycle with narration
 ---
+// turbo-all
 
 Guide the user through their first complete OpenSpec workflow cycle. This is a teaching experience—you'll do real work in their codebase while explaining each step.
 

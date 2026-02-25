@@ -16,16 +16,6 @@ interface WebcamData {
 const URL = 'https://nap.dgt.es/datex2/v3/dgt/DevicePublication/camaras_datex2_v36.xml';
 const OUTPUT_FILE = path.resolve(__dirname, '../data/webcams.json');
 
-// Helper to safely access nested properties
-function get(obj: any, path: string[], defaultValue: any = undefined) {
-  let current = obj;
-  for (const key of path) {
-    if (current === undefined || current === null) return defaultValue;
-    current = current[key];
-  }
-  return current !== undefined ? current : defaultValue;
-}
-
 async function fetchWebcams() {
   try {
     console.log(`Fetching XML from ${URL}...`);
