@@ -1,6 +1,6 @@
 import { fireEvent, render } from '@testing-library/react-native';
 import React from 'react';
-import { SelectBox } from '../select-box';
+import { SelectBox } from '../ui/select-box';
 
 // Mock MaterialIcons to avoid font loading issues in Jest
 jest.mock('@expo/vector-icons/MaterialIcons', () => 'MaterialIcons');
