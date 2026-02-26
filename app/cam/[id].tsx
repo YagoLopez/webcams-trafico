@@ -159,9 +159,16 @@ export default function CamDetailScreen() {
           </View>
         </View>
 
-        <Pressable className="w-full h-14 mt-2 mb-8 rounded-lg overflow-hidden border border-slate-200 dark:border-slate-800 items-center justify-center bg-slate-100 dark:bg-slate-800 active:opacity-80 flex-row gap-2">
-          <MaterialIcons name="map" size={24} color="#137fec" />
-          <Text className="text-[#111418] dark:text-white font-bold">Open Full Map</Text>
+        <Pressable className="w-full h-32 mt-2 mb-8 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 items-center justify-center bg-slate-100 dark:bg-slate-800 active:opacity-90">
+          <Image
+            source={require('../../assets/images/gmap.jpg')}
+            className="absolute top-0 left-0 w-full h-full opacity-70 dark:opacity-50"
+            resizeMode="cover"
+          />
+          <View className="flex-row items-center gap-2 bg-white dark:bg-slate-900 px-5 py-2.5 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
+            <MaterialIcons name="map" size={20} color="#137fec" />
+            <Text className="text-[#111418] dark:text-white font-bold">Open Full Map</Text>
+          </View>
         </Pressable>
 
       </ScrollView>
