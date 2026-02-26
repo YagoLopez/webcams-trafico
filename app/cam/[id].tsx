@@ -45,18 +45,20 @@ export default function CamDetailScreen() {
       {/* Custom Header */}
       <View
         style={{ paddingTop: insets.top }}
-        className="flex-row items-center justify-between px-4 pb-3 bg-white/90 dark:bg-[#101922]/90 border-b border-gray-100 dark:border-gray-800 z-10"
+        className="flex-row items-center gap-2 px-4 h-[70px] bg-primary z-10 shadow-md"
       >
         <Pressable
           onPress={() => router.back()}
-          className="w-10 h-10 items-center justify-center rounded-full active:bg-gray-100 dark:active:bg-gray-800"
+          className="h-16 w-10 -ml-2 items-center justify-center rounded-full active:bg-white/20"
         >
-          <MaterialIcons name="arrow-back-ios" size={24} color={colorScheme === 'dark' ? 'white' : '#111418'} />
+          <MaterialIcons name="arrow-back" size={24} color="white" />
         </Pressable>
-        <Text className="flex-1 text-center text-lg font-bold text-[#111418] dark:text-white mr-10">Webcam Detail</Text>
+        <Text className="text-lg font-bold text-white">
+          Webcam Detail
+        </Text>
       </View>
 
-      <ScrollView className="flex-1" contentContainerStyle={{ padding: 16, paddingBottom: 100 }}>
+      <ScrollView className="flex-1 w-full md:w-[60%] mx-auto" contentContainerStyle={{ padding: 16, paddingBottom: 100 }}>
         {/* Image Container */}
         <View className="relative w-full aspect-video rounded-xl overflow-hidden shadow-md bg-gray-200 dark:bg-gray-800 mb-4">
           {isOffline ? (
@@ -72,7 +74,7 @@ export default function CamDetailScreen() {
           )}
 
           {/* Live Badge */}
-          <View className="absolute top-3 left-3 flex-row items-center gap-2 bg-black/60 px-3 py-1.5 rounded-full border border-white/10">
+          <View className="absolute bottom-3 left-3 flex-row items-center gap-2 bg-black/60 px-3 py-1.5 rounded-full border border-white/10">
             <View className={`h-2.5 w-2.5 rounded-full ${isOffline ? 'bg-slate-400' : 'bg-red-500'}`} />
             <Text className="text-white text-xs font-medium uppercase tracking-wide">
               {isOffline ? 'Offline' : 'Live'}
