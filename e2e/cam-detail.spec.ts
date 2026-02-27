@@ -70,4 +70,35 @@ test.describe('Camera Detail Screen', () => {
     // Expect to arrive back at the home screen
     await expect(page.getByText('Listado Cámaras').first()).toBeVisible();
   });
+
+  test('open and close full screen image gallery', async ({ page }) => {
+    await page.goto('/');
+
+    // Navigate to the detail view first
+    await expect(page.getByText('Listado Cámaras').first()).toBeVisible();
+    const firstCameraLink = page.getByRole('link').first();
+    await firstCameraLink.click();
+
+    // Wait for the detail screen to be fully loaded
+    await expect(page.getByText('Webcam Detail', { exact: true }).first()).toBeVisible();
+
+    // Find the camera image, which is now wrapped in a Pressable for the gallery
+    const camImage = page.getByRole('img').first();
+    await expect(camImage).toBeVisible();
+
+    // Click the image to open the AwesomeGallery
+    await camImage.click();
+
+    // The gallery should appear with a close button
+    const closeButton = page.getByLabel('Close gallery').first();
+
+    // Wait for the gallery to be visible
+    await expect(closeButton).toBeVisible();
+
+    // Close the gallery
+    await closeButton.click();
+
+    // Verify the gallery is closed by verifying the close button is no longer visible
+    await expect(closeButton).not.toBeVisible();
+  });
 });
