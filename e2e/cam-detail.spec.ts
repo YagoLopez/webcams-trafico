@@ -60,16 +60,8 @@ test.describe('Camera Detail Screen', () => {
     // The back button is to the left of the title (mr-10 margin trick is used, so it's the first child of the header row).
     // Let's use `getByText` to find the header row via text, then go to parent, then find the generic button/pressable wrapper.
     // In RNW, Pressables are often role="button".
-    const headerRow = page.locator('div.flex-row.items-center.justify-between').first();
-    const backButton = headerRow.locator('[role="button"]').first();
-
-    // We can also just click at a specific coordinate relative to the header text bounding box if things are tricky,
-    // but let's try relying on standard selectors.
-    // Playwright supports clicking via coordinates, or via element discovery. 
-    // Another option is simulating swipe right for iOS, but here we're testing the web fallback.
-
     // Wait for the UI to be ready
-    await page.waitForTimeout(500); // small delay to let animations/hydration finish
+    await page.waitForLoadState('networkidle');
 
     // Since "go back" is critical, let's use Playwright's native back as primary, and UI click as secondary since we know it's a web simulation.
     // Web applications typically rely on the browser history stack for back navigation.

@@ -69,7 +69,7 @@ export const CamCard: React.FC<CamCardProps> = React.memo(({ item }) => {
               </View>
             </View>
 
-            <Pressable onPress={() => alert('Favorite toggled!')} className="active:opacity-60">
+            <Pressable onPress={(e) => { e.preventDefault(); /* TODO: Implement favorite logic */ alert('Favorite toggled!'); }} className="active:opacity-60">
               <MaterialIcons name="favorite-border" size={24} color="#cbd5e1" />
             </Pressable>
           </View>

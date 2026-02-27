@@ -39,7 +39,7 @@ export default function CamDetailScreen() {
   const isOffline = cam.status === 'offline';
 
   return (
-    <View className="flex-1 bg-white dark:bg-[#101922]">
+    <View className="flex-1 bg-white dark:bg-background-dark">
       <Stack.Screen options={{ headerShown: false }} />
 
       {/* Custom Header */}
@@ -94,7 +94,7 @@ export default function CamDetailScreen() {
               <Text className="text-primary dark:text-blue-400 text-xs font-bold">{cam.road}</Text>
             </View>
             <View className={`flex-row items-center gap-1 px-2 py-0.5 rounded border ${isOffline ? 'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700' : 'bg-emerald-50 dark:bg-emerald-900/30 border-emerald-100 dark:border-emerald-800'}`}>
-              <MaterialIcons name={isOffline ? "error-outline" : "check-circle"} size={14} color={isOffline ? "#64748b" : "#059669"} />
+              <MaterialIcons name={isOffline ? "error-outline" : "check-circle"} size={14} className={isOffline ? 'text-slate-500 dark:text-slate-400' : 'text-emerald-600 dark:text-emerald-400'} />
               <Text className={`text-xs font-medium ${isOffline ? 'text-slate-500 dark:text-slate-400' : 'text-emerald-600 dark:text-emerald-400'}`}>
                 {isOffline ? 'Offline' : 'Fluid'}
               </Text>
