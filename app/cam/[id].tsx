@@ -105,7 +105,7 @@ export default function CamDetailScreen() {
         </View>
 
         {/* Action Buttons */}
-        <View className="flex-row gap-3 mb-6">
+        <View className="flex-row gap-3 mb-6 w-full lg:w-[300px] self-center">
           <Pressable className="flex-1 flex-row items-center justify-center gap-2 h-11 bg-primary active:bg-blue-600 rounded-lg shadow-sm">
             <MaterialIcons name="star-border" size={20} color="white" />
             <Text className="text-white font-semibold text-sm">Add to Favorites</Text>
@@ -159,7 +159,7 @@ export default function CamDetailScreen() {
           </View>
         </View>
 
-        <Pressable className="w-full h-32 mt-2 mb-8 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 items-center justify-center bg-slate-100 dark:bg-slate-800 active:opacity-90">
+        <Pressable className="w-full self-center lg:w-[90%] h-32 mt-2 mb-8 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 items-center justify-center bg-slate-100 dark:bg-slate-800 active:opacity-90">
           <Image
             source={require('../../assets/images/gmap.jpg')}
             className="absolute top-0 left-0 w-full h-full opacity-70 dark:opacity-50"
