@@ -13,8 +13,8 @@ export default function CamDetailScreen() {
   const insets = useSafeAreaInsets();
   const colorScheme = useColorScheme();
 
-  const cams = JsonCamsRepository.getInstance();
-  const { data: cam, isLoading } = useCamById(cams, id);
+  const camsRepository = JsonCamsRepository.getInstance();
+  const { data: cam, isLoading } = useCamById(camsRepository, id);
 
   if (isLoading) {
     return (
@@ -66,11 +66,13 @@ export default function CamDetailScreen() {
               <MaterialIcons name="videocam-off" size={64} color="#cbd5e1" />
             </View>
           ) : (
-            <Image
-              source={{ uri: cam.imageUrl }}
-              className="w-full h-full"
-              resizeMode="cover"
-            />
+            <Pressable onPress={() => router.push({ pathname: '/cam/gallery', params: { url: cam.imageUrl } })} className="flex-1" accessibilityLabel="Open gallery">
+              <Image
+                source={{ uri: cam.imageUrl }}
+                className="w-full h-full"
+                resizeMode="cover"
+              />
+            </Pressable>
           )}
 
           {/* Live Badge */}
