@@ -83,7 +83,7 @@ test.describe('Camera Detail Screen', () => {
     await expect(page.getByText('Webcam Detail', { exact: true }).first()).toBeVisible();
 
     // Find the camera image, which is now wrapped in a Pressable for the gallery
-    const camImage = page.getByRole('img').first();
+    const camImage = page.getByLabel('Open gallery').first();
     await expect(camImage).toBeVisible();
 
     // Click the image to open the AwesomeGallery

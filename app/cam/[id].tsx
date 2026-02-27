@@ -3,9 +3,8 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useState } from 'react';
-import { ActivityIndicator, Image, Modal, Pressable, ScrollView, Text, View } from 'react-native';
-import ImageViewer from 'react-native-image-zoom-viewer';
+import React from 'react';
+import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 export default function CamDetailScreen() {
@@ -13,7 +12,6 @@ export default function CamDetailScreen() {
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const colorScheme = useColorScheme();
-  const [isExpanded, setIsExpanded] = useState(false);
 
   const camsRepository = JsonCamsRepository.getInstance();
   const { data: cam, isLoading } = useCamById(camsRepository, id);
@@ -68,7 +66,7 @@ export default function CamDetailScreen() {
               <MaterialIcons name="videocam-off" size={64} color="#cbd5e1" />
             </View>
           ) : (
-            <Pressable onPress={() => setIsExpanded(true)} className="flex-1">
+            <Pressable onPress={() => router.push({ pathname: '/cam/gallery', params: { url: cam.imageUrl } })} className="flex-1" accessibilityLabel="Open gallery">
               <Image
                 source={{ uri: cam.imageUrl }}
                 className="w-full h-full"
@@ -176,25 +174,6 @@ export default function CamDetailScreen() {
         </Pressable>
 
       </ScrollView>
-
-      {!isOffline && cam?.imageUrl && (
-        <Modal visible={isExpanded} transparent={true} onRequestClose={() => setIsExpanded(false)}>
-          <ImageViewer
-            imageUrls={[{ url: cam.imageUrl }]}
-            onSwipeDown={() => setIsExpanded(false)}
-            enableSwipeDown={true}
-            renderHeader={() => (
-              <Pressable
-                onPress={() => setIsExpanded(false)}
-                className="absolute z-50 top-12 right-6 p-2 bg-black/50 rounded-full"
-                accessibilityLabel="Close gallery"
-              >
-                <MaterialIcons name="close" size={28} color="white" />
-              </Pressable>
-            )}
-          />
-        </Modal>
-      )}
     </View>
   );
 }
