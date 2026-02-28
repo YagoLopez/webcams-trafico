@@ -60,7 +60,7 @@ export default function MapScreen() {
 
   return (
     <View style={styles.container}>
-      <TrafficMap cameras={cameras} center={center} />
+      <TrafficMap cameras={cameras} center={center} selectedCameraId={params.cameraId as string} />
     </View>
   );
 }

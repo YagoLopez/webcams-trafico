@@ -68,7 +68,7 @@ export default function CamDetailScreen() {
           ) : (
             <Pressable onPress={() => {
               if (cam.latitude && cam.longitude) {
-                router.push({ pathname: '/map', params: { lat: cam.latitude, lon: cam.longitude } });
+                router.push({ pathname: '/map', params: { lat: cam.latitude, lon: cam.longitude, cameraId: cam.id } });
               }
             }} className="flex-1" accessibilityLabel="Open gallery">
               <Image
@@ -168,7 +168,7 @@ export default function CamDetailScreen() {
         <Pressable
           onPress={() => {
             if (cam.latitude && cam.longitude) {
-              router.push({ pathname: '/map', params: { lat: cam.latitude, lon: cam.longitude } });
+              router.push({ pathname: '/map', params: { lat: cam.latitude, lon: cam.longitude, cameraId: cam.id } });
             }
           }}
           className="w-full self-center lg:w-[90%] h-32 mt-2 mb-8 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 items-center justify-center bg-slate-100 dark:bg-slate-800 active:opacity-90">

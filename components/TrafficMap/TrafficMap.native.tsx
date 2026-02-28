@@ -7,9 +7,10 @@ import { UrlTile } from 'react-native-maps';
 interface TrafficMapProps {
   cameras: any[];
   center?: { lat: number; lon: number };
+  selectedCameraId?: string;
 }
 
-export default function TrafficMapNative({ cameras, center }: TrafficMapProps) {
+export default function TrafficMapNative({ cameras, center, selectedCameraId }: TrafficMapProps) {
   const mapRef = useRef<any>(null);
 
   useEffect(() => {
@@ -51,7 +52,7 @@ export default function TrafficMapNative({ cameras, center }: TrafficMapProps) {
               coordinate={{ latitude: cam.latitude, longitude: cam.longitude }}
               title={cam.location}
             >
-              <View className="bg-blue-500 p-2 rounded-full border-2 border-white shadow-md">
+              <View className={`p-2 rounded-full border-2 border-white shadow-md ${cam.id === selectedCameraId ? 'bg-red-500 z-10 scale-125' : 'bg-blue-500'}`}>
                 <Text className="text-white font-bold text-xs">📷</Text>
               </View>
               <Callout>

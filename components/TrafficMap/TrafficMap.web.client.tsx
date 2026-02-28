@@ -19,7 +19,19 @@ L.Icon.Default.mergeOptions({
 interface TrafficMapProps {
   cameras: any[];
   center?: { lat: number; lon: number };
+  selectedCameraId?: string;
 }
+
+// Custom red icon for the selected camera
+const redIcon = new L.Icon({
+  iconRetinaUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+  iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
+  shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
 
 // Component to handle imperative repositioning
 function MapController({ center }: { center?: { lat: number; lon: number } }) {
@@ -32,7 +44,7 @@ function MapController({ center }: { center?: { lat: number; lon: number } }) {
   return null;
 }
 
-export default function TrafficMapWebClient({ cameras, center }: TrafficMapProps) {
+export default function TrafficMapWebClient({ cameras, center, selectedCameraId }: TrafficMapProps) {
   const defaultCenter = center ? [center.lat, center.lon] : [40.4168, -3.7038];
 
   // Use a key derived from center to force re-mounting MapContainer initially 
@@ -62,6 +74,8 @@ export default function TrafficMapWebClient({ cameras, center }: TrafficMapProps
               <Marker
                 key={cam.id}
                 position={[cam.latitude, cam.longitude]}
+                icon={cam.id === selectedCameraId ? redIcon : undefined}
+                zIndexOffset={cam.id === selectedCameraId ? 1000 : 0}
               >
                 <Popup>
                   <View style={{ width: 200 }}>
