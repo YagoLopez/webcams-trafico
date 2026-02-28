@@ -1,7 +1,7 @@
 import * as Location from 'expo-location';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
-import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 import TrafficMap from '../../components/TrafficMap';
 
 import { useFilteredCams } from '@/hooks/use-cams';
@@ -51,7 +51,7 @@ export default function MapScreen() {
 
   if (loadingLocation || camsLoading) {
     return (
-      <View style={styles.center}>
+      <View className="flex-1 justify-center items-center">
         <ActivityIndicator size="large" color="#3b82f6" />
         <Text className="mt-4 text-gray-500">Cargando mapa...</Text>
       </View>
@@ -59,19 +59,9 @@ export default function MapScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1">
       <TrafficMap cameras={cameras} center={center} selectedCameraId={params.cameraId as string} />
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  }
-});
