@@ -5,16 +5,18 @@ import { Pressable, View } from 'react-native';
 import ImageViewer from 'react-native-image-zoom-viewer';
 
 export default function GalleryScreen() {
-  const { url } = useLocalSearchParams<{ url: string | string[] }>();
+  const { image } = useLocalSearchParams<{ image: string | string[] }>();
   const router = useRouter();
 
   // Asegura que tomamos un string incluso si Expo Router devuelve un array,
   // con lo cual garantizamos el tipado correcto de runtime para ImageViewer.
-  const imageUrl = Array.isArray(url) ? url[0] : url;
+  const imageUrl = Array.isArray(image) ? image[0] : image;
 
   const handleBack = useCallback(() => {
     if (router.canGoBack()) {
       router.back();
+    } else {
+      router.push('../');
     }
   }, [router]);
 

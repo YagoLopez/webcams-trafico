@@ -67,9 +67,8 @@ export default function CamDetailScreen() {
             </View>
           ) : (
             <Pressable onPress={() => {
-              if (cam.latitude && cam.longitude) {
-                router.push({ pathname: '/map', params: { lat: cam.latitude, lon: cam.longitude, cameraId: cam.id } });
-              }
+              // @ts-ignore - temporary ignore until expo-router regenerates route types for /cam/[id]/gallery
+              router.push({ pathname: '/cam/[id]/gallery', params: { id: cam.id, image: cam.imageUrl } });
             }} className="flex-1" accessibilityLabel="Open gallery">
               <Image
                 source={{ uri: cam.imageUrl }}
