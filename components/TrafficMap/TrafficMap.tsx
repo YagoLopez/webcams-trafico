@@ -14,11 +14,26 @@ interface TrafficMapProps {
 
 export default function TrafficMapNative({ cameras, center, selectedCameraId }: TrafficMapProps) {
   const mapRef = useRef<any>(null);
+  const markerRefs = useRef<{ [key: string]: any }>({});
   const router = useRouter();
   const [activeCameraId, setActiveCameraId] = React.useState<string | undefined>(selectedCameraId);
 
   useEffect(() => {
     setActiveCameraId(selectedCameraId);
+    if (selectedCameraId) {
+      // Wait for any map animation to finish (e.g., center changes take 500ms)
+      setTimeout(() => {
+        let attempts = 0;
+        const interval = setInterval(() => {
+          const marker = markerRefs.current[selectedCameraId];
+          if (marker && marker.showCallout) {
+            marker.showCallout();
+            clearInterval(interval);
+          }
+          if (++attempts > 10) clearInterval(interval); // Give up after 2 seconds
+        }, 200);
+      }, 500);
+    }
   }, [selectedCameraId]);
 
   useEffect(() => {
@@ -28,7 +43,7 @@ export default function TrafficMapNative({ cameras, center, selectedCameraId }: 
         longitude: center.lon,
         latitudeDelta: 0.05,
         longitudeDelta: 0.05,
-      }, 1000);
+      }, 500); // 500ms animation
     }
   }, [center]);
 
@@ -58,6 +73,9 @@ export default function TrafficMapNative({ cameras, center, selectedCameraId }: 
           return (
             <Marker
               key={cam.id}
+              ref={(ref) => {
+                if (ref) markerRefs.current[cam.id] = ref;
+              }}
               coordinate={{ latitude: cam.latitude, longitude: cam.longitude }}
               title={cam.location}
               onPress={() => setActiveCameraId(cam.id)}

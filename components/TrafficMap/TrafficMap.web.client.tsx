@@ -1,6 +1,6 @@
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 // Leaflet and React-Leaflet imports
@@ -59,10 +59,23 @@ function MapController({ center }: { center?: { lat: number; lon: number } }) {
 export default function TrafficMapWebClient({ cameras, center, selectedCameraId }: TrafficMapProps) {
   const defaultCenter = center ? [center.lat, center.lon] : [40.4168, -3.7038];
   const router = useRouter();
+  const markerRefs = useRef<{ [key: string]: any }>({});
   const [activeCameraId, setActiveCameraId] = React.useState<string | undefined>(selectedCameraId);
 
   useEffect(() => {
     setActiveCameraId(selectedCameraId);
+    if (selectedCameraId) {
+      // The MarkerClusterGroup might take a moment to render the marker if it was clustered
+      let attempts = 0;
+      const interval = setInterval(() => {
+        const marker = markerRefs.current[selectedCameraId];
+        if (marker && marker.openPopup) {
+          marker.openPopup();
+          clearInterval(interval);
+        }
+        if (++attempts > 10) clearInterval(interval); // Give up after 2 seconds
+      }, 200);
+    }
   }, [selectedCameraId]);
 
   // Use a key derived from center to force re-mounting MapContainer initially 
@@ -91,6 +104,9 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
             return (
               <Marker
                 key={cam.id}
+                ref={(ref) => {
+                  if (ref) markerRefs.current[cam.id] = ref;
+                }}
                 position={[cam.latitude, cam.longitude]}
                 icon={cam.id === activeCameraId ? redIcon : defaultIcon}
                 zIndexOffset={cam.id === activeCameraId ? 1000 : 0}
