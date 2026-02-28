@@ -59,6 +59,11 @@ function MapController({ center }: { center?: { lat: number; lon: number } }) {
 export default function TrafficMapWebClient({ cameras, center, selectedCameraId }: TrafficMapProps) {
   const defaultCenter = center ? [center.lat, center.lon] : [40.4168, -3.7038];
   const router = useRouter();
+  const [activeCameraId, setActiveCameraId] = React.useState<string | undefined>(selectedCameraId);
+
+  useEffect(() => {
+    setActiveCameraId(selectedCameraId);
+  }, [selectedCameraId]);
 
   // Use a key derived from center to force re-mounting MapContainer initially 
   // when navigating with coords, because MapContainer's center prop is immutable.
@@ -87,8 +92,12 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
               <Marker
                 key={cam.id}
                 position={[cam.latitude, cam.longitude]}
-                icon={cam.id === selectedCameraId ? redIcon : defaultIcon}
-                zIndexOffset={cam.id === selectedCameraId ? 1000 : 0}
+                icon={cam.id === activeCameraId ? redIcon : defaultIcon}
+                zIndexOffset={cam.id === activeCameraId ? 1000 : 0}
+                eventHandlers={{
+                  click: () => setActiveCameraId(cam.id),
+                  popupclose: () => setActiveCameraId(selectedCameraId),
+                }}
               >
                 <Popup>
                   <Pressable onPress={() => router.push(`/cam/${cam.id}`)} style={{ width: 200 }}>
