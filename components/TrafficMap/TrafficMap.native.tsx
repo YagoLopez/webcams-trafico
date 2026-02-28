@@ -1,8 +1,9 @@
 import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import MapView, { Callout, Marker } from 'react-native-map-clustering';
-import { UrlTile } from 'react-native-maps';
+import MapView from 'react-native-map-clustering';
+import { Callout, Marker, UrlTile } from 'react-native-maps';
 
 interface TrafficMapProps {
   cameras: any[];
@@ -12,6 +13,7 @@ interface TrafficMapProps {
 
 export default function TrafficMapNative({ cameras, center, selectedCameraId }: TrafficMapProps) {
   const mapRef = useRef<any>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (center && mapRef.current) {
@@ -55,7 +57,7 @@ export default function TrafficMapNative({ cameras, center, selectedCameraId }: 
               <View className={`p-2 rounded-full border-2 border-white shadow-md ${cam.id === selectedCameraId ? 'bg-red-500 z-10 scale-125' : 'bg-blue-500'}`}>
                 <Text className="text-white font-bold text-xs">📷</Text>
               </View>
-              <Callout>
+              <Callout onPress={() => router.push(`/cam/${cam.id}`)}>
                 <View className="p-2 w-48">
                   <Text className="font-bold mb-1">{cam.location}</Text>
                   <Image

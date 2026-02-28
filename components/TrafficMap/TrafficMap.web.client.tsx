@@ -1,6 +1,7 @@
 import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
 import React, { useEffect } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
 // Leaflet and React-Leaflet imports
 import L from 'leaflet';
@@ -48,6 +49,7 @@ function MapController({ center }: { center?: { lat: number; lon: number } }) {
 
 export default function TrafficMapWebClient({ cameras, center, selectedCameraId }: TrafficMapProps) {
   const defaultCenter = center ? [center.lat, center.lon] : [40.4168, -3.7038];
+  const router = useRouter();
 
   // Use a key derived from center to force re-mounting MapContainer initially 
   // when navigating with coords, because MapContainer's center prop is immutable.
@@ -80,14 +82,14 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
                 zIndexOffset={cam.id === selectedCameraId ? 1000 : 0}
               >
                 <Popup>
-                  <View style={{ width: 200 }}>
+                  <Pressable onPress={() => router.push(`/cam/${cam.id}`)} style={{ width: 200 }}>
                     <Text style={{ fontWeight: 'bold', marginBottom: 4 }}>{cam.location}</Text>
                     <Image
                       source={{ uri: cam.imageUrl }}
                       style={{ width: '100%', height: 120, borderRadius: 8 }}
                       contentFit="cover"
                     />
-                  </View>
+                  </Pressable>
                 </Popup>
               </Marker>
             );
