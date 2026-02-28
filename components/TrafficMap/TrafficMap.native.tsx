@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
@@ -54,8 +55,8 @@ export default function TrafficMapNative({ cameras, center, selectedCameraId }: 
               coordinate={{ latitude: cam.latitude, longitude: cam.longitude }}
               title={cam.location}
             >
-              <View className={`p-2 rounded-full border-2 border-white shadow-md ${cam.id === selectedCameraId ? 'bg-red-500 z-10 scale-125' : 'bg-blue-500'}`}>
-                <Text className="text-white font-bold text-xs">📷</Text>
+              <View className={`p-2 rounded-lg border-2 border-white shadow-md ${cam.id === selectedCameraId ? 'bg-red-500 z-10 scale-125' : 'bg-blue-500'}`}>
+                <Ionicons name="videocam" size={14} color="white" />
               </View>
               <Callout onPress={() => router.push(`/cam/${cam.id}`)}>
                 <View className="p-2 w-48">
