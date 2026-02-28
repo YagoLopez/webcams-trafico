@@ -33,6 +33,8 @@ const redIcon = new L.Icon({
   shadowSize: [41, 41]
 });
 
+const defaultIcon = new L.Icon.Default();
+
 // Component to handle imperative repositioning
 function MapController({ center }: { center?: { lat: number; lon: number } }) {
   const map = useMap();
@@ -74,7 +76,7 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
               <Marker
                 key={cam.id}
                 position={[cam.latitude, cam.longitude]}
-                icon={cam.id === selectedCameraId ? redIcon : undefined}
+                icon={cam.id === selectedCameraId ? redIcon : defaultIcon}
                 zIndexOffset={cam.id === selectedCameraId ? 1000 : 0}
               >
                 <Popup>
