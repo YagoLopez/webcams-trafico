@@ -66,7 +66,11 @@ export default function CamDetailScreen() {
               <MaterialIcons name="videocam-off" size={64} color="#cbd5e1" />
             </View>
           ) : (
-            <Pressable onPress={() => router.push({ pathname: '/cam/gallery', params: { url: cam.imageUrl } })} className="flex-1" accessibilityLabel="Open gallery">
+            <Pressable onPress={() => {
+              if (cam.latitude && cam.longitude) {
+                router.push({ pathname: '/map', params: { lat: cam.latitude, lon: cam.longitude } });
+              }
+            }} className="flex-1" accessibilityLabel="Open gallery">
               <Image
                 source={{ uri: cam.imageUrl }}
                 className="w-full h-full"
@@ -161,7 +165,13 @@ export default function CamDetailScreen() {
           </View>
         </View>
 
-        <Pressable className="w-full self-center lg:w-[90%] h-32 mt-2 mb-8 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 items-center justify-center bg-slate-100 dark:bg-slate-800 active:opacity-90">
+        <Pressable
+          onPress={() => {
+            if (cam.latitude && cam.longitude) {
+              router.push({ pathname: '/map', params: { lat: cam.latitude, lon: cam.longitude } });
+            }
+          }}
+          className="w-full self-center lg:w-[90%] h-32 mt-2 mb-8 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 items-center justify-center bg-slate-100 dark:bg-slate-800 active:opacity-90">
           <Image
             source={require('../../assets/images/gmap.jpg')}
             className="absolute top-0 left-0 w-full h-full opacity-70 dark:opacity-50"

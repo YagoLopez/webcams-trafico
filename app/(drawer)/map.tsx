@@ -1,0 +1,77 @@
+import * as Location from 'expo-location';
+import { useLocalSearchParams } from 'expo-router';
+import React, { useEffect, useState } from 'react';
+import { ActivityIndicator, StyleSheet, Text, View } from 'react-native';
+import TrafficMap from '../../components/TrafficMap';
+
+import { useFilteredCams } from '@/hooks/use-cams';
+import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
+
+export default function MapScreen() {
+  const params = useLocalSearchParams();
+
+  const camsRepository = JsonCamsRepository.getInstance();
+  const { data: cameras = [], isLoading: camsLoading } = useFilteredCams(camsRepository, {});
+
+  // We need to fetch basic data for the filters modal here since it's now living in the layout
+  const [center, setCenter] = useState<{ lat: number; lon: number } | undefined>();
+  const [loadingLocation, setLoadingLocation] = useState(true);
+
+  useEffect(() => {
+    async function initMap() {
+      // 1. If routed with params, use those
+      if (params.lat && params.lon) {
+        setCenter({
+          lat: parseFloat(params.lat as string),
+          lon: parseFloat(params.lon as string)
+        });
+        setLoadingLocation(false);
+        return;
+      }
+
+      // 2. Otherwise request location and center on user
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status === 'granted') {
+          const location = await Location.getCurrentPositionAsync({});
+          setCenter({
+            lat: location.coords.latitude,
+            lon: location.coords.longitude
+          });
+        }
+      } catch (e) {
+        console.log('Error getting location', e);
+      } finally {
+        setLoadingLocation(false);
+      }
+    }
+
+    initMap();
+  }, [params.lat, params.lon]);
+
+  if (loadingLocation || camsLoading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" color="#3b82f6" />
+        <Text className="mt-4 text-gray-500">Cargando mapa...</Text>
+      </View>
+    );
+  }
+
+  return (
+    <View style={styles.container}>
+      <TrafficMap cameras={cameras} center={center} />
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
+});

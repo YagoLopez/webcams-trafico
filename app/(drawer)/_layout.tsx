@@ -65,6 +65,14 @@ export default function DrawerLayout() {
             drawerIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
           }}
         />
+        <Drawer.Screen
+          name="map"
+          options={{
+            title: 'Mapa de Tráfico',
+            drawerLabel: 'Mapa de Tráfico',
+            drawerIcon: ({ color }) => <IconSymbol size={28} name="map.fill" color={color} />,
+          }}
+        />
       </Drawer>
 
       {/* Global Filters Modal */}
