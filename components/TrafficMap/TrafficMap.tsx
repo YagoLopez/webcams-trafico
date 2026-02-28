@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import { Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 import MapView from 'react-native-map-clustering';
 import { Callout, Marker, UrlTile } from 'react-native-maps';
 
@@ -65,14 +65,32 @@ export default function TrafficMapNative({ cameras, center, selectedCameraId }: 
               <View className={`p-2 rounded-lg border-2 border-white shadow-md ${cam.id === activeCameraId ? 'bg-red-500 z-10 scale-125' : 'bg-blue-500'}`}>
                 <Ionicons name="videocam" size={14} color="white" />
               </View>
-              <Callout onPress={() => router.push(`/cam/${cam.id}`)}>
-                <View className="p-2 w-48">
-                  <Text className="font-bold mb-1">{cam.location}</Text>
-                  <Image
-                    source={{ uri: cam.imageUrl }}
-                    className="w-full h-[100px] rounded-lg"
-                    contentFit="cover"
-                  />
+              <Callout tooltip>
+                <View className="bg-white dark:bg-slate-800 p-3 rounded-xl w-64 shadow-xl border border-slate-200 dark:border-slate-700 items-center">
+                  <Text className="font-bold text-sm mb-2 text-center text-slate-800 dark:text-white">{cam.location}</Text>
+
+                  {/* <CalloutSubview> only works on iOS, so for Android the Callout handles presses poorly for multiple buttons.
+                      However, wrapping in Pressable or Callout onPress handles the primary action. */}
+                  <Pressable
+                    onPress={() => {
+                      // @ts-ignore - temporary ignore until expo-router regenerates route types
+                      router.push({ pathname: '/cam/[id]/gallery', params: { id: cam.id, image: cam.imageUrl } });
+                    }}
+                    className="w-full active:opacity-80"
+                  >
+                    <Image
+                      source={{ uri: cam.imageUrl }}
+                      className="w-full h-[140px] rounded-lg bg-gray-200"
+                      contentFit="cover"
+                    />
+                  </Pressable>
+
+                  <Pressable
+                    onPress={() => router.push(`/cam/${cam.id}`)}
+                    className="mt-3 bg-blue-500 px-4 py-2.5 rounded-lg w-[90%] items-center active:bg-blue-600 shadow-sm"
+                  >
+                    <Text className="text-white font-semibold text-sm">Detalle de Cámara</Text>
+                  </Pressable>
                 </View>
               </Callout>
             </Marker>

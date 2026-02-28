@@ -100,14 +100,28 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
                 }}
               >
                 <Popup>
-                  <Pressable onPress={() => router.push(`/cam/${cam.id}`)} className="w-[200px]">
-                    <Text className="font-bold mb-1">{cam.location}</Text>
-                    <Image
-                      source={{ uri: cam.imageUrl }}
-                      className="w-full h-[120px] rounded-lg"
-                      contentFit="cover"
-                    />
-                  </Pressable>
+                  <View className="w-[240px] items-center p-1">
+                    <Text className="font-bold mb-2 text-center text-sm">{cam.location}</Text>
+                    <Pressable
+                      onPress={() => {
+                        // @ts-ignore
+                        router.push({ pathname: '/cam/[id]/gallery', params: { id: cam.id, image: cam.imageUrl } });
+                      }}
+                      className="w-full active:opacity-80 cursor-pointer"
+                    >
+                      <Image
+                        source={{ uri: cam.imageUrl }}
+                        className="w-full h-[140px] rounded-lg bg-gray-200"
+                        contentFit="cover"
+                      />
+                    </Pressable>
+                    <Pressable
+                      onPress={() => router.push(`/cam/${cam.id}`)}
+                      className="mt-3 bg-blue-500 px-4 py-2.5 rounded-lg w-[90%] items-center active:bg-blue-600 shadow-sm cursor-pointer"
+                    >
+                      <Text className="text-white font-semibold text-sm">Detalle de Cámara</Text>
+                    </Pressable>
+                  </View>
                 </Popup>
               </Marker>
             );
