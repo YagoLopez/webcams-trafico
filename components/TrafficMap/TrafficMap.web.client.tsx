@@ -1,7 +1,7 @@
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import React, { useEffect } from 'react';
-import { Pressable, StyleSheet, Text, View } from 'react-native';
+import { Pressable, Text, View } from 'react-native';
 
 // Leaflet and React-Leaflet imports
 import L from 'leaflet';
@@ -70,12 +70,12 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
   const mapKey = center ? `${center.lat}-${center.lon}` : 'default-map';
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1 w-full h-screen">
       <MapContainer
         key={mapKey}
         center={defaultCenter as [number, number]}
         zoom={center ? 15 : 6}
-        style={styles.map}
+        className="w-full h-full"
       >
         <MapController center={center} />
         <TileLayer
@@ -100,11 +100,11 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
                 }}
               >
                 <Popup>
-                  <Pressable onPress={() => router.push(`/cam/${cam.id}`)} style={{ width: 200 }}>
-                    <Text style={{ fontWeight: 'bold', marginBottom: 4 }}>{cam.location}</Text>
+                  <Pressable onPress={() => router.push(`/cam/${cam.id}`)} className="w-[200px]">
+                    <Text className="font-bold mb-1">{cam.location}</Text>
                     <Image
                       source={{ uri: cam.imageUrl }}
-                      style={{ width: '100%', height: 120, borderRadius: 8 }}
+                      className="w-full h-[120px] rounded-lg"
                       contentFit="cover"
                     />
                   </Pressable>
@@ -118,14 +118,3 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: '100%',
-    height: '100vh',
-  },
-  map: {
-    width: '100%',
-    height: '100%',
-  },
-});

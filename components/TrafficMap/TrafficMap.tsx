@@ -2,7 +2,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Text, View } from 'react-native';
 import MapView from 'react-native-map-clustering';
 import { Callout, Marker, UrlTile } from 'react-native-maps';
 
@@ -33,10 +33,10 @@ export default function TrafficMapNative({ cameras, center, selectedCameraId }: 
   }, [center]);
 
   return (
-    <View style={styles.container}>
+    <View className="flex-1">
       <MapView
         ref={mapRef}
-        style={styles.map}
+        className="w-full h-full"
         initialRegion={{
           latitude: center?.lat || 40.4168, // Default to Madrid if no center
           longitude: center?.lon || -3.7038,
@@ -70,7 +70,7 @@ export default function TrafficMapNative({ cameras, center, selectedCameraId }: 
                   <Text className="font-bold mb-1">{cam.location}</Text>
                   <Image
                     source={{ uri: cam.imageUrl }}
-                    style={{ width: '100%', height: 100, borderRadius: 8 }}
+                    className="w-full h-[100px] rounded-lg"
                     contentFit="cover"
                   />
                 </View>
@@ -83,12 +83,3 @@ export default function TrafficMapNative({ cameras, center, selectedCameraId }: 
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  map: {
-    width: '100%',
-    height: '100%',
-  },
-});
