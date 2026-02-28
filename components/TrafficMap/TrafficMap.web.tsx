@@ -1,5 +1,5 @@
 import React, { Suspense } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 
 interface TrafficMapProps {
   cameras: any[];
@@ -21,20 +21,13 @@ export default function TrafficMapWeb(props: TrafficMapProps) {
   }, []);
 
   if (!isMounted || typeof window === 'undefined') {
-    return <View style={styles.container} />;
+    return <View className="flex-1 w-full h-screen" />;
   }
 
   return (
-    <Suspense fallback={<View style={styles.container} />}>
+    <Suspense fallback={<View className="flex-1 w-full h-screen" />}>
       <TrafficMapWebClient {...props} />
     </Suspense>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    width: '100%',
-    height: '100vh',
-  },
-});
