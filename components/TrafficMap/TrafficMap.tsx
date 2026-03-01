@@ -17,7 +17,7 @@ export default function TrafficMapNative({ cameras, center, selectedCameraId }: 
   const markerRefs = useRef<{ [key: string]: any }>({});
   const router = useRouter();
   const [activeCameraId, setActiveCameraId] = React.useState<string | undefined>(selectedCameraId);
-  const isInternalUpdate = useRef(false);
+  const internalCenterUpdateRef = useRef<{ lat: number, lon: number } | null>(null);
 
   useEffect(() => {
     setActiveCameraId(selectedCameraId);
@@ -38,11 +38,16 @@ export default function TrafficMapNative({ cameras, center, selectedCameraId }: 
   }, [selectedCameraId]);
 
   useEffect(() => {
-    if (isInternalUpdate.current) {
-      isInternalUpdate.current = false;
-      return;
-    }
     if (center && mapRef.current) {
+      if (internalCenterUpdateRef.current) {
+        const dx = Math.abs(internalCenterUpdateRef.current.lat - center.lat);
+        const dy = Math.abs(internalCenterUpdateRef.current.lon - center.lon);
+        internalCenterUpdateRef.current = null;
+        if (dx < 0.0001 && dy < 0.0001) {
+          return; // Skip animation if it was triggered by clicking this exact marker
+        }
+      }
+
       mapRef.current.animateToRegion({
         latitude: center.lat,
         longitude: center.lon,
@@ -87,8 +92,11 @@ export default function TrafficMapNative({ cameras, center, selectedCameraId }: 
               coordinate={{ latitude: cam.latitude, longitude: cam.longitude }}
               title={cam.location}
               onPress={() => {
-                isInternalUpdate.current = true;
-                setTimeout(() => { isInternalUpdate.current = false; }, 2000);
+                if (!center || Math.abs(center.lat - cam.latitude) > 0.0001 || Math.abs(center.lon - cam.longitude) > 0.0001) {
+                  internalCenterUpdateRef.current = { lat: cam.latitude, lon: cam.longitude };
+                } else {
+                  internalCenterUpdateRef.current = null;
+                }
                 setActiveCameraId(cam.id);
                 router.setParams({
                   cameraId: String(cam.id),

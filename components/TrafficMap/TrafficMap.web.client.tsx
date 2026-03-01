@@ -46,17 +46,21 @@ const redIcon = createCameraIcon(true);
 const defaultIcon = createCameraIcon(false);
 
 // Component to handle imperative repositioning
-function MapController({ center, internalUpdateRef }: { center?: { lat: number; lon: number }, internalUpdateRef: React.MutableRefObject<boolean> }) {
+function MapController({ center, internalCenterUpdateRef }: { center?: { lat: number; lon: number }, internalCenterUpdateRef: React.MutableRefObject<{ lat: number, lon: number } | null> }) {
   const map = useMap();
   useEffect(() => {
-    if (internalUpdateRef.current) {
-      internalUpdateRef.current = false;
-      return;
-    }
     if (center) {
+      if (internalCenterUpdateRef.current) {
+        const dx = Math.abs(internalCenterUpdateRef.current.lat - center.lat);
+        const dy = Math.abs(internalCenterUpdateRef.current.lon - center.lon);
+        internalCenterUpdateRef.current = null;
+        if (dx < 0.0001 && dy < 0.0001) {
+          return; // Skip animation
+        }
+      }
       map.setView([center.lat, center.lon], 15, { animate: true });
     }
-  }, [center, map, internalUpdateRef]);
+  }, [center, map, internalCenterUpdateRef]);
   return null;
 }
 
@@ -73,7 +77,7 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
   const router = useRouter();
   const markerRefs = useRef<{ [key: string]: any }>({});
   const [activeCameraId, setActiveCameraId] = React.useState<string | undefined>(selectedCameraId);
-  const isInternalUpdate = useRef(false);
+  const internalCenterUpdateRef = useRef<{ lat: number, lon: number } | null>(null);
 
   useEffect(() => {
     setActiveCameraId(selectedCameraId);
@@ -110,7 +114,7 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
         zoom={center ? 15 : 6}
         className="w-full h-full"
       >
-        <MapController center={center} internalUpdateRef={isInternalUpdate} />
+        <MapController center={center} internalCenterUpdateRef={internalCenterUpdateRef} />
         <MapEvents onMapClick={() => {
           if (activeCameraId && markerRefs.current[activeCameraId]) {
             markerRefs.current[activeCameraId].closePopup();
@@ -139,8 +143,11 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
                 zIndexOffset={cam.id === activeCameraId ? 1000 : 0}
                 eventHandlers={{
                   click: () => {
-                    isInternalUpdate.current = true;
-                    setTimeout(() => { isInternalUpdate.current = false; }, 2000);
+                    if (!center || Math.abs(center.lat - cam.latitude) > 0.0001 || Math.abs(center.lon - cam.longitude) > 0.0001) {
+                      internalCenterUpdateRef.current = { lat: cam.latitude, lon: cam.longitude };
+                    } else {
+                      internalCenterUpdateRef.current = null;
+                    }
                     setActiveCameraId(cam.id);
                     router.setParams({
                       cameraId: String(cam.id),
