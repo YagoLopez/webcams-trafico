@@ -46,13 +46,17 @@ const redIcon = createCameraIcon(true);
 const defaultIcon = createCameraIcon(false);
 
 // Component to handle imperative repositioning
-function MapController({ center }: { center?: { lat: number; lon: number } }) {
+function MapController({ center, internalUpdateRef }: { center?: { lat: number; lon: number }, internalUpdateRef: React.MutableRefObject<boolean> }) {
   const map = useMap();
   useEffect(() => {
+    if (internalUpdateRef.current) {
+      internalUpdateRef.current = false;
+      return;
+    }
     if (center) {
       map.setView([center.lat, center.lon], 15, { animate: true });
     }
-  }, [center, map]);
+  }, [center, map, internalUpdateRef]);
   return null;
 }
 
@@ -69,6 +73,7 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
   const router = useRouter();
   const markerRefs = useRef<{ [key: string]: any }>({});
   const [activeCameraId, setActiveCameraId] = React.useState<string | undefined>(selectedCameraId);
+  const isInternalUpdate = useRef(false);
 
   useEffect(() => {
     setActiveCameraId(selectedCameraId);
@@ -88,7 +93,7 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
 
   // Use a key derived from center to force re-mounting MapContainer initially 
   // when navigating with coords, because MapContainer's center prop is immutable.
-  const mapKey = center ? `${center.lat}-${center.lon}` : 'default-map';
+  const mapKey = 'traffic-map';
 
   return (
     <View className="flex-1 w-full h-screen">
@@ -98,7 +103,7 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
         zoom={center ? 15 : 6}
         className="w-full h-full"
       >
-        <MapController center={center} />
+        <MapController center={center} internalUpdateRef={isInternalUpdate} />
         <MapEvents onMapClick={() => {
           setActiveCameraId(undefined);
           router.setParams({ cameraId: '' });
@@ -124,6 +129,8 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
                 zIndexOffset={cam.id === activeCameraId ? 1000 : 0}
                 eventHandlers={{
                   click: () => {
+                    isInternalUpdate.current = true;
+                    setTimeout(() => { isInternalUpdate.current = false; }, 2000);
                     setActiveCameraId(cam.id);
                     router.setParams({
                       cameraId: String(cam.id),
