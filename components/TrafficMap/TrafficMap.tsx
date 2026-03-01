@@ -91,6 +91,7 @@ export default function TrafficMapNative({ cameras, center, selectedCameraId }: 
               }}
               coordinate={{ latitude: cam.latitude, longitude: cam.longitude }}
               title={cam.location}
+              tracksViewChanges={cam.id === activeCameraId}
               onPress={() => {
                 if (!center || Math.abs(center.lat - cam.latitude) > 0.0001 || Math.abs(center.lon - cam.longitude) > 0.0001) {
                   internalCenterUpdateRef.current = { lat: cam.latitude, lon: cam.longitude };

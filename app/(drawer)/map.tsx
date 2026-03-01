@@ -7,10 +7,11 @@ import TrafficMap from '../../components/TrafficMap';
 import { useFilteredCams } from '@/hooks/use-cams';
 import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
 
+const camsRepository = JsonCamsRepository.getInstance();
+
 export default function MapScreen() {
   const params = useLocalSearchParams();
 
-  const camsRepository = JsonCamsRepository.getInstance();
   const { data: cameras = [], isLoading: camsLoading } = useFilteredCams(camsRepository, {});
 
   // We need to fetch basic data for the filters modal here since it's now living in the layout

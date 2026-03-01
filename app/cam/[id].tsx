@@ -67,7 +67,6 @@ export default function CamDetailScreen() {
             </View>
           ) : (
             <Pressable onPress={() => {
-              // @ts-ignore - temporary ignore until expo-router regenerates route types for /cam/[id]/gallery
               router.push({ pathname: '/cam/[id]/gallery', params: { id: cam.id, image: cam.imageUrl } });
             }} className="flex-1" accessibilityLabel="Open gallery">
               <Image
