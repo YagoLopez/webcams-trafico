@@ -17,8 +17,10 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
+import { Cam } from '@/types/cam';
+
 interface TrafficMapProps {
-  cameras: any[];
+  cameras: Cam[];
   center?: { lat: number; lon: number };
   selectedCameraId?: string;
 }
@@ -102,14 +104,9 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
     }
   }, [selectedCameraId]);
 
-  // Use a key derived from center to force re-mounting MapContainer initially 
-  // when navigating with coords, because MapContainer's center prop is immutable.
-  const mapKey = 'traffic-map';
-
   return (
     <View className="flex-1 w-full h-screen">
       <MapContainer
-        key={mapKey}
         center={defaultCenter as [number, number]}
         zoom={center ? 15 : 6}
         className="w-full h-full"
@@ -131,28 +128,31 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
           maxClusterRadius={50}
         >
           {cameras.map((cam) => {
-            if (!cam.latitude || !cam.longitude) return null;
+            const lat = cam.latitude;
+            const lon = cam.longitude;
+            if (lat === undefined || lon === undefined) return null;
+
             return (
               <Marker
                 key={cam.id}
                 ref={(ref) => {
                   if (ref) markerRefs.current[cam.id] = ref;
                 }}
-                position={[cam.latitude, cam.longitude]}
+                position={[lat, lon]}
                 icon={cam.id === activeCameraId ? redIcon : defaultIcon}
                 zIndexOffset={cam.id === activeCameraId ? 1000 : 0}
                 eventHandlers={{
                   click: () => {
-                    if (!center || Math.abs(center.lat - cam.latitude) > 0.0001 || Math.abs(center.lon - cam.longitude) > 0.0001) {
-                      internalCenterUpdateRef.current = { lat: cam.latitude, lon: cam.longitude };
+                    if (!center || Math.abs(center.lat - lat) > 0.0001 || Math.abs(center.lon - lon) > 0.0001) {
+                      internalCenterUpdateRef.current = { lat, lon };
                     } else {
                       internalCenterUpdateRef.current = null;
                     }
                     setActiveCameraId(cam.id);
                     router.setParams({
                       cameraId: String(cam.id),
-                      lat: String(cam.latitude),
-                      lon: String(cam.longitude)
+                      lat: String(lat),
+                      lon: String(lon)
                     });
                   }
                 }}

@@ -6,15 +6,17 @@ import { Pressable, Text, View } from 'react-native';
 import MapView from 'react-native-map-clustering';
 import { Callout, Marker, UrlTile } from 'react-native-maps';
 
+import { Cam } from '@/types/cam';
+
 interface TrafficMapProps {
-  cameras: any[];
+  cameras: Cam[];
   center?: { lat: number; lon: number };
   selectedCameraId?: string;
 }
 
 export default function TrafficMapNative({ cameras, center, selectedCameraId }: TrafficMapProps) {
-  const mapRef = useRef<any>(null);
-  const markerRefs = useRef<{ [key: string]: any }>({});
+  const mapRef = useRef<import('react-native-maps').default>(null);
+  const markerRefs = useRef<Record<string, import('react-native-maps').MapMarker | null>>({});
   const router = useRouter();
   const [activeCameraId, setActiveCameraId] = React.useState<string | undefined>(selectedCameraId);
   const internalCenterUpdateRef = useRef<{ lat: number, lon: number } | null>(null);
@@ -82,27 +84,30 @@ export default function TrafficMapNative({ cameras, center, selectedCameraId }: 
           flipY={false}
         />
         {cameras.map((cam) => {
-          if (!cam.latitude || !cam.longitude) return null;
+          const lat = cam.latitude;
+          const lon = cam.longitude;
+          if (lat === undefined || lon === undefined) return null;
+
           return (
             <Marker
               key={cam.id}
               ref={(ref) => {
                 if (ref) markerRefs.current[cam.id] = ref;
               }}
-              coordinate={{ latitude: cam.latitude, longitude: cam.longitude }}
+              coordinate={{ latitude: lat, longitude: lon }}
               title={cam.location}
               tracksViewChanges={cam.id === activeCameraId}
               onPress={() => {
-                if (!center || Math.abs(center.lat - cam.latitude) > 0.0001 || Math.abs(center.lon - cam.longitude) > 0.0001) {
-                  internalCenterUpdateRef.current = { lat: cam.latitude, lon: cam.longitude };
+                if (!center || Math.abs(center.lat - lat) > 0.0001 || Math.abs(center.lon - lon) > 0.0001) {
+                  internalCenterUpdateRef.current = { lat, lon };
                 } else {
                   internalCenterUpdateRef.current = null;
                 }
                 setActiveCameraId(cam.id);
                 router.setParams({
                   cameraId: String(cam.id),
-                  lat: String(cam.latitude),
-                  lon: String(cam.longitude)
+                  lat: String(lat),
+                  lon: String(lon)
                 });
               }}
             >

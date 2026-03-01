@@ -23,8 +23,8 @@ export default function MapScreen() {
       // 1. If routed with params, use those
       if (params.lat && params.lon) {
         setCenter({
-          lat: parseFloat(params.lat as string),
-          lon: parseFloat(params.lon as string)
+          lat: parseFloat(Array.isArray(params.lat) ? params.lat[0] : params.lat),
+          lon: parseFloat(Array.isArray(params.lon) ? params.lon[0] : params.lon)
         });
         setLoadingLocation(false);
         return;
