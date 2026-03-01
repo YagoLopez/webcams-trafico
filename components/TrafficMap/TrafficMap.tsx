@@ -61,7 +61,10 @@ export default function TrafficMapNative({ cameras, center, selectedCameraId }: 
         clusterColor="#3b82f6" // Tailwind blue-500
         showsUserLocation={true}
         mapType="none" // Important: Hide default Google/Apple map
-        onPress={() => setActiveCameraId(undefined)} // Deselect on map click
+        onPress={() => {
+          setActiveCameraId(undefined);
+          router.setParams({ cameraId: '' });
+        }} // Deselect on map click
       >
         <UrlTile
           urlTemplate="https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -78,7 +81,14 @@ export default function TrafficMapNative({ cameras, center, selectedCameraId }: 
               }}
               coordinate={{ latitude: cam.latitude, longitude: cam.longitude }}
               title={cam.location}
-              onPress={() => setActiveCameraId(cam.id)}
+              onPress={() => {
+                setActiveCameraId(cam.id);
+                router.setParams({
+                  cameraId: String(cam.id),
+                  lat: String(cam.latitude),
+                  lon: String(cam.longitude)
+                });
+              }}
             >
               <View className={`p-2 rounded-lg border-2 border-white shadow-md ${cam.id === activeCameraId ? 'bg-red-500 z-10 scale-125' : 'bg-blue-500'}`}>
                 <Ionicons name="videocam" size={14} color="white" />

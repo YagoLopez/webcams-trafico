@@ -6,7 +6,7 @@ import { Pressable, Text, View } from 'react-native';
 // Leaflet and React-Leaflet imports
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
-import { MapContainer, Marker, Popup, TileLayer, useMap } from 'react-leaflet';
+import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 
 // Fix for default Leaflet icon paths in React Native Web/Webpack
@@ -56,6 +56,14 @@ function MapController({ center }: { center?: { lat: number; lon: number } }) {
   return null;
 }
 
+// Component to handle map clicks for deselecting cameras
+function MapEvents({ onMapClick }: { onMapClick: () => void }) {
+  useMapEvents({
+    click: () => onMapClick(),
+  });
+  return null;
+}
+
 export default function TrafficMapWebClient({ cameras, center, selectedCameraId }: TrafficMapProps) {
   const defaultCenter = center ? [center.lat, center.lon] : [40.4168, -3.7038];
   const router = useRouter();
@@ -91,6 +99,10 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
         className="w-full h-full"
       >
         <MapController center={center} />
+        <MapEvents onMapClick={() => {
+          setActiveCameraId(undefined);
+          router.setParams({ cameraId: '' });
+        }} />
         <TileLayer
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           url="https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -111,16 +123,21 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
                 icon={cam.id === activeCameraId ? redIcon : defaultIcon}
                 zIndexOffset={cam.id === activeCameraId ? 1000 : 0}
                 eventHandlers={{
-                  click: () => setActiveCameraId(cam.id),
-                  popupclose: () => setActiveCameraId(selectedCameraId),
+                  click: () => {
+                    setActiveCameraId(cam.id);
+                    router.setParams({
+                      cameraId: String(cam.id),
+                      lat: String(cam.latitude),
+                      lon: String(cam.longitude)
+                    });
+                  }
                 }}
               >
-                <Popup>
+                <Popup closeButton={false}>
                   <View className="w-[240px] items-center p-1">
                     <Text className="font-bold mb-2 text-center text-sm">{cam.location}</Text>
                     <Pressable
                       onPress={() => {
-                        // @ts-ignore
                         router.push({ pathname: '/cam/[id]/gallery', params: { id: cam.id, image: cam.imageUrl } });
                       }}
                       className="w-full active:opacity-80 cursor-pointer"
