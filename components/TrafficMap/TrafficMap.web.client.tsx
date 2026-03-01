@@ -1,3 +1,4 @@
+import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
@@ -161,12 +162,9 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
                         setActiveCameraId(undefined);
                         router.setParams({ cameraId: '' });
                       }}
-                      className="absolute right-[-4px] top-[-4px] p-2 z-50 active:opacity-60 cursor-pointer"
+                      className="absolute right-[-4px] top-[-4px] py-2 z-50 active:opacity-60 cursor-pointer hover:scale-110"
                     >
-                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#666' }}>
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                      </svg>
+                      <Ionicons name="close-circle-outline" size={20} color="#666" />
                     </Pressable>
                     <Text className="font-bold mb-2 text-center text-sm px-6">{cam.location}</Text>
                     <Pressable
