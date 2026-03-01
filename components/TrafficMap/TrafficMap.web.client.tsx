@@ -1,4 +1,3 @@
-import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
@@ -151,21 +150,8 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
                   }
                 }}
               >
-                <Popup closeButton={false}>
+                <Popup closeButton={true}>
                   <View className="w-[240px] items-center p-1">
-                    <Pressable
-                      onPress={() => {
-                        const marker = markerRefs.current[cam.id];
-                        if (marker && marker.closePopup) {
-                          marker.closePopup();
-                        }
-                        setActiveCameraId(undefined);
-                        router.setParams({ cameraId: '' });
-                      }}
-                      className="absolute right-[-4px] top-[-4px] py-2 z-50 active:opacity-60 cursor-pointer hover:scale-110"
-                    >
-                      <Ionicons name="close-circle-outline" size={20} color="#666" />
-                    </Pressable>
                     <Text className="font-bold mb-2 text-center text-sm px-6">{cam.location}</Text>
                     <Pressable
                       onPress={() => {
