@@ -58,11 +58,11 @@ export default function DrawerLayout() {
           }}
         />
         <Drawer.Screen
-          name="explore"
+          name="map"
           options={{
-            title: 'Explorar Mapa',
-            drawerLabel: 'Explorar',
-            drawerIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+            title: 'Mapa de Tráfico',
+            drawerLabel: 'Mapa de Tráfico',
+            drawerIcon: ({ color }) => <IconSymbol size={28} name="map.fill" color={color} />,
           }}
         />
       </Drawer>

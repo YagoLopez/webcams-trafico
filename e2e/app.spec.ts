@@ -32,7 +32,7 @@ test('open drawer menu', async ({ page }) => {
 
   // Verify that an item inside the drawer is now visible
   // The drawer label for the Explore screen is "Explorar"
-  await expect(page.getByText('Explorar', { exact: true }).first()).toBeVisible();
+  await expect(page.getByText('Mapa de Tráfico', { exact: true }).first()).toBeVisible();
 });
 
 test('filter icon changes background color when filters are applied', async ({ page }) => {
