@@ -82,12 +82,19 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
       let attempts = 0;
       const interval = setInterval(() => {
         const marker = markerRefs.current[selectedCameraId];
-        if (marker && marker.openPopup) {
-          marker.openPopup();
-          clearInterval(interval);
+        if (marker) {
+          if (marker.openPopup) {
+            marker.openPopup();
+            clearInterval(interval);
+          } else if (marker._map) { // Internal Leaflet check if marker is on map
+            marker.openPopup();
+            clearInterval(interval);
+          }
         }
-        if (++attempts > 10) clearInterval(interval); // Give up after 2 seconds
+        if (++attempts > 20) clearInterval(interval); // Give up after 4 seconds
       }, 200);
+
+      return () => clearInterval(interval);
     }
   }, [selectedCameraId]);
 
@@ -105,6 +112,9 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
       >
         <MapController center={center} internalUpdateRef={isInternalUpdate} />
         <MapEvents onMapClick={() => {
+          if (activeCameraId && markerRefs.current[activeCameraId]) {
+            markerRefs.current[activeCameraId].closePopup();
+          }
           setActiveCameraId(undefined);
           router.setParams({ cameraId: '' });
         }} />
@@ -142,7 +152,23 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
               >
                 <Popup closeButton={false}>
                   <View className="w-[240px] items-center p-1">
-                    <Text className="font-bold mb-2 text-center text-sm">{cam.location}</Text>
+                    <Pressable
+                      onPress={() => {
+                        const marker = markerRefs.current[cam.id];
+                        if (marker && marker.closePopup) {
+                          marker.closePopup();
+                        }
+                        setActiveCameraId(undefined);
+                        router.setParams({ cameraId: '' });
+                      }}
+                      className="absolute right-[-4px] top-[-4px] p-2 z-50 active:opacity-60 cursor-pointer"
+                    >
+                      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" style={{ color: '#666' }}>
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                      </svg>
+                    </Pressable>
+                    <Text className="font-bold mb-2 text-center text-sm px-6">{cam.location}</Text>
                     <Pressable
                       onPress={() => {
                         router.push({ pathname: '/cam/[id]/gallery', params: { id: cam.id, image: cam.imageUrl } });
