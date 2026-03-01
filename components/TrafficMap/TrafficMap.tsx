@@ -116,7 +116,6 @@ export default function TrafficMapNative({ cameras, center, selectedCameraId }: 
                       However, wrapping in Pressable or Callout onPress handles the primary action. */}
                   <Pressable
                     onPress={() => {
-                      // @ts-ignore - temporary ignore until expo-router regenerates route types
                       router.push({ pathname: '/cam/[id]/gallery', params: { id: cam.id, image: cam.imageUrl } });
                     }}
                     className="w-full active:opacity-80"
