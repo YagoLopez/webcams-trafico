@@ -9,12 +9,12 @@ import { Callout, Marker, UrlTile } from 'react-native-maps';
 import { Cam } from '@/types/cam';
 
 interface TrafficMapProps {
-  cameras: Cam[];
+  cams: Cam[];
   center?: { lat: number; lon: number };
   selectedCameraId?: string;
 }
 
-export default function TrafficMapNative({ cameras, center, selectedCameraId }: TrafficMapProps) {
+export default function TrafficMapNative({ cams, center, selectedCameraId }: TrafficMapProps) {
   const mapRef = useRef<import('react-native-maps').default>(null);
   const markerRefs = useRef<Record<string, import('react-native-maps').MapMarker | null>>({});
   const router = useRouter();
@@ -101,7 +101,7 @@ export default function TrafficMapNative({ cameras, center, selectedCameraId }: 
           maximumZ={19}
           flipY={false}
         />
-        {cameras.map((cam) => {
+        {cams.map((cam) => {
           const lat = cam.latitude;
           const lon = cam.longitude;
           if (lat === undefined || lon === undefined) return null;

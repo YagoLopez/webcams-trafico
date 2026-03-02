@@ -21,14 +21,14 @@ L.Icon.Default.mergeOptions({
 });
 
 interface TrafficMapProps {
-  cameras: Cam[];
+  cams: Cam[];
   center?: { lat: number; lon: number };
   selectedCameraId?: string;
 }
 
 // Custom camera icons (using SVG to match Ionicons 'videocam')
 const createCameraIcon = (isSelected: boolean) => {
-  const bgColor = isSelected ? '#ef4444' : '#3b82f6';
+  const bgColor = isSelected ? '#ae00ffff' : '#3b82f6';
   const scale = isSelected ? 'transform: scale(1.25); z-index: 10;' : '';
   const html = `<div style="background-color: ${bgColor}; border-radius: 8px; border: 2px solid white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; ${scale}">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="16" height="16" fill="white">
@@ -45,7 +45,7 @@ const createCameraIcon = (isSelected: boolean) => {
   });
 };
 
-const redIcon = createCameraIcon(true);
+const selectedIcon = createCameraIcon(true);
 const defaultIcon = createCameraIcon(false);
 
 // Component to handle imperative repositioning
@@ -75,7 +75,7 @@ function MapEvents({ onMapClick }: { onMapClick: () => void }) {
   return null;
 }
 
-export default function TrafficMapWebClient({ cameras, center, selectedCameraId }: TrafficMapProps) {
+export default function TrafficMapWebClient({ cams, center, selectedCameraId }: TrafficMapProps) {
   const defaultCenter = center ? [center.lat, center.lon] : [40.4168, -3.7038];
   const router = useRouter();
   const markerRefs = useRef<{ [key: string]: any }>({});
@@ -115,6 +115,7 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
         ref={mapRef}
       >
         <MapController center={center} internalCenterUpdateRef={internalCenterUpdateRef} />
+
         <MapEvents onMapClick={() => {
           if (activeCameraId && markerRefs.current[activeCameraId]) {
             markerRefs.current[activeCameraId].closePopup();
@@ -140,7 +141,7 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
             });
           }}
         >
-          {cameras.map((cam) => {
+          {cams.map((cam) => {
             const lat = cam.latitude;
             const lon = cam.longitude;
             if (lat === undefined || lon === undefined) return null;
@@ -152,7 +153,7 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
                   if (ref) markerRefs.current[cam.id] = ref;
                 }}
                 position={[lat, lon]}
-                icon={cam.id === activeCameraId ? redIcon : defaultIcon}
+                icon={cam.id === activeCameraId ? selectedIcon : defaultIcon}
                 zIndexOffset={cam.id === activeCameraId ? 1000 : 0}
                 eventHandlers={{
                   click: (e) => {
@@ -191,7 +192,7 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
                     </Pressable>
                     <Pressable
                       onPress={() => router.push(`/cam/${cam.id}`)}
-                      className="mt-3 bg-blue-500 px-4 py-2.5 rounded-lg w-[90%] items-center active:bg-blue-600 shadow-sm cursor-pointer"
+                      className="mt-3 bg-blue-500 px-4 py-2.5 rounded-lg w-full items-center active:bg-blue-600 shadow-md cursor-pointer"
                     >
                       <Text className="text-white font-semibold text-sm">Detalle de Cámara</Text>
                     </Pressable>
