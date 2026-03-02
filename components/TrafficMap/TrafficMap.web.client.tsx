@@ -8,6 +8,7 @@ import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
+import { Cam } from '@/types/cam';
 
 // Fix for default Leaflet icon paths in React Native Web/Webpack
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -16,8 +17,6 @@ L.Icon.Default.mergeOptions({
   iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
-
-import { Cam } from '@/types/cam';
 
 interface TrafficMapProps {
   cameras: Cam[];
