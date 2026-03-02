@@ -20,35 +20,30 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
   const router = useRouter();
   const [activeCameraId, setActiveCameraId] = React.useState<string | undefined>(selectedCameraId);
   const internalCenterUpdateRef = useRef<{ lat: number, lon: number } | null>(null);
-  const isInternalUpdate = useRef<{ timeoutId: ReturnType<typeof setTimeout>, intervalId: ReturnType<typeof setInterval> } | null>(null);
 
   useEffect(() => {
     setActiveCameraId(selectedCameraId);
-    if (selectedCameraId) {
-      // Wait for any map animation to finish (e.g., center changes take 500ms)
-      const timeoutId = setTimeout(() => {
-        let attempts = 0;
-        const intervalId = setInterval(() => {
-          const marker = markerRefs.current[selectedCameraId];
-          if (marker && marker.showCallout) {
-            marker.showCallout();
-            clearInterval(intervalId);
-          }
-          if (++attempts > 10) clearInterval(intervalId); // Give up after 2 seconds
-        }, 200);
+    if (!selectedCameraId) return;
 
-        // Store intervalId so we can clean it up broadly if needed, though timeout cleans itself
-        // But since we are inside a timeout, we return a function from useEffect to clear BOTH
-        isInternalUpdate.current = { timeoutId, intervalId };
-      }, 500);
-
-      return () => {
-        clearTimeout(timeoutId);
-        if (isInternalUpdate.current?.intervalId) {
-          clearInterval(isInternalUpdate.current.intervalId);
+    // Declare both IDs in the outer closure so the cleanup function can always reach them,
+    // even if the component unmounts before the 500ms timeout fires.
+    let intervalId: ReturnType<typeof setInterval>;
+    const timeoutId = setTimeout(() => {
+      let attempts = 0;
+      intervalId = setInterval(() => {
+        const marker = markerRefs.current[selectedCameraId];
+        if (marker && marker.showCallout) {
+          marker.showCallout();
+          clearInterval(intervalId);
         }
-      };
-    }
+        if (++attempts > 10) clearInterval(intervalId); // Give up after 2 seconds
+      }, 200);
+    }, 500);
+
+    return () => {
+      clearTimeout(timeoutId);
+      clearInterval(intervalId); // safe even if intervalId was never assigned
+    };
   }, [selectedCameraId]);
 
   useEffect(() => {

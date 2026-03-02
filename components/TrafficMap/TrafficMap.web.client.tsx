@@ -158,9 +158,9 @@ export default function TrafficMapWebClient({ cams, center, selectedCameraId }: 
                 icon={cam.id === activeCameraId ? selectedIcon : defaultIcon}
                 zIndexOffset={cam.id === activeCameraId ? 1000 : 0}
                 eventHandlers={{
-                  click: (e) => {
-                    const map = mapRef.current || e.target._map;
-                    const currentZoom = map?.getZoom() || 15;
+                  click: () => {
+                    const map = mapRef.current;
+                    const currentZoom = map?.getZoom() ?? 15;
                     internalCenterUpdateRef.current = (!center || Math.abs(center.lat - lat) > 0.0001 || Math.abs(center.lon - lon) > 0.0001) ? { lat, lon } : null;
                     map?.flyTo([lat, lon], currentZoom, { animate: true, duration: DURATION });
                     setActiveCameraId(cam.id);
