@@ -8,6 +8,17 @@ import { Callout, Marker, UrlTile } from 'react-native-maps';
 
 import { Cam } from '@/types/cam';
 
+interface ClusterPoint {
+  id: number | string;
+  geometry: {
+    coordinates: [number, number];
+  };
+  onPress: () => void;
+  properties?: {
+    point_count: number;
+  };
+}
+
 interface TrafficMapProps {
   cams: Cam[];
   center?: { lat: number; lon: number };
@@ -66,7 +77,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
     }
   }, [center]);
 
-  const renderCluster = React.useCallback((cluster: any) => {
+  const renderCluster = React.useCallback((cluster: ClusterPoint) => {
     const { id, geometry, onPress, properties } = cluster;
     const points = properties?.point_count || 0;
     return (

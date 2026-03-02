@@ -12,7 +12,7 @@ const camsRepository = JsonCamsRepository.getInstance();
 export default function MapScreen() {
   const params = useLocalSearchParams();
 
-  const { data: cameras = [], isLoading: camsLoading } = useFilteredCams(camsRepository, {});
+  const { data: cams = [], isLoading: camsLoading } = useFilteredCams(camsRepository, {});
 
   // We need to fetch basic data for the filters modal here since it's now living in the layout
   const [center, setCenter] = useState<{ lat: number; lon: number } | undefined>();
@@ -61,7 +61,7 @@ export default function MapScreen() {
 
   return (
     <View className="flex-1">
-      <TrafficMap cams={cameras} center={center} selectedCameraId={params.cameraId as string} />
+      <TrafficMap cams={cams} center={center} selectedCameraId={params.cameraId as string} />
     </View>
   );
 }

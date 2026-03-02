@@ -2,7 +2,7 @@ import React, { Suspense } from 'react';
 import { View } from 'react-native';
 
 interface TrafficMapProps {
-  cameras: any[];
+  cams: any[];
   center?: { lat: number; lon: number };
 }
 
