@@ -16,6 +16,11 @@
     },
     "android": {
       "package": "com.yago.webcamapp",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyCMRVvK8O2to5LfiZx4FHVvUf6PFEsM0JU"
+        }
+      },
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",

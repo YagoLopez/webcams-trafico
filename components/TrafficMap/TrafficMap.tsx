@@ -4,7 +4,7 @@ import { useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
 import { Pressable, Text, View } from 'react-native';
 import MapView from 'react-native-map-clustering';
-import { Callout, Marker, UrlTile } from 'react-native-maps';
+import { Callout, Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
 import { Cam } from '@/types/cam';
 
@@ -107,20 +107,15 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
           latitudeDelta: 5.0,
           longitudeDelta: 5.0,
         }}
+        provider={PROVIDER_GOOGLE}
         clusterColor="#3b82f6" // Tailwind blue-500
         showsUserLocation={true}
-        mapType="none" // Important: Hide default Google/Apple map
         onPress={() => {
           setActiveCameraId(undefined);
           router.setParams({ cameraId: '' });
         }} // Deselect on map click
         renderCluster={renderCluster}
       >
-        <UrlTile
-          urlTemplate="https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          maximumZ={19}
-          flipY={false}
-        />
         {cams.map((cam) => {
           const lat = cam.latitude;
           const lon = cam.longitude;

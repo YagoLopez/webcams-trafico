@@ -1,13 +1,22 @@
 import React, { Suspense } from 'react';
-import { View } from 'react-native';
+import { ActivityIndicator, Text, View } from 'react-native';
 
 interface TrafficMapProps {
   cams: any[];
   center?: { lat: number; lon: number };
 }
 
+function MapLoadingFallback() {
+  return (
+    <View className="flex-1 w-full h-screen items-center justify-center bg-slate-100 gap-3">
+      <ActivityIndicator size="large" color="#3b82f6" />
+      <Text className="text-base text-slate-500 font-medium">Cargando mapa…</Text>
+    </View>
+  );
+}
+
 // React.lazy requires a default export from the dynamic import.
-// This ensures that the component (and all its leaflet static imports inside it) 
+// This ensures that the component (and all its leaflet static imports inside it)
 // are NEVER evaluated on the server.
 const TrafficMapWebClient = React.lazy(
   () => import('./TrafficMap.web.client')
@@ -21,11 +30,11 @@ export default function TrafficMapWeb(props: TrafficMapProps) {
   }, []);
 
   if (!isMounted || typeof window === 'undefined') {
-    return <View className="flex-1 w-full h-screen" />;
+    return <MapLoadingFallback />;
   }
 
   return (
-    <Suspense fallback={<View className="flex-1 w-full h-screen" />}>
+    <Suspense fallback={<MapLoadingFallback />}>
       <TrafficMapWebClient {...props} />
     </Suspense>
   );
