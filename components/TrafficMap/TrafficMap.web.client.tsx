@@ -10,7 +10,7 @@ import 'leaflet/dist/leaflet.css';
 import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 
-const DURATION = 0.7;
+const DURATION = 1;
 
 // Fix for default Leaflet icon paths in React Native Web/Webpack
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -150,7 +150,7 @@ export default function TrafficMapWebClient({ cams, center, selectedCameraId }: 
               <Marker
                 key={cam.id}
                 ref={(ref) => {
-                  if (ref) markerRefs.current[cam.id] = ref;
+                  markerRefs.current[cam.id] = ref;
                 }}
                 position={[lat, lon]}
                 icon={cam.id === activeCameraId ? selectedIcon : defaultIcon}
@@ -176,8 +176,12 @@ export default function TrafficMapWebClient({ cams, center, selectedCameraId }: 
                 }}
               >
                 <Popup closeButton={true} autoPan={false}>
-                  <View className="w-[240px] items-center p-1">
-                    <Text className="font-bold mb-2 text-center text-sm px-6">{cam.location}</Text>
+                  {<View className="flex-row justify-center mt-2 px-1">
+                    <Text className="font-bold text-xs">{cam.road}</Text>
+                    <Text className="text-gray-600 text-xs"> - {cam.kilometer}</Text>
+                  </View>}
+
+                  <View className="w-[240px] p-1">
                     <Pressable
                       onPress={() => {
                         router.push({ pathname: '/cam/[id]/gallery', params: { id: cam.id, image: cam.imageUrl } });
@@ -190,12 +194,14 @@ export default function TrafficMapWebClient({ cams, center, selectedCameraId }: 
                         contentFit="cover"
                       />
                     </Pressable>
+
                     <Pressable
                       onPress={() => router.push(`/cam/${cam.id}`)}
-                      className="mt-3 bg-blue-500 px-4 py-2.5 rounded-lg w-full items-center active:bg-blue-600 shadow-md cursor-pointer"
+                      className="mt-2 bg-blue-500 px-4 py-2.5 rounded-lg w-full items-center active:bg-blue-600 shadow-md cursor-pointer"
                     >
-                      <Text className="text-white font-semibold text-sm">Detalle de Cámara</Text>
+                      <Text className="text-white font-semibold text-sm">Datos de Cámara</Text>
                     </Pressable>
+
                   </View>
                 </Popup>
               </Marker>

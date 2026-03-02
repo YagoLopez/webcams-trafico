@@ -23,6 +23,7 @@ const MAPPING = {
   'line.3.horizontal': 'menu',
   'line.3.horizontal.decrease.circle': 'filter-list',
   'slider.horizontal.3': 'tune',
+  'map.fill': 'map',
 } as IconMapping;
 
 /**

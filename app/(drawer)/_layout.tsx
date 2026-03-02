@@ -60,8 +60,8 @@ export default function DrawerLayout() {
         <Drawer.Screen
           name="map"
           options={{
-            title: 'Mapa de Tráfico',
-            drawerLabel: 'Mapa de Tráfico',
+            title: 'Mapa de Cámaras',
+            drawerLabel: 'Mapa de Cámaras',
             drawerIcon: ({ color }) => <IconSymbol size={28} name="map.fill" color={color} />,
           }}
         />

@@ -97,7 +97,7 @@ describe('CamDetailScreen', () => {
       </SafeAreaProvider>
     );
 
-    expect(screen.getByText('Webcam Detail')).toBeTruthy();
+    expect(screen.getByText('Datos de Cámara')).toBeTruthy();
     expect(screen.getByText('A-1')).toBeTruthy();
     expect(screen.getAllByText('MADRID')).toBeTruthy();
     expect(screen.getAllByText('Km 10')).toBeTruthy();
@@ -122,7 +122,7 @@ describe('CamDetailScreen', () => {
       </SafeAreaProvider>
     );
 
-    expect(screen.getByText('Webcam Detail')).toBeTruthy();
+    expect(screen.getByText('Datos de Cámara')).toBeTruthy();
     expect(screen.getAllByText('Offline')).toBeTruthy();
   });
 });
