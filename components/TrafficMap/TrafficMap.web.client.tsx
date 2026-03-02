@@ -106,6 +106,15 @@ export default function TrafficMapWebClient({ cams, center, selectedCameraId }: 
     }
   }, [selectedCameraId]);
 
+  const iconCreateFunction = React.useCallback((cluster: any) => {
+    const count = cluster.getChildCount();
+    return L.divIcon({
+      html: `<div style="background-color: #1e3a8a; border-radius: 50%; width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px; border: 2px solid white; box-shadow: 0 0 0 3px #1e3a8a, 0 0 0 5px white, 0 4px 6px 4px rgba(0,0,0,0.3); box-sizing: border-box;">${count}</div>`,
+      className: '',
+      iconSize: [46, 46],
+    });
+  }, []);
+
   return (
     <View className="flex-1 w-full h-screen">
       <MapContainer
@@ -132,14 +141,7 @@ export default function TrafficMapWebClient({ cams, center, selectedCameraId }: 
           maxClusterRadius={50}
           showCoverageOnHover={false}
           spiderfyOnMaxZoom={false}
-          iconCreateFunction={(cluster: any) => {
-            const count = cluster.getChildCount();
-            return L.divIcon({
-              html: `<div style="background-color: #1e3a8a; border-radius: 50%; width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px; border: 2px solid white; box-shadow: 0 0 0 3px #1e3a8a, 0 0 0 5px white, 0 4px 6px 4px rgba(0,0,0,0.3); box-sizing: border-box;">${count}</div>`,
-              className: '',
-              iconSize: [46, 46],
-            });
-          }}
+          iconCreateFunction={iconCreateFunction}
         >
           {cams.map((cam) => {
             const lat = cam.latitude;
@@ -159,13 +161,8 @@ export default function TrafficMapWebClient({ cams, center, selectedCameraId }: 
                   click: (e) => {
                     const map = mapRef.current || e.target._map;
                     const currentZoom = map?.getZoom() || 15;
-                    if (!center || Math.abs(center.lat - lat) > 0.0001 || Math.abs(center.lon - lon) > 0.0001) {
-                      internalCenterUpdateRef.current = { lat, lon };
-                      map?.flyTo([lat, lon], currentZoom, { animate: true, duration: DURATION });
-                    } else {
-                      internalCenterUpdateRef.current = null;
-                      map?.flyTo([lat, lon], currentZoom, { animate: true, duration: DURATION });
-                    }
+                    internalCenterUpdateRef.current = (!center || Math.abs(center.lat - lat) > 0.0001 || Math.abs(center.lon - lon) > 0.0001) ? { lat, lon } : null;
+                    map?.flyTo([lat, lon], currentZoom, { animate: true, duration: DURATION });
                     setActiveCameraId(cam.id);
                     router.setParams({
                       cameraId: String(cam.id),
