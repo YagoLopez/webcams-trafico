@@ -130,9 +130,9 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
           iconCreateFunction={(cluster: any) => {
             const count = cluster.getChildCount();
             return L.divIcon({
-              html: `<div style="background-color: #ef4444; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; border: 2px solid white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">${count}</div>`,
+              html: `<div style="background-color: #1e3a8a; border-radius: 50%; width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px; border: 2px solid white; box-shadow: 0 0 0 3px #1e3a8a, 0 0 0 5px white, 0 4px 6px 4px rgba(0,0,0,0.3); box-sizing: border-box;">${count}</div>`,
               className: '',
-              iconSize: [40, 40],
+              iconSize: [46, 46],
             });
           }}
         >
