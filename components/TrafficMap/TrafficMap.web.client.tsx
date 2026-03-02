@@ -176,10 +176,10 @@ export default function TrafficMapWebClient({ cams, center, selectedCameraId }: 
                 }}
               >
                 <Popup closeButton={true} autoPan={false}>
-                  {<View className="flex-row justify-center mt-2 px-1">
+                  <View className="flex-row justify-center mt-2 px-1">
                     <Text className="font-bold text-xs">{cam.road}</Text>
                     <Text className="text-gray-600 text-xs"> - {cam.kilometer}</Text>
-                  </View>}
+                  </View>
 
                   <View className="w-[240px] p-1">
                     <Pressable
