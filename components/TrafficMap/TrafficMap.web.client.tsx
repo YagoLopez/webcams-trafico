@@ -4,10 +4,16 @@ import React, { useEffect, useRef } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 // Leaflet and React-Leaflet imports
+import { Cam } from '@/types/cam';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
+
+const DURATION = 1;
+
+const SELECTED_CAMERA_COLOR = '#ae00ffff';
+const CLUSTER_BG_COLOR = '#1e3a8a';
 
 // Fix for default Leaflet icon paths in React Native Web/Webpack
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -17,17 +23,19 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
 });
 
-import { Cam } from '@/types/cam';
-
 interface TrafficMapProps {
-  cameras: Cam[];
+  cams: Cam[];
   center?: { lat: number; lon: number };
   selectedCameraId?: string;
 }
 
+interface MarkerCluster {
+  getChildCount: () => number;
+}
+
 // Custom camera icons (using SVG to match Ionicons 'videocam')
 const createCameraIcon = (isSelected: boolean) => {
-  const bgColor = isSelected ? '#ef4444' : '#3b82f6';
+  const bgColor = isSelected ? SELECTED_CAMERA_COLOR : '#3b82f6';
   const scale = isSelected ? 'transform: scale(1.25); z-index: 10;' : '';
   const html = `<div style="background-color: ${bgColor}; border-radius: 8px; border: 2px solid white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; ${scale}">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="16" height="16" fill="white">
@@ -44,7 +52,7 @@ const createCameraIcon = (isSelected: boolean) => {
   });
 };
 
-const redIcon = createCameraIcon(true);
+const selectedIcon = createCameraIcon(true);
 const defaultIcon = createCameraIcon(false);
 
 // Component to handle imperative repositioning
@@ -74,12 +82,13 @@ function MapEvents({ onMapClick }: { onMapClick: () => void }) {
   return null;
 }
 
-export default function TrafficMapWebClient({ cameras, center, selectedCameraId }: TrafficMapProps) {
+export default function TrafficMapWebClient({ cams, center, selectedCameraId }: TrafficMapProps) {
   const defaultCenter = center ? [center.lat, center.lon] : [40.4168, -3.7038];
   const router = useRouter();
   const markerRefs = useRef<{ [key: string]: any }>({});
   const [activeCameraId, setActiveCameraId] = React.useState<string | undefined>(selectedCameraId);
   const internalCenterUpdateRef = useRef<{ lat: number, lon: number } | null>(null);
+  const mapRef = useRef<L.Map | null>(null);
 
   useEffect(() => {
     setActiveCameraId(selectedCameraId);
@@ -104,14 +113,25 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
     }
   }, [selectedCameraId]);
 
+  const iconCreateFunction = React.useCallback((cluster: MarkerCluster) => {
+    const count = cluster.getChildCount();
+    return L.divIcon({
+      html: `<div style="background-color: ${CLUSTER_BG_COLOR}; border-radius: 50%; width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px; border: 2px solid white; box-shadow: 0 0 0 3px ${CLUSTER_BG_COLOR}, 0 0 0 5px white, 0 4px 6px 4px rgba(0,0,0,0.3); box-sizing: border-box;">${count}</div>`,
+      className: '',
+      iconSize: [46, 46],
+    });
+  }, []);
+
   return (
     <View className="flex-1 w-full h-screen">
       <MapContainer
         center={defaultCenter as [number, number]}
         zoom={center ? 15 : 6}
         className="w-full h-full"
+        ref={mapRef}
       >
         <MapController center={center} internalCenterUpdateRef={internalCenterUpdateRef} />
+
         <MapEvents onMapClick={() => {
           if (activeCameraId && markerRefs.current[activeCameraId]) {
             markerRefs.current[activeCameraId].closePopup();
@@ -126,8 +146,11 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
         <MarkerClusterGroup
           chunkedLoading
           maxClusterRadius={50}
+          showCoverageOnHover={false}
+          spiderfyOnMaxZoom={false}
+          iconCreateFunction={iconCreateFunction}
         >
-          {cameras.map((cam) => {
+          {cams.map((cam) => {
             const lat = cam.latitude;
             const lon = cam.longitude;
             if (lat === undefined || lon === undefined) return null;
@@ -136,18 +159,17 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
               <Marker
                 key={cam.id}
                 ref={(ref) => {
-                  if (ref) markerRefs.current[cam.id] = ref;
+                  markerRefs.current[cam.id] = ref;
                 }}
                 position={[lat, lon]}
-                icon={cam.id === activeCameraId ? redIcon : defaultIcon}
+                icon={cam.id === activeCameraId ? selectedIcon : defaultIcon}
                 zIndexOffset={cam.id === activeCameraId ? 1000 : 0}
                 eventHandlers={{
                   click: () => {
-                    if (!center || Math.abs(center.lat - lat) > 0.0001 || Math.abs(center.lon - lon) > 0.0001) {
-                      internalCenterUpdateRef.current = { lat, lon };
-                    } else {
-                      internalCenterUpdateRef.current = null;
-                    }
+                    const map = mapRef.current;
+                    const currentZoom = map?.getZoom() ?? 15;
+                    internalCenterUpdateRef.current = (!center || Math.abs(center.lat - lat) > 0.0001 || Math.abs(center.lon - lon) > 0.0001) ? { lat, lon } : null;
+                    map?.flyTo([lat, lon], currentZoom, { animate: true, duration: DURATION });
                     setActiveCameraId(cam.id);
                     router.setParams({
                       cameraId: String(cam.id),
@@ -157,9 +179,13 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
                   }
                 }}
               >
-                <Popup closeButton={true}>
-                  <View className="w-[240px] items-center p-1">
-                    <Text className="font-bold mb-2 text-center text-sm px-6">{cam.location}</Text>
+                <Popup closeButton={true} autoPan={false}>
+                  <View className="flex-row justify-center mt-2 px-1">
+                    <Text className="font-bold text-xs">{cam.road}</Text>
+                    <Text className="text-gray-600 text-xs"> - {cam.kilometer}</Text>
+                  </View>
+
+                  <View className="w-[240px] p-1">
                     <Pressable
                       onPress={() => {
                         router.push({ pathname: '/cam/[id]/gallery', params: { id: cam.id, image: cam.imageUrl } });
@@ -172,12 +198,14 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
                         contentFit="cover"
                       />
                     </Pressable>
+
                     <Pressable
                       onPress={() => router.push(`/cam/${cam.id}`)}
-                      className="mt-3 bg-blue-500 px-4 py-2.5 rounded-lg w-[90%] items-center active:bg-blue-600 shadow-sm cursor-pointer"
+                      className="mt-2 bg-blue-500 px-4 py-2.5 rounded-lg w-full items-center active:bg-blue-600 shadow-md cursor-pointer"
                     >
-                      <Text className="text-white font-semibold text-sm">Detalle de Cámara</Text>
+                      <Text className="text-white font-semibold text-sm">Datos de Cámara</Text>
                     </Pressable>
+
                   </View>
                 </Popup>
               </Marker>

@@ -54,7 +54,7 @@ export default function CamDetailScreen() {
           <MaterialIcons name="arrow-back" size={24} color="white" />
         </Pressable>
         <Text className="text-lg font-bold text-white">
-          Webcam Detail
+          Datos de Cámara
         </Text>
       </View>
 

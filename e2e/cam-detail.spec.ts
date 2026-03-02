@@ -12,7 +12,7 @@ test.describe('Camera Detail Screen', () => {
     await firstCameraLink.click();
 
     // Wait for the detail screen to load by checking the custom header title
-    await expect(page.getByText('Webcam Detail', { exact: true }).first()).toBeVisible();
+    await expect(page.getByText('Datos de Cámara', { exact: true }).first()).toBeVisible();
 
     // Verify detail screen content elements 
     // Wait for some basic detail info that should be present for any camera
@@ -35,7 +35,7 @@ test.describe('Camera Detail Screen', () => {
     await firstCameraLink.click();
 
     // Wait for the detail screen to be fully loaded
-    await expect(page.getByText('Webcam Detail', { exact: true }).first()).toBeVisible();
+    await expect(page.getByText('Datos de Cámara', { exact: true }).first()).toBeVisible();
 
     // The back button does not have text, but is wrapped in a view. 
     // We can target it with its role or by locating the header container first.
@@ -51,8 +51,8 @@ test.describe('Camera Detail Screen', () => {
     // Since Expo Router manages history, browser 'back' button triggers `router.back()` behavior.
 
     // We'll click the left edge where the back button is expected to be as a robust fallback
-    // The `<View>` containing "Webcam Detail" also has the back button.
-    const headerTitle = page.getByText('Webcam Detail', { exact: true }).first();
+    // The `<View>` containing "Datos de Cámara" also has the back button.
+    const headerTitle = page.getByText('Datos de Cámara', { exact: true }).first();
 
     // Wait for header to settle
     await headerTitle.waitFor({ state: 'visible' });
@@ -80,7 +80,7 @@ test.describe('Camera Detail Screen', () => {
     await firstCameraLink.click();
 
     // Wait for the detail screen to be fully loaded
-    await expect(page.getByText('Webcam Detail', { exact: true }).first()).toBeVisible();
+    await expect(page.getByText('Datos de Cámara', { exact: true }).first()).toBeVisible();
 
     // Find the camera image, which is now wrapped in a Pressable for the gallery
     const camImage = page.getByLabel('Open gallery').first();

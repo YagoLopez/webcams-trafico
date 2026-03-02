@@ -2,6 +2,7 @@ import { useCamById } from '@/hooks/use-cams';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { useRouter } from 'expo-router';
 import React from 'react';
+import { ActivityIndicator } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import CamDetailScreen from '../[id]';
 
@@ -48,7 +49,7 @@ describe('CamDetailScreen', () => {
   test('renders loading indicator when data is loading', () => {
     (useCamById as jest.Mock).mockReturnValue({ data: null, isLoading: true });
 
-    const { getByTestId, root } = render(
+    const { root } = render(
       <SafeAreaProvider>
         <CamDetailScreen />
       </SafeAreaProvider>
@@ -56,7 +57,7 @@ describe('CamDetailScreen', () => {
 
     // We can query for ActivityIndicator using its type or text if any,
     // Since ActivityIndicator doesn't have a testID by default, we can check root.findByType
-    const activityIndicator = root.findByType(require('react-native').ActivityIndicator);
+    const activityIndicator = root.findByType(ActivityIndicator);
     expect(activityIndicator).toBeTruthy();
   });
 
@@ -96,7 +97,7 @@ describe('CamDetailScreen', () => {
       </SafeAreaProvider>
     );
 
-    expect(screen.getByText('Webcam Detail')).toBeTruthy();
+    expect(screen.getByText('Datos de Cámara')).toBeTruthy();
     expect(screen.getByText('A-1')).toBeTruthy();
     expect(screen.getAllByText('MADRID')).toBeTruthy();
     expect(screen.getAllByText('Km 10')).toBeTruthy();
@@ -121,7 +122,7 @@ describe('CamDetailScreen', () => {
       </SafeAreaProvider>
     );
 
-    expect(screen.getByText('Webcam Detail')).toBeTruthy();
+    expect(screen.getByText('Datos de Cámara')).toBeTruthy();
     expect(screen.getAllByText('Offline')).toBeTruthy();
   });
 });

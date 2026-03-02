@@ -8,13 +8,24 @@ import { Callout, Marker, UrlTile } from 'react-native-maps';
 
 import { Cam } from '@/types/cam';
 
+interface ClusterPoint {
+  id: number | string;
+  geometry: {
+    coordinates: [number, number];
+  };
+  onPress: () => void;
+  properties?: {
+    point_count: number;
+  };
+}
+
 interface TrafficMapProps {
-  cameras: Cam[];
+  cams: Cam[];
   center?: { lat: number; lon: number };
   selectedCameraId?: string;
 }
 
-export default function TrafficMapNative({ cameras, center, selectedCameraId }: TrafficMapProps) {
+export default function TrafficMapNative({ cams, center, selectedCameraId }: TrafficMapProps) {
   const mapRef = useRef<import('react-native-maps').default>(null);
   const markerRefs = useRef<Record<string, import('react-native-maps').MapMarker | null>>({});
   const router = useRouter();
@@ -23,20 +34,27 @@ export default function TrafficMapNative({ cameras, center, selectedCameraId }: 
 
   useEffect(() => {
     setActiveCameraId(selectedCameraId);
-    if (selectedCameraId) {
-      // Wait for any map animation to finish (e.g., center changes take 500ms)
-      setTimeout(() => {
-        let attempts = 0;
-        const interval = setInterval(() => {
-          const marker = markerRefs.current[selectedCameraId];
-          if (marker && marker.showCallout) {
-            marker.showCallout();
-            clearInterval(interval);
-          }
-          if (++attempts > 10) clearInterval(interval); // Give up after 2 seconds
-        }, 200);
-      }, 500);
-    }
+    if (!selectedCameraId) return;
+
+    // Declare both IDs in the outer closure so the cleanup function can always reach them,
+    // even if the component unmounts before the 500ms timeout fires.
+    let intervalId: ReturnType<typeof setInterval>;
+    const timeoutId = setTimeout(() => {
+      let attempts = 0;
+      intervalId = setInterval(() => {
+        const marker = markerRefs.current[selectedCameraId];
+        if (marker && marker.showCallout) {
+          marker.showCallout();
+          clearInterval(intervalId);
+        }
+        if (++attempts > 10) clearInterval(intervalId); // Give up after 2 seconds
+      }, 200);
+    }, 500);
+
+    return () => {
+      clearTimeout(timeoutId);
+      clearInterval(intervalId); // safe even if intervalId was never assigned
+    };
   }, [selectedCameraId]);
 
   useEffect(() => {
@@ -59,6 +77,25 @@ export default function TrafficMapNative({ cameras, center, selectedCameraId }: 
     }
   }, [center]);
 
+  const renderCluster = React.useCallback((cluster: ClusterPoint) => {
+    const { id, geometry, onPress, properties } = cluster;
+    const points = properties?.point_count || 0;
+    return (
+      <Marker
+        key={`cluster-${id}`}
+        coordinate={{
+          latitude: geometry.coordinates[1],
+          longitude: geometry.coordinates[0],
+        }}
+        onPress={onPress}
+      >
+        <View className="bg-red-500 rounded-full w-10 h-10 items-center justify-center border-2 border-white shadow-md">
+          <Text className="text-white font-bold">{points}</Text>
+        </View>
+      </Marker>
+    );
+  }, []);
+
   return (
     <View className="flex-1">
       <MapView
@@ -77,13 +114,14 @@ export default function TrafficMapNative({ cameras, center, selectedCameraId }: 
           setActiveCameraId(undefined);
           router.setParams({ cameraId: '' });
         }} // Deselect on map click
+        renderCluster={renderCluster}
       >
         <UrlTile
           urlTemplate="https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
           maximumZ={19}
           flipY={false}
         />
-        {cameras.map((cam) => {
+        {cams.map((cam) => {
           const lat = cam.latitude;
           const lon = cam.longitude;
           if (lat === undefined || lon === undefined) return null;
@@ -98,11 +136,7 @@ export default function TrafficMapNative({ cameras, center, selectedCameraId }: 
               title={cam.location}
               tracksViewChanges={cam.id === activeCameraId}
               onPress={() => {
-                if (!center || Math.abs(center.lat - lat) > 0.0001 || Math.abs(center.lon - lon) > 0.0001) {
-                  internalCenterUpdateRef.current = { lat, lon };
-                } else {
-                  internalCenterUpdateRef.current = null;
-                }
+                internalCenterUpdateRef.current = (!center || Math.abs(center.lat - lat) > 0.0001 || Math.abs(center.lon - lon) > 0.0001) ? { lat, lon } : null;
                 setActiveCameraId(cam.id);
                 router.setParams({
                   cameraId: String(cam.id),
