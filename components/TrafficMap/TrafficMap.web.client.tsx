@@ -10,6 +10,8 @@ import 'leaflet/dist/leaflet.css';
 import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 
+const DURATION = 0.7;
+
 // Fix for default Leaflet icon paths in React Native Web/Webpack
 delete (L.Icon.Default.prototype as any)._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -79,6 +81,7 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
   const markerRefs = useRef<{ [key: string]: any }>({});
   const [activeCameraId, setActiveCameraId] = React.useState<string | undefined>(selectedCameraId);
   const internalCenterUpdateRef = useRef<{ lat: number, lon: number } | null>(null);
+  const mapRef = useRef<L.Map | null>(null);
 
   useEffect(() => {
     setActiveCameraId(selectedCameraId);
@@ -109,6 +112,7 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
         center={defaultCenter as [number, number]}
         zoom={center ? 15 : 6}
         className="w-full h-full"
+        ref={mapRef}
       >
         <MapController center={center} internalCenterUpdateRef={internalCenterUpdateRef} />
         <MapEvents onMapClick={() => {
@@ -151,11 +155,15 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
                 icon={cam.id === activeCameraId ? redIcon : defaultIcon}
                 zIndexOffset={cam.id === activeCameraId ? 1000 : 0}
                 eventHandlers={{
-                  click: () => {
+                  click: (e) => {
+                    const map = mapRef.current || e.target._map;
+                    const currentZoom = map?.getZoom() || 15;
                     if (!center || Math.abs(center.lat - lat) > 0.0001 || Math.abs(center.lon - lon) > 0.0001) {
                       internalCenterUpdateRef.current = { lat, lon };
+                      map?.flyTo([lat, lon], currentZoom, { animate: true, duration: DURATION });
                     } else {
                       internalCenterUpdateRef.current = null;
+                      map?.flyTo([lat, lon], currentZoom, { animate: true, duration: DURATION });
                     }
                     setActiveCameraId(cam.id);
                     router.setParams({
@@ -166,7 +174,7 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
                   }
                 }}
               >
-                <Popup closeButton={true}>
+                <Popup closeButton={true} autoPan={false}>
                   <View className="w-[240px] items-center p-1">
                     <Text className="font-bold mb-2 text-center text-sm px-6">{cam.location}</Text>
                     <Pressable
