@@ -4,11 +4,11 @@ import React, { useEffect, useRef } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 // Leaflet and React-Leaflet imports
+import { Cam } from '@/types/cam';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
-import { Cam } from '@/types/cam';
 
 // Fix for default Leaflet icon paths in React Native Web/Webpack
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -125,6 +125,16 @@ export default function TrafficMapWebClient({ cameras, center, selectedCameraId 
         <MarkerClusterGroup
           chunkedLoading
           maxClusterRadius={50}
+          showCoverageOnHover={false}
+          spiderfyOnMaxZoom={false}
+          iconCreateFunction={(cluster: any) => {
+            const count = cluster.getChildCount();
+            return L.divIcon({
+              html: `<div style="background-color: #ef4444; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; border: 2px solid white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);">${count}</div>`,
+              className: '',
+              iconSize: [40, 40],
+            });
+          }}
         >
           {cameras.map((cam) => {
             const lat = cam.latitude;

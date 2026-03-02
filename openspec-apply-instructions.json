@@ -1,0 +1,13 @@
+## Apply: refactor-clustering-representation
+Schema: feature-with-tests
+
+### Context Files
+- proposal: C:\Users\Yago\WebstormProjects\expo-android-project-3\openspec\changes\refactor-clustering-representation\proposal.md
+- specs: C:\Users\Yago\WebstormProjects\expo-android-project-3\openspec\changes\refactor-clustering-representation\specs\**\*.md
+- design: C:\Users\Yago\WebstormProjects\expo-android-project-3\openspec\changes\refactor-clustering-representation\design.md
+- tasks: C:\Users\Yago\WebstormProjects\expo-android-project-3\openspec\changes\refactor-clustering-representation\tasks.md
+- unit-tests: C:\Users\Yago\WebstormProjects\expo-android-project-3\openspec\changes\refactor-clustering-representation\tests\unit.md
+
+### Instruction
+The tasks.md file exists but contains no tasks.
+Add tasks to tasks.md or regenerate it with openspec-continue-change.

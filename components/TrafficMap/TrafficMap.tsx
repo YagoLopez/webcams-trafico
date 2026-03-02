@@ -77,6 +77,24 @@ export default function TrafficMapNative({ cameras, center, selectedCameraId }: 
           setActiveCameraId(undefined);
           router.setParams({ cameraId: '' });
         }} // Deselect on map click
+        renderCluster={(cluster) => {
+          const { id, geometry, onPress, properties } = cluster;
+          const points = properties?.point_count || 0;
+          return (
+            <Marker
+              key={`cluster-${id}`}
+              coordinate={{
+                latitude: geometry.coordinates[1],
+                longitude: geometry.coordinates[0],
+              }}
+              onPress={onPress}
+            >
+              <View className="bg-red-500 rounded-full w-10 h-10 items-center justify-center border-2 border-white shadow-md">
+                <Text className="text-white font-bold">{points}</Text>
+              </View>
+            </Marker>
+          );
+        }}
       >
         <UrlTile
           urlTemplate="https://a.tile.openstreetmap.org/{z}/{x}/{y}.png"
