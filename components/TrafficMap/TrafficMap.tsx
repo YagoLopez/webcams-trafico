@@ -1,4 +1,3 @@
-import { Ionicons } from '@expo/vector-icons';
 import { Image } from 'expo-image';
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
@@ -14,46 +13,8 @@ interface TrafficMapProps {
   selectedCameraId?: string;
 }
 
-// A custom Marker wrapper is necessary to toggle tracksViewChanges locally.
-// Android custom markers will be invisible if tracksViewChanges is true at the exact moment of mount
-// and snapshotting. Toggling it after a short delay or onLayout fixes the missing icons at deep zooms.
-const TrackedMarker = React.forwardRef<import('react-native-maps').MapMarker, any>((props, ref) => {
-  const [tracksViewChanges, setTracksViewChanges] = React.useState(true);
-
-  // Stop tracking view changes shortly after mount to ensure Android renders the custom icon
-  useEffect(() => {
-    // 500ms is often too short for vector icons to load and render on the first map display.
-    // Give it 1.5 seconds on the very first render.
-    const timeout = setTimeout(() => {
-      setTracksViewChanges(false);
-    }, 1500);
-    return () => clearTimeout(timeout);
-  }, []);
-
-  return (
-    <Marker
-      {...props}
-      ref={ref}
-      tracksViewChanges={tracksViewChanges}
-    >
-      <View
-        className="p-2 rounded-lg border-2 border-white shadow-md bg-blue-500 justify-center items-center w-8 h-8"
-      >
-        <Ionicons
-          name="videocam"
-          size={14}
-          color="white"
-          onLayout={() => {
-            // Give a tiny frame after layout for snapshot
-            setTimeout(() => setTracksViewChanges(false), 200);
-          }}
-        />
-      </View>
-      {props.children}
-    </Marker>
-  );
-});
-TrackedMarker.displayName = 'TrackedMarker';
+// Using a pre-generated static PNG icon vastly improves performance over vector views
+const camIcon = require('@/assets/images/cam-icon.png');
 
 export default function TrafficMapNative({ cams, center, selectedCameraId }: TrafficMapProps) {
   const mapRef = useRef<any>(null); // react-native-map-clustering doesn't export a perfect type for this, so using 'any' is standard here
@@ -140,7 +101,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
           if (lat === undefined || lon === undefined) return null;
 
           return (
-            <TrackedMarker
+            <Marker
               key={cam.id}
               ref={(ref: any) => {
                 if (ref) markerRefs.current[cam.id] = ref;
@@ -149,6 +110,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
               title={cam.location}
               anchor={{ x: 0.5, y: 0.5 }}
               calloutAnchor={{ x: 0.5, y: 0.0 }}
+              icon={camIcon}
               onPress={() => {
                 clickedMarkerIdRef.current = cam.id;
                 internalCenterUpdateRef.current = (!center || Math.abs(center.lat - lat) > 0.0001 || Math.abs(center.lon - lon) > 0.0001) ? { lat, lon } : null;
@@ -185,7 +147,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
                   </Pressable>
                 </View>
               </Callout>
-            </TrackedMarker>
+            </Marker>
           );
         })}
       </MapView>
