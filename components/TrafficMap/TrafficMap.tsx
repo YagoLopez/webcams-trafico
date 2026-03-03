@@ -22,9 +22,11 @@ const TrackedMarker = React.forwardRef<import('react-native-maps').MapMarker, an
 
   // Stop tracking view changes shortly after mount to ensure Android renders the custom icon
   useEffect(() => {
+    // 500ms is often too short for vector icons to load and render on the first map display.
+    // Give it 1.5 seconds on the very first render.
     const timeout = setTimeout(() => {
       setTracksViewChanges(false);
-    }, 500);
+    }, 1500);
     return () => clearTimeout(timeout);
   }, []);
 
@@ -35,10 +37,17 @@ const TrackedMarker = React.forwardRef<import('react-native-maps').MapMarker, an
       tracksViewChanges={tracksViewChanges}
     >
       <View
-        className="p-2 rounded-lg border-2 border-white shadow-md bg-blue-500"
-        onLayout={() => setTracksViewChanges(false)}
+        className="p-2 rounded-lg border-2 border-white shadow-md bg-blue-500 justify-center items-center w-8 h-8"
       >
-        <Ionicons name="videocam" size={14} color="white" />
+        <Ionicons
+          name="videocam"
+          size={14}
+          color="white"
+          onLayout={() => {
+            // Give a tiny frame after layout for snapshot
+            setTimeout(() => setTracksViewChanges(false), 200);
+          }}
+        />
       </View>
       {props.children}
     </Marker>
