@@ -107,7 +107,23 @@ export default function CamDetailScreen() {
           <Text className="text-2xl font-bold text-[#111418] dark:text-white tracking-tight">{cam.location}</Text>
           <Text className="text-slate-500 dark:text-slate-400 text-sm mt-1">{cam.kilometer}</Text>
         </View>
-
+        <Pressable
+          onPress={() => {
+            if (cam.latitude && cam.longitude) {
+              router.push({ pathname: '/map', params: { lat: cam.latitude, lon: cam.longitude, cameraId: cam.id } });
+            }
+          }}
+          className="w-full self-center lg:w-[90%] h-32 mt-2 mb-8 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 items-center justify-center bg-slate-100 dark:bg-slate-800 active:opacity-90">
+          <Image
+            source={require('../../assets/images/gmap.jpg')}
+            className="absolute top-0 left-0 w-full h-full opacity-70 dark:opacity-50"
+            resizeMode="cover"
+          />
+          <View className="flex-row items-center gap-2 bg-white dark:bg-slate-900 px-5 py-2.5 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
+            <MaterialIcons name="map" size={20} color="#137fec" />
+            <Text className="text-[#111418] dark:text-white font-bold">Open Full Map</Text>
+          </View>
+        </Pressable>
         {/* Action Buttons */}
         <View className="flex-row gap-3 mb-6 w-full lg:w-[300px] self-center">
           <Pressable className="flex-1 flex-row items-center justify-center gap-2 h-11 bg-primary active:bg-blue-600 rounded-lg shadow-sm">
@@ -163,23 +179,7 @@ export default function CamDetailScreen() {
           </View>
         </View>
 
-        <Pressable
-          onPress={() => {
-            if (cam.latitude && cam.longitude) {
-              router.push({ pathname: '/map', params: { lat: cam.latitude, lon: cam.longitude, cameraId: cam.id } });
-            }
-          }}
-          className="w-full self-center lg:w-[90%] h-32 mt-2 mb-8 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 items-center justify-center bg-slate-100 dark:bg-slate-800 active:opacity-90">
-          <Image
-            source={require('../../assets/images/gmap.jpg')}
-            className="absolute top-0 left-0 w-full h-full opacity-70 dark:opacity-50"
-            resizeMode="cover"
-          />
-          <View className="flex-row items-center gap-2 bg-white dark:bg-slate-900 px-5 py-2.5 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
-            <MaterialIcons name="map" size={20} color="#137fec" />
-            <Text className="text-[#111418] dark:text-white font-bold">Open Full Map</Text>
-          </View>
-        </Pressable>
+
 
       </ScrollView>
     </View>
