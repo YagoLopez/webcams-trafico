@@ -60,7 +60,7 @@ export default function MapScreen() {
   }
 
   return (
-    <View className="flex-1">
+    <View style={{ flex: 1 }}>
       <TrafficMap cams={cams} center={center} selectedCameraId={params.cameraId as string} />
     </View>
   );
