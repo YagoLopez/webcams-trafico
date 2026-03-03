@@ -14,8 +14,37 @@ interface TrafficMapProps {
   selectedCameraId?: string;
 }
 
-// CameraMarker was removed because react-native-map-clustering needs Marker components to be direct children
-// of the MapView to extract their coordinates via React.Children.map and cloneElement.
+// A custom Marker wrapper is necessary to toggle tracksViewChanges locally.
+// Android custom markers will be invisible if tracksViewChanges is true at the exact moment of mount
+// and snapshotting. Toggling it after a short delay or onLayout fixes the missing icons at deep zooms.
+const TrackedMarker = React.forwardRef<import('react-native-maps').MapMarker, any>((props, ref) => {
+  const [tracksViewChanges, setTracksViewChanges] = React.useState(true);
+
+  // Stop tracking view changes shortly after mount to ensure Android renders the custom icon
+  useEffect(() => {
+    const timeout = setTimeout(() => {
+      setTracksViewChanges(false);
+    }, 500);
+    return () => clearTimeout(timeout);
+  }, []);
+
+  return (
+    <Marker
+      {...props}
+      ref={ref}
+      tracksViewChanges={tracksViewChanges}
+    >
+      <View
+        className="p-2 rounded-lg border-2 border-white shadow-md bg-blue-500"
+        onLayout={() => setTracksViewChanges(false)}
+      >
+        <Ionicons name="videocam" size={14} color="white" />
+      </View>
+      {props.children}
+    </Marker>
+  );
+});
+TrackedMarker.displayName = 'TrackedMarker';
 
 export default function TrafficMapNative({ cams, center, selectedCameraId }: TrafficMapProps) {
   const mapRef = useRef<any>(null); // react-native-map-clustering doesn't export a perfect type for this, so using 'any' is standard here
@@ -84,8 +113,8 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
         initialRegion={{
           latitude: center?.lat || 40.4168,
           longitude: center?.lon || -3.7038,
-          latitudeDelta: 5.0,
-          longitudeDelta: 5.0,
+          latitudeDelta: center ? 0.05 : 5.0,
+          longitudeDelta: center ? 0.05 : 5.0,
         }}
         provider={PROVIDER_GOOGLE}
         showsUserLocation={true}
@@ -102,16 +131,15 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
           if (lat === undefined || lon === undefined) return null;
 
           return (
-            <Marker
+            <TrackedMarker
               key={cam.id}
-              ref={(ref) => {
+              ref={(ref: any) => {
                 if (ref) markerRefs.current[cam.id] = ref;
               }}
               coordinate={{ latitude: lat, longitude: lon }}
               title={cam.location}
               anchor={{ x: 0.5, y: 0.5 }}
               calloutAnchor={{ x: 0.5, y: 0.0 }}
-              tracksViewChanges={false}
               onPress={() => {
                 clickedMarkerIdRef.current = cam.id;
                 internalCenterUpdateRef.current = (!center || Math.abs(center.lat - lat) > 0.0001 || Math.abs(center.lon - lon) > 0.0001) ? { lat, lon } : null;
@@ -123,9 +151,6 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
                 });
               }}
             >
-              <View className="p-2 rounded-lg border-2 border-white shadow-md bg-blue-500">
-                <Ionicons name="videocam" size={14} color="white" />
-              </View>
               <Callout tooltip={true}>
                 <View className="bg-white dark:bg-slate-800 p-3 rounded-xl w-64 shadow-xl border border-slate-200 dark:border-slate-700 items-center">
                   <Text className="font-bold text-sm mb-2 text-center text-slate-800 dark:text-white">{cam.location}</Text>
@@ -151,7 +176,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
                   </Pressable>
                 </View>
               </Callout>
-            </Marker>
+            </TrackedMarker>
           );
         })}
       </MapView>
