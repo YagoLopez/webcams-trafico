@@ -86,6 +86,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
         anchor={{ x: 0.5, y: 0.5 }}
         icon={camIcon}
         tracksViewChanges={false}
+        testID={`map-marker-${cam.id}`}
         onPress={(e) => {
           e.stopPropagation();
           router.setParams({
@@ -139,6 +140,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
           activeOffsetX={[-20, 20]}
         >
           <Animated.View
+            testID="pseudo-callout"
             className="absolute top-10 left-5 right-5 bg-white rounded-xl p-3 shadow-lg elevation-5 flex-col"
             style={{ transform: [{ translateX: pan.x }] }}
           >
