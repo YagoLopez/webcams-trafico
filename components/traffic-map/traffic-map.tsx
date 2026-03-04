@@ -1,6 +1,7 @@
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import { Animated, GestureResponderEvent, Image, PanResponder, PanResponderGestureState, Pressable, Text, View } from 'react-native';
+import { Animated, Image, Pressable, Text, View } from 'react-native';
+import { PanGestureHandler, PanGestureHandlerGestureEvent, PanGestureHandlerStateChangeEvent, State } from 'react-native-gesture-handler';
 import MapViewClustered from 'react-native-map-clustering';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
@@ -20,35 +21,32 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
   const [activeCam, setActiveCam] = React.useState<Cam | null>(null);
   const pan = useRef(new Animated.ValueXY()).current;
 
-  const panResponder = useRef(
-    PanResponder.create({
-      onStartShouldSetPanResponder: () => false,
-      onMoveShouldSetPanResponder: (_: GestureResponderEvent, gestureState: PanResponderGestureState) => {
-        return Math.abs(gestureState.dx) > 20 && Math.abs(gestureState.dx) > Math.abs(gestureState.dy);
-      },
-      onPanResponderMove: Animated.event([null, { dx: pan.x }], {
-        useNativeDriver: false,
-      }),
-      onPanResponderRelease: (_: GestureResponderEvent, gestureState: PanResponderGestureState) => {
-        if (Math.abs(gestureState.dx) > 100) {
-          // Swipe out
-          Animated.timing(pan, {
-            toValue: { x: gestureState.dx > 0 ? 500 : -500, y: 0 },
-            duration: 200,
-            useNativeDriver: true,
-          }).start(() => {
-            router.setParams({ cameraId: '' });
-          });
-        } else {
-          // Bounce back to center
-          Animated.spring(pan, {
-            toValue: { x: 0, y: 0 },
-            useNativeDriver: true,
-          }).start();
-        }
-      },
-    })
-  ).current;
+  const onGestureEvent = Animated.event<PanGestureHandlerGestureEvent>(
+    [{ nativeEvent: { translationX: pan.x } }],
+    { useNativeDriver: true }
+  );
+
+  const onHandlerStateChange = (event: PanGestureHandlerStateChangeEvent) => {
+    if (event.nativeEvent.oldState === State.ACTIVE) {
+      const { translationX } = event.nativeEvent;
+      if (Math.abs(translationX) > 100) {
+        // Swipe out
+        Animated.timing(pan, {
+          toValue: { x: translationX > 0 ? 500 : -500, y: 0 },
+          duration: 200,
+          useNativeDriver: true,
+        }).start(() => {
+          router.setParams({ cameraId: '' });
+        });
+      } else {
+        // Bounce back to center
+        Animated.spring(pan, {
+          toValue: { x: 0, y: 0 },
+          useNativeDriver: true,
+        }).start();
+      }
+    }
+  };
 
   useEffect(() => {
     if (selectedCameraId) {
@@ -133,35 +131,40 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
       </MapViewClustered>
 
       {activeCam && (
-        <Animated.View
-          className="absolute top-10 left-5 right-5 bg-white rounded-xl p-3 shadow-lg elevation-5 flex-col"
-          style={{ transform: [{ translateX: pan.x }] }}
-          {...panResponder.panHandlers}
+        <PanGestureHandler
+          onGestureEvent={onGestureEvent}
+          onHandlerStateChange={onHandlerStateChange}
+          activeOffsetX={[-20, 20]}
         >
-          <Pressable
-            className="absolute -top-2 -right-2 z-10 bg-white rounded-full w-6 h-6 items-center justify-center shadow-sm elevation-2 active:opacity-70"
-            onPress={() => router.setParams({ cameraId: '' })}
+          <Animated.View
+            className="absolute top-10 left-5 right-5 bg-white rounded-xl p-3 shadow-lg elevation-5 flex-col"
+            style={{ transform: [{ translateX: pan.x }] }}
           >
-            <Text className="text-[12px] text-[#333] font-bold">✕</Text>
-          </Pressable>
-
-          <Pressable
-            className="active:opacity-70"
-            onPress={() => router.push({ pathname: '/cam/[id]/gallery', params: { id: activeCam.id, image: activeCam.imageUrl } })}
-          >
-            <Image className="w-full h-[200px] rounded-lg bg-[#e1e4e8] mb-3" source={{ uri: activeCam.imageUrl }} resizeMode="cover" />
-          </Pressable>
-          <View className="justify-between">
-            <Text className="text-base font-bold text-[#333] mb-1" numberOfLines={1}>{activeCam.location}</Text>
-            <Text className="text-sm text-[#666] mb-2">{activeCam.road} - Km {activeCam.kilometer}</Text>
             <Pressable
-              className="bg-[#3b82f6] py-3 px-3 rounded-md self-start active:opacity-70"
-              onPress={() => router.push(`/cam/${activeCam.id}`)}
+              className="absolute -top-2 -right-2 z-10 bg-white rounded-full w-6 h-6 items-center justify-center shadow-sm elevation-2 active:opacity-70"
+              onPress={() => router.setParams({ cameraId: '' })}
             >
-              <Text className="text-white text-sm font-medium">Ver detalles</Text>
+              <Text className="text-[12px] text-[#333] font-bold">✕</Text>
             </Pressable>
-          </View>
-        </Animated.View>
+
+            <Pressable
+              className="active:opacity-70"
+              onPress={() => router.push({ pathname: '/cam/[id]/gallery', params: { id: activeCam.id, image: activeCam.imageUrl } })}
+            >
+              <Image className="w-full h-[200px] rounded-lg bg-[#e1e4e8] mb-3" source={{ uri: activeCam.imageUrl }} resizeMode="cover" />
+            </Pressable>
+            <View className="justify-between">
+              <Text className="text-base font-bold text-[#333] mb-1" numberOfLines={1}>{activeCam.location}</Text>
+              <Text className="text-sm text-[#666] mb-2">{activeCam.road} - Km {activeCam.kilometer}</Text>
+              <Pressable
+                className="bg-[#3b82f6] py-3 px-3 rounded-md self-start active:opacity-70"
+                onPress={() => router.push(`/cam/${activeCam.id}`)}
+              >
+                <Text className="text-white text-sm font-medium">Ver detalles</Text>
+              </Pressable>
+            </View>
+          </Animated.View>
+        </PanGestureHandler>
       )}
     </View>
   );
