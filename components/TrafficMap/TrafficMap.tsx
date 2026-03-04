@@ -119,7 +119,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
 const styles = StyleSheet.create({
   calloutContainer: {
     position: 'absolute',
-    bottom: 30,
+    top: 40,
     left: 20,
     right: 20,
     backgroundColor: 'white',
@@ -130,18 +130,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.25,
     shadowRadius: 3.84,
     elevation: 5,
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: 'column',
   },
   calloutImage: {
-    width: 80,
-    height: 80,
+    width: '100%',
+    height: 200,
     borderRadius: 8,
     backgroundColor: '#e1e4e8',
+    marginBottom: 12,
   },
   calloutInfo: {
-    flex: 1,
-    marginLeft: 12,
     justifyContent: 'space-between',
   },
   calloutTitle: {
