@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import { Image, Pressable, Text, View } from 'react-native';
+import { Image, PanResponder, Pressable, Text, View } from 'react-native';
 import MapView from 'react-native-map-clustering';
 import { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
@@ -19,6 +19,20 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
   const router = useRouter();
 
   const [activeCam, setActiveCam] = React.useState<Cam | null>(null);
+
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => false,
+      onMoveShouldSetPanResponder: (evt, gestureState) => {
+        return Math.abs(gestureState.dx) > 20 && Math.abs(gestureState.dx) > Math.abs(gestureState.dy);
+      },
+      onPanResponderRelease: (evt, gestureState) => {
+        if (Math.abs(gestureState.dx) > 50) {
+          router.setParams({ cameraId: '' });
+        }
+      },
+    })
+  ).current;
 
   useEffect(() => {
     if (selectedCameraId) {
@@ -102,7 +116,10 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
       </MapView>
 
       {activeCam && (
-        <View className="absolute top-10 left-5 right-5 bg-white rounded-xl p-3 shadow-lg elevation-5 flex-col">
+        <View
+          className="absolute top-10 left-5 right-5 bg-white rounded-xl p-3 shadow-lg elevation-5 flex-col"
+          {...panResponder.panHandlers}
+        >
           <Pressable
             className="absolute -top-2 -right-2 z-10 bg-white rounded-full w-6 h-6 items-center justify-center shadow-sm elevation-2 active:opacity-70"
             onPress={() => router.setParams({ cameraId: '' })}
