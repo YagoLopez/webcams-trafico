@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import MapView from 'react-native-map-clustering';
 import { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
@@ -52,7 +52,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
       <Marker
         key={cam.id}
         coordinate={{ latitude: lat, longitude: lon }}
-        title={cam.location}
+        title={cam.road}
         anchor={{ x: 0.5, y: 0.5 }}
         icon={camIcon}
         tracksViewChanges={false}
@@ -93,6 +93,100 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
         {markers}
       </MapView>
 
+      {activeCam && (
+        <View style={styles.calloutContainer}>
+          <TouchableOpacity style={styles.closeButton} onPress={() => router.setParams({ cameraId: '' })}>
+            <Text style={styles.closeText}>✕</Text>
+          </TouchableOpacity>
+
+          <Image style={styles.calloutImage} source={{ uri: activeCam.imageUrl }} resizeMode="cover" />
+          <View style={styles.calloutInfo}>
+            <Text style={styles.calloutTitle} numberOfLines={1}>{activeCam.location}</Text>
+            <Text style={styles.calloutSubtitle}>{activeCam.road} - Km {activeCam.kilometer}</Text>
+            <TouchableOpacity
+              style={styles.calloutButton}
+              onPress={() => router.push(`/cam/${activeCam.id}`)}
+            >
+              <Text style={styles.calloutButtonText}>Ver detalles</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  calloutContainer: {
+    position: 'absolute',
+    bottom: 30,
+    left: 20,
+    right: 20,
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 12,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  calloutImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 8,
+    backgroundColor: '#e1e4e8',
+  },
+  calloutInfo: {
+    flex: 1,
+    marginLeft: 12,
+    justifyContent: 'space-between',
+  },
+  calloutTitle: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 4,
+  },
+  calloutSubtitle: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 8,
+  },
+  calloutButton: {
+    backgroundColor: '#3b82f6',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
+    borderRadius: 6,
+    alignSelf: 'flex-start',
+  },
+  calloutButtonText: {
+    color: 'white',
+    fontSize: 14,
+    fontWeight: '500',
+  },
+  closeButton: {
+    position: 'absolute',
+    top: -8,
+    right: -8,
+    zIndex: 1,
+    backgroundColor: 'white',
+    borderRadius: 12,
+    width: 24,
+    height: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.2,
+    shadowRadius: 1.41,
+    elevation: 2,
+  },
+  closeText: {
+    fontSize: 12,
+    color: '#333',
+    fontWeight: 'bold',
+  }
+});
