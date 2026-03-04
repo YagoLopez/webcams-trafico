@@ -3,7 +3,7 @@ import { useColorScheme } from '@/hooks/use-color-scheme';
 import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
@@ -15,6 +15,7 @@ export default function CamDetailScreen() {
 
   const camsRepository = JsonCamsRepository.getInstance();
   const { data: cam, isLoading } = useCamById(camsRepository, id);
+  const [isNavigatingToMap, setIsNavigatingToMap] = useState(false);
 
   if (isLoading) {
     return (
@@ -107,23 +108,42 @@ export default function CamDetailScreen() {
           <Text className="text-2xl font-bold text-[#111418] dark:text-white tracking-tight">{cam.location}</Text>
           <Text className="text-slate-500 dark:text-slate-400 text-sm mt-1">{cam.kilometer}</Text>
         </View>
+
+        {/* Map Preview */}
         <Pressable
+          disabled={isNavigatingToMap}
           onPress={() => {
             if (cam.latitude && cam.longitude) {
-              router.push({ pathname: '/map', params: { lat: cam.latitude, lon: cam.longitude, cameraId: cam.id } });
+              setIsNavigatingToMap(true);
+              // Small delay to allow the UI to render the loading indicator before
+              // the JS thread gets busy mounting the map screen.
+              setTimeout(() => {
+                router.push({ pathname: '/map', params: { lat: cam.latitude, lon: cam.longitude, cameraId: cam.id } });
+                setTimeout(() => setIsNavigatingToMap(false), 500);
+              }, 50);
             }
           }}
-          className="w-full self-center lg:w-[90%] h-32 mt-2 mb-8 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 items-center justify-center bg-slate-100 dark:bg-slate-800 active:opacity-90">
+          style={({ pressed }) => [
+            { transform: [{ scale: pressed ? 0.96 : 1 }] }
+          ]}
+          className={`w-full self-center lg:w-[90%] h-32 mt-2 mb-8 rounded-xl overflow-hidden border-2 border-slate-300 dark:border-slate-600 shadow-md items-center justify-center bg-slate-100 dark:bg-slate-800 ${isNavigatingToMap ? 'opacity-90' : 'active:opacity-80'}`}>
           <Image
             source={require('../../assets/images/gmap.jpg')}
             className="absolute top-0 left-0 w-full h-full opacity-70 dark:opacity-50"
             resizeMode="cover"
           />
-          <View className="flex-row items-center gap-2 bg-white dark:bg-slate-900 px-5 py-2.5 rounded-lg shadow-sm border border-slate-200 dark:border-slate-700">
-            <MaterialIcons name="map" size={20} color="#137fec" />
-            <Text className="text-[#111418] dark:text-white font-bold">Open Full Map</Text>
+          <View className="flex-row items-center border-2 border-slate-300 dark:border-slate-600 gap-2 bg-white dark:bg-slate-900 px-5 py-4 rounded-lg shadow-lg">
+            {isNavigatingToMap ? (
+              <ActivityIndicator size="small" color="#137fec" />
+            ) : (
+              <MaterialIcons name="map" size={20} color="#137fec" />
+            )}
+            <Text className="text-[#111418] dark:text-white font-bold">
+              {isNavigatingToMap ? 'Abriendo mapa...' : 'Mostrar en mapa'}
+            </Text>
           </View>
         </Pressable>
+
         {/* Action Buttons */}
         <View className="flex-row gap-3 mb-6 w-full lg:w-[300px] self-center">
           <Pressable className="flex-1 flex-row items-center justify-center gap-2 h-11 bg-primary active:bg-blue-600 rounded-lg shadow-sm">
