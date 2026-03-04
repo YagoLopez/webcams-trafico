@@ -1,6 +1,6 @@
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Image, Pressable, Text, View } from 'react-native';
 import MapView from 'react-native-map-clustering';
 import { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
@@ -52,13 +52,11 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
       <Marker
         key={cam.id}
         coordinate={{ latitude: lat, longitude: lon }}
-        title={cam.road}
         anchor={{ x: 0.5, y: 0.5 }}
         icon={camIcon}
         tracksViewChanges={false}
         onPress={(e) => {
           e.stopPropagation();
-          // Set selection explicitly in route instead of using native Callout
           router.setParams({
             cameraId: String(cam.id),
             lat: String(lat),
@@ -70,10 +68,10 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
   }), [cams, router]);
 
   return (
-    <View style={StyleSheet.absoluteFill}>
+    <View className="absolute inset-0">
       <MapView
         ref={mapRef as any}
-        style={StyleSheet.absoluteFill}
+        style={{ flex: 1 }}
         initialRegion={{
           latitude: center?.lat || 40.4168,
           longitude: center?.lon || -3.7038,
@@ -94,97 +92,32 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
       </MapView>
 
       {activeCam && (
-        <View style={styles.calloutContainer}>
-          <TouchableOpacity style={styles.closeButton} onPress={() => router.setParams({ cameraId: '' })}>
-            <Text style={styles.closeText}>✕</Text>
-          </TouchableOpacity>
+        <View className="absolute top-10 left-5 right-5 bg-white rounded-xl p-3 shadow-lg elevation-5 flex-col">
+          <Pressable
+            className="absolute -top-2 -right-2 z-10 bg-white rounded-full w-6 h-6 items-center justify-center shadow-sm elevation-2 active:opacity-70"
+            onPress={() => router.setParams({ cameraId: '' })}
+          >
+            <Text className="text-[12px] text-[#333] font-bold">✕</Text>
+          </Pressable>
 
-          <Image style={styles.calloutImage} source={{ uri: activeCam.imageUrl }} resizeMode="cover" />
-          <View style={styles.calloutInfo}>
-            <Text style={styles.calloutTitle} numberOfLines={1}>{activeCam.location}</Text>
-            <Text style={styles.calloutSubtitle}>{activeCam.road} - Km {activeCam.kilometer}</Text>
-            <TouchableOpacity
-              style={styles.calloutButton}
+          <Pressable
+            className="active:opacity-70"
+            onPress={() => router.push({ pathname: '/cam/[id]/gallery', params: { id: activeCam.id, image: activeCam.imageUrl } })}
+          >
+            <Image className="w-full h-[200px] rounded-lg bg-[#e1e4e8] mb-3" source={{ uri: activeCam.imageUrl }} resizeMode="cover" />
+          </Pressable>
+          <View className="justify-between">
+            <Text className="text-base font-bold text-[#333] mb-1" numberOfLines={1}>{activeCam.location}</Text>
+            <Text className="text-sm text-[#666] mb-2">{activeCam.road} - Km {activeCam.kilometer}</Text>
+            <Pressable
+              className="bg-[#3b82f6] py-1.5 px-3 rounded-md self-start active:opacity-70"
               onPress={() => router.push(`/cam/${activeCam.id}`)}
             >
-              <Text style={styles.calloutButtonText}>Ver detalles</Text>
-            </TouchableOpacity>
+              <Text className="text-white text-sm font-medium">Ver detalles</Text>
+            </Pressable>
           </View>
         </View>
       )}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  calloutContainer: {
-    position: 'absolute',
-    top: 40,
-    left: 20,
-    right: 20,
-    backgroundColor: 'white',
-    borderRadius: 12,
-    padding: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    flexDirection: 'column',
-  },
-  calloutImage: {
-    width: '100%',
-    height: 200,
-    borderRadius: 8,
-    backgroundColor: '#e1e4e8',
-    marginBottom: 12,
-  },
-  calloutInfo: {
-    justifyContent: 'space-between',
-  },
-  calloutTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 4,
-  },
-  calloutSubtitle: {
-    fontSize: 14,
-    color: '#666',
-    marginBottom: 8,
-  },
-  calloutButton: {
-    backgroundColor: '#3b82f6',
-    paddingVertical: 6,
-    paddingHorizontal: 12,
-    borderRadius: 6,
-    alignSelf: 'flex-start',
-  },
-  calloutButtonText: {
-    color: 'white',
-    fontSize: 14,
-    fontWeight: '500',
-  },
-  closeButton: {
-    position: 'absolute',
-    top: -8,
-    right: -8,
-    zIndex: 1,
-    backgroundColor: 'white',
-    borderRadius: 12,
-    width: 24,
-    height: 24,
-    alignItems: 'center',
-    justifyContent: 'center',
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 1.41,
-    elevation: 2,
-  },
-  closeText: {
-    fontSize: 12,
-    color: '#333',
-    fontWeight: 'bold',
-  }
-});
