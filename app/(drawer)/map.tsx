@@ -2,7 +2,7 @@ import * as Location from 'expo-location';
 import { useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
-import TrafficMap from '../../components/TrafficMap';
+import TrafficMap from '../../components/traffic-map';
 
 import { useFilteredCams } from '@/hooks/use-cams';
 import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
@@ -60,7 +60,7 @@ export default function MapScreen() {
   }
 
   return (
-    <View className="flex-1">
+    <View style={{ flex: 1 }}>
       <TrafficMap cams={cams} center={center} selectedCameraId={params.cameraId as string} />
     </View>
   );

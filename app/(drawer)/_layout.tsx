@@ -37,7 +37,7 @@ export default function DrawerLayout() {
           drawerItemStyle: {
             borderRadius: 10,
           },
-          swipeEnabled: true,
+          swipeEnabled: false,
           swipeEdgeWidth: Dimensions.get('window').width, // Allows swiping from ANYWHERE on the screen
           header: ({ route, options }) => {
             const title =

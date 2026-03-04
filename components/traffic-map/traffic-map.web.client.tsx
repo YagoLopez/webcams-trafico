@@ -85,7 +85,7 @@ function MapEvents({ onMapClick }: { onMapClick: () => void }) {
 export default function TrafficMapWebClient({ cams, center, selectedCameraId }: TrafficMapProps) {
   const defaultCenter = center ? [center.lat, center.lon] : [40.4168, -3.7038];
   const router = useRouter();
-  const markerRefs = useRef<{ [key: string]: any }>({});
+  const markerRefs = useRef<{ [key: string]: L.Marker | null }>({});
   const [activeCameraId, setActiveCameraId] = React.useState<string | undefined>(selectedCameraId);
   const internalCenterUpdateRef = useRef<{ lat: number, lon: number } | null>(null);
   const mapRef = useRef<L.Map | null>(null);
@@ -101,7 +101,7 @@ export default function TrafficMapWebClient({ cams, center, selectedCameraId }: 
           if (marker.openPopup) {
             marker.openPopup();
             clearInterval(interval);
-          } else if (marker._map) { // Internal Leaflet check if marker is on map
+          } else if ((marker as any)._map) { // Internal Leaflet check if marker is on map
             marker.openPopup();
             clearInterval(interval);
           }
