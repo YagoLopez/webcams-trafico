@@ -66,27 +66,28 @@ export default function GalleryScreen() {
 
       {renderHeader}
 
-      {imageSize ? (
-        // @ts-expect-error: react-native-image-pan-zoom has incompatible type definitions for React 19 / Expo 54
-        <ImageZoom
-          cropWidth={screenWidth}
-          cropHeight={screenHeight}
-          imageWidth={calculatedImageWidth}
-          imageHeight={screenHeight}
-          onSwipeDown={handleBack}
-          enableSwipeDown={true}
-          enableCenterFocus={false}
-        >
-          <Image
-            source={{ uri: imageUrl }}
-            style={{
-              width: calculatedImageWidth,
-              height: screenHeight
-            }}
-            resizeMode="stretch"
-          />
-        </ImageZoom>
-      ) : (
+      {imageSize ? (() => {
+        const imageDisplayHeight = screenHeight;
+        const imageDisplayWidth = imageSize.width * (imageDisplayHeight / imageSize.height);
+        return (
+          //@ts-ignore
+          <ImageZoom
+            cropWidth={screenWidth}
+            cropHeight={screenHeight}
+            imageWidth={imageDisplayWidth}
+            imageHeight={imageDisplayHeight}
+            onSwipeDown={handleBack}
+            enableSwipeDown={true}
+            enableCenterFocus={false}
+          >
+            <Image
+              source={{ uri: imageUrl }}
+              style={{ width: imageDisplayWidth, height: imageDisplayHeight }}
+              resizeMode="stretch"
+            />
+          </ImageZoom>
+        );
+      })() : (
         <View className="flex-1 items-center justify-center">
           <ActivityIndicator size="large" color="white" />
         </View>
