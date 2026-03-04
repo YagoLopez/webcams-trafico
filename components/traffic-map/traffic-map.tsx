@@ -60,7 +60,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
     } else {
       setActiveCam(null);
     }
-  }, [selectedCameraId, cams]);
+  }, [selectedCameraId, cams, pan]);
 
   useEffect(() => {
     if (center && mapRef.current) {

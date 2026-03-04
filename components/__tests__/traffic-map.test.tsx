@@ -14,18 +14,25 @@ jest.mock('expo-router', () => ({
 }));
 
 jest.mock('react-native-map-clustering', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { View } = require('react-native');
-  return (props: any) => <View testID="map-clustering" {...props}>{props.children}</View>;
+  const MockClustering = (props: any) => <View testID="map-clustering" {...props}>{props.children}</View>;
+  MockClustering.displayName = 'MockClustering';
+  return MockClustering;
 });
 
 jest.mock('react-native-maps', () => {
+  // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { View } = require('react-native');
   const MockMapView = (props: any) => <View testID="map-view" {...props}>{props.children}</View>;
-  MockMapView.Marker = (props: any) => <View testID={props.testID} {...props} />;
+  MockMapView.displayName = 'MockMapView';
+  const MockMarker = (props: any) => <View testID={props.testID} {...props} />;
+  MockMarker.displayName = 'MockMarker';
+  MockMapView.Marker = MockMarker;
   return {
     __esModule: true,
     default: MockMapView,
-    Marker: MockMapView.Marker,
+    Marker: MockMarker,
     PROVIDER_GOOGLE: 'PROVIDER_GOOGLE',
   };
 });
@@ -59,10 +66,10 @@ describe('TrafficMap', () => {
   });
 
   it('renders correctly with no cams', () => {
-    const { getByTestId, queryByTestId } = render(
+    const { getByTestId } = render(
       <TrafficMap cams={[]} />
     );
-    expect(true).toBe(true);
+    expect(getByTestId('map-clustering')).toBeTruthy();
   });
 
   it('renders markers correctly on the map', () => {
