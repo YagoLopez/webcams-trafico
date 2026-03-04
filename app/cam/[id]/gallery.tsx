@@ -52,6 +52,8 @@ export default function GalleryScreen() {
     return null; // Should not happen in normal flow
   }
 
+  const calculatedImageWidth = imageSize ? imageSize.width * (screenHeight / imageSize.height) : 0;
+
   return (
     <View className="flex-1 bg-black">
       <Stack.Screen
@@ -65,11 +67,11 @@ export default function GalleryScreen() {
       {renderHeader}
 
       {imageSize ? (
-        //@ts-ignore
+        // @ts-expect-error: react-native-image-pan-zoom has incompatible type definitions for React 19 / Expo 54
         <ImageZoom
           cropWidth={screenWidth}
           cropHeight={screenHeight}
-          imageWidth={imageSize.width * (screenHeight / imageSize.height)}
+          imageWidth={calculatedImageWidth}
           imageHeight={screenHeight}
           onSwipeDown={handleBack}
           enableSwipeDown={true}
@@ -78,7 +80,7 @@ export default function GalleryScreen() {
           <Image
             source={{ uri: imageUrl }}
             style={{
-              width: imageSize.width * (screenHeight / imageSize.height),
+              width: calculatedImageWidth,
               height: screenHeight
             }}
             resizeMode="stretch"
