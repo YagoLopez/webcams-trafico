@@ -87,6 +87,16 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
             router.setParams({ cameraId: '' });
           }
         }}
+        onPanDrag={() => {
+          if (activeCam) {
+            router.setParams({ cameraId: '' });
+          }
+        }}
+        onRegionChange={(region, details) => {
+          if (activeCam && details?.isGesture) {
+            router.setParams({ cameraId: '' });
+          }
+        }}
       >
         {markers}
       </MapView>
