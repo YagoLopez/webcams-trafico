@@ -4,6 +4,12 @@ import React, { useCallback, useState } from 'react';
 import { ActivityIndicator, Dimensions, Image, Pressable, View } from 'react-native';
 import ImageZoom from 'react-native-image-pan-zoom';
 
+// Fix para el error de TypeScript en React 18+ donde 'children' no está definido en los props.
+const ImageZoomTyped = ImageZoom as unknown as React.ComponentType<
+  React.ComponentProps<typeof ImageZoom> & { children?: React.ReactNode }
+>;
+
+
 const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
 
 export default function GalleryScreen() {
@@ -70,8 +76,7 @@ export default function GalleryScreen() {
         const imageDisplayHeight = screenHeight;
         const imageDisplayWidth = imageSize.width * (imageDisplayHeight / imageSize.height);
         return (
-          //@ts-ignore
-          <ImageZoom
+          <ImageZoomTyped
             cropWidth={screenWidth}
             cropHeight={screenHeight}
             imageWidth={imageDisplayWidth}
@@ -85,7 +90,7 @@ export default function GalleryScreen() {
               style={{ width: imageDisplayWidth, height: imageDisplayHeight }}
               resizeMode="stretch"
             />
-          </ImageZoom>
+          </ImageZoomTyped>
         );
       })() : (
         <View className="flex-1 items-center justify-center">
