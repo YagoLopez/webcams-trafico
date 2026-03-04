@@ -1,3 +1,3 @@
-import TrafficMapComponent from './TrafficMap';
+import TrafficMapComponent from './traffic-map';
 
 export default TrafficMapComponent;

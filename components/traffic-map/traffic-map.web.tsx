@@ -19,7 +19,7 @@ function MapLoadingFallback() {
 // This ensures that the component (and all its leaflet static imports inside it)
 // are NEVER evaluated on the server.
 const TrafficMapWebClient = React.lazy(
-  () => import('./TrafficMap.web.client')
+  () => import('./traffic-map.web.client')
 );
 
 export default function TrafficMapWeb(props: TrafficMapProps) {

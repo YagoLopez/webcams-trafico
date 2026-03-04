@@ -82,7 +82,7 @@
   "jest": {
     "preset": "jest-expo",
     "transformIgnorePatterns": [
-      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@exponent/.*|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@sentry/react-native|nativewind|react-native-css-interop|@tanstack/react-query)"
+      "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|react-native-map-clustering|supercluster|kdbush|expo(nent)?|@exponent/.*|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@sentry/react-native|nativewind|react-native-css-interop|@tanstack/react-query)"
     ],
     "setupFilesAfterEnv": [
       "@testing-library/jest-native/extend-expect"
