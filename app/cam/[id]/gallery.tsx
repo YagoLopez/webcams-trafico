@@ -73,7 +73,7 @@ export default function GalleryScreen() {
       {renderHeader}
 
       {imageSize ? (() => {
-        const imageDisplayHeight = screenHeight;
+        const imageDisplayHeight = screenHeight * 0.6;
         const imageDisplayWidth = imageSize.width * (imageDisplayHeight / imageSize.height);
         return (
           <ImageZoomTyped
