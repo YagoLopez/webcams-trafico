@@ -124,9 +124,9 @@ export default function CamDetailScreen() {
             }
           }}
           style={({ pressed }) => [
-            { transform: [{ scale: pressed ? 0.96 : 1 }] }
+            { transform: [{ scale: pressed ? 0.8 : 1 }] }
           ]}
-          className={`w-full self-center lg:w-[90%] h-32 mt-2 mb-8 rounded-xl overflow-hidden border-2 border-slate-300 dark:border-slate-600 shadow-md items-center justify-center bg-slate-100 dark:bg-slate-800 ${isNavigatingToMap ? 'opacity-90' : 'active:opacity-80'}`}>
+          className={`w-full self-center lg:w-[90%] h-32 mt-2 mb-8 rounded-xl overflow-hidden border border-white/10 dark:border-slate-600 shadow-md items-center justify-center bg-slate-100 dark:bg-slate-800 ${isNavigatingToMap ? 'opacity-90' : 'active:opacity-80'}`}>
           <Image
             source={require('../../assets/images/gmap.jpg')}
             className="absolute top-0 left-0 w-full h-full opacity-70 dark:opacity-50"
@@ -134,23 +134,30 @@ export default function CamDetailScreen() {
           />
           <View className="flex-row items-center border-2 border-slate-300 dark:border-slate-600 gap-2 bg-white dark:bg-slate-900 px-5 py-4 rounded-lg shadow-lg">
             {isNavigatingToMap ? (
-              <ActivityIndicator size="small" color="#137fec" />
+              <>
+                <ActivityIndicator size="small" color="#137fec" />
+                <Text className="text-[#111418] dark:text-white font-bold">
+                  Abriendo mapa...
+                </Text>
+              </>
             ) : (
-              <MaterialIcons name="map" size={20} color="#137fec" />
+              <>
+                <MaterialIcons name="map" size={20} color="#137fec" />
+                <Text className="text-[#111418] dark:text-white font-bold">
+                  Mostrar en mapa
+                </Text>
+              </>
             )}
-            <Text className="text-[#111418] dark:text-white font-bold">
-              {isNavigatingToMap ? 'Abriendo mapa...' : 'Mostrar en mapa'}
-            </Text>
           </View>
         </Pressable>
 
         {/* Action Buttons */}
         <View className="flex-row gap-3 mb-6 w-full lg:w-[300px] self-center">
-          <Pressable className="flex-1 flex-row items-center justify-center gap-2 h-11 bg-primary active:bg-blue-600 rounded-lg shadow-sm">
+          <Pressable className="flex-1 flex-row items-center justify-center gap-2 h-14 bg-primary active:bg-blue-600 rounded-lg shadow-sm">
             <MaterialIcons name="star-border" size={20} color="white" />
             <Text className="text-white font-semibold text-sm">Add to Favorites</Text>
           </Pressable>
-          <Pressable className="w-11 h-11 items-center justify-center bg-slate-100 dark:bg-slate-800 active:bg-slate-200 dark:active:bg-slate-700 rounded-lg border border-slate-100 dark:border-slate-700">
+          <Pressable className="w-11 h-14 items-center justify-center bg-slate-100 dark:bg-slate-800 active:bg-slate-200 dark:active:bg-slate-700 rounded-lg border border-slate-100 dark:border-slate-700">
             <MaterialIcons name="share" size={20} color={colorScheme === 'dark' ? 'white' : '#111418'} />
           </Pressable>
         </View>
