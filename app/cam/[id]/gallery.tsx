@@ -1,16 +1,32 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
-import React, { useCallback, useMemo } from 'react';
-import { Pressable, View } from 'react-native';
-import ImageViewer from 'react-native-image-zoom-viewer';
+import React, { useCallback, useState } from 'react';
+import { ActivityIndicator, Dimensions, Image, Pressable, View } from 'react-native';
+import ImageZoom from 'react-native-image-pan-zoom';
+
+const { width: screenWidth, height: screenHeight } = Dimensions.get('screen');
 
 export default function GalleryScreen() {
   const { image } = useLocalSearchParams<{ image: string | string[] }>();
   const router = useRouter();
 
   // Asegura que tomamos un string incluso si Expo Router devuelve un array,
-  // con lo cual garantizamos el tipado correcto de runtime para ImageViewer.
+  // con lo cual garantizamos el tipado correcto de runtime.
   const imageUrl = Array.isArray(image) ? image[0] : image;
+
+  // Estado para las dimensiones reales de la imagen
+  const [imageSize, setImageSize] = useState<{ width: number, height: number } | null>(null);
+
+  React.useEffect(() => {
+    if (imageUrl) {
+      Image.getSize(imageUrl, (width, height) => {
+        setImageSize({ width, height });
+      }, () => {
+        // En caso de error, asume un tamaño cuadrado u otra lógica de fallo segura
+        setImageSize({ width: screenWidth, height: screenWidth });
+      });
+    }
+  }, [imageUrl]);
 
   const handleBack = useCallback(() => {
     if (router.canGoBack()) {
@@ -20,28 +36,23 @@ export default function GalleryScreen() {
     }
   }, [router]);
 
-  const renderIndicator = useCallback(() => <View />, []);
-
-  const renderHeader = useCallback(
-    () => (
+  const renderHeader = (
+    <View className="absolute z-50 top-12 right-6">
       <Pressable
         onPress={handleBack}
-        className="absolute z-50 top-12 right-6 p-2 bg-black/50 rounded-full"
+        className="p-2 bg-black/50 rounded-full"
         accessibilityLabel="Close gallery"
       >
         <MaterialIcons name="close" size={28} color="white" />
       </Pressable>
-    ),
-    [handleBack]
+    </View>
   );
-
-  const images = useMemo(() => {
-    return imageUrl ? [{ url: imageUrl }] : [];
-  }, [imageUrl]);
 
   if (!imageUrl) {
     return null; // Should not happen in normal flow
   }
+
+  const calculatedImageWidth = imageSize ? imageSize.width * (screenHeight / imageSize.height) : 0;
 
   return (
     <View className="flex-1 bg-black">
@@ -53,13 +64,34 @@ export default function GalleryScreen() {
         }}
       />
 
-      <ImageViewer
-        imageUrls={images}
-        onSwipeDown={handleBack}
-        enableSwipeDown={true}
-        renderIndicator={renderIndicator} // Hide image 1/1 counter
-        renderHeader={renderHeader}
-      />
+      {renderHeader}
+
+      {imageSize ? (() => {
+        const imageDisplayHeight = screenHeight;
+        const imageDisplayWidth = imageSize.width * (imageDisplayHeight / imageSize.height);
+        return (
+          //@ts-ignore
+          <ImageZoom
+            cropWidth={screenWidth}
+            cropHeight={screenHeight}
+            imageWidth={imageDisplayWidth}
+            imageHeight={imageDisplayHeight}
+            onSwipeDown={handleBack}
+            enableSwipeDown={true}
+            enableCenterFocus={false}
+          >
+            <Image
+              source={{ uri: imageUrl }}
+              style={{ width: imageDisplayWidth, height: imageDisplayHeight }}
+              resizeMode="stretch"
+            />
+          </ImageZoom>
+        );
+      })() : (
+        <View className="flex-1 items-center justify-center">
+          <ActivityIndicator size="large" color="white" />
+        </View>
+      )}
     </View>
   );
 }
