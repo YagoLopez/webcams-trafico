@@ -155,7 +155,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
             <Text className="text-base font-bold text-[#333] mb-1" numberOfLines={1}>{activeCam.location}</Text>
             <Text className="text-sm text-[#666] mb-2">{activeCam.road} - Km {activeCam.kilometer}</Text>
             <Pressable
-              className="bg-[#3b82f6] py-1.5 px-3 rounded-md self-start active:opacity-70"
+              className="bg-[#3b82f6] py-3 px-3 rounded-md self-start active:opacity-70"
               onPress={() => router.push(`/cam/${activeCam.id}`)}
             >
               <Text className="text-white text-sm font-medium">Ver detalles</Text>
