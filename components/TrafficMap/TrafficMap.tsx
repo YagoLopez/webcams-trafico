@@ -1,8 +1,8 @@
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import { Image, PanResponder, Pressable, Text, View } from 'react-native';
-import MapView from 'react-native-map-clustering';
-import { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { Animated, GestureResponderEvent, Image, PanResponder, PanResponderGestureState, Pressable, Text, View } from 'react-native';
+import MapViewClustered from 'react-native-map-clustering';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
 import { Cam } from '@/types/cam';
 
@@ -15,20 +15,36 @@ interface TrafficMapProps {
 const camIcon = require('@/assets/images/cam-icon4.png');
 
 export default function TrafficMapNative({ cams, center, selectedCameraId }: TrafficMapProps) {
-  const mapRef = useRef<any>(null);
+  const mapRef = useRef<MapView>(null);
   const router = useRouter();
-
   const [activeCam, setActiveCam] = React.useState<Cam | null>(null);
+  const pan = useRef(new Animated.ValueXY()).current;
 
   const panResponder = useRef(
     PanResponder.create({
       onStartShouldSetPanResponder: () => false,
-      onMoveShouldSetPanResponder: (evt, gestureState) => {
+      onMoveShouldSetPanResponder: (_: GestureResponderEvent, gestureState: PanResponderGestureState) => {
         return Math.abs(gestureState.dx) > 20 && Math.abs(gestureState.dx) > Math.abs(gestureState.dy);
       },
-      onPanResponderRelease: (evt, gestureState) => {
-        if (Math.abs(gestureState.dx) > 50) {
-          router.setParams({ cameraId: '' });
+      onPanResponderMove: Animated.event([null, { dx: pan.x }], {
+        useNativeDriver: false,
+      }),
+      onPanResponderRelease: (_: GestureResponderEvent, gestureState: PanResponderGestureState) => {
+        if (Math.abs(gestureState.dx) > 100) {
+          // Swipe out
+          Animated.timing(pan, {
+            toValue: { x: gestureState.dx > 0 ? 500 : -500, y: 0 },
+            duration: 200,
+            useNativeDriver: true,
+          }).start(() => {
+            router.setParams({ cameraId: '' });
+          });
+        } else {
+          // Bounce back to center
+          Animated.spring(pan, {
+            toValue: { x: 0, y: 0 },
+            useNativeDriver: true,
+          }).start();
         }
       },
     })
@@ -38,6 +54,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
     if (selectedCameraId) {
       const cam = cams.find((c) => String(c.id) === String(selectedCameraId));
       if (cam) {
+        pan.setValue({ x: 0, y: 0 }); // Reset position when a new camera is selected
         setActiveCam(cam);
       }
     } else {
@@ -83,8 +100,8 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
 
   return (
     <View className="absolute inset-0">
-      <MapView
-        ref={mapRef as any}
+      <MapViewClustered
+        ref={mapRef}
         style={{ flex: 1 }}
         initialRegion={{
           latitude: center?.lat || 40.4168,
@@ -113,11 +130,12 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
         }}
       >
         {markers}
-      </MapView>
+      </MapViewClustered>
 
       {activeCam && (
-        <View
+        <Animated.View
           className="absolute top-10 left-5 right-5 bg-white rounded-xl p-3 shadow-lg elevation-5 flex-col"
+          style={{ transform: [{ translateX: pan.x }] }}
           {...panResponder.panHandlers}
         >
           <Pressable
@@ -143,7 +161,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
               <Text className="text-white text-sm font-medium">Ver detalles</Text>
             </Pressable>
           </View>
-        </View>
+        </Animated.View>
       )}
     </View>
   );
