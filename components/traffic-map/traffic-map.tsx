@@ -35,8 +35,10 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
           toValue: { x: translationX > 0 ? 500 : -500, y: 0 },
           duration: 200,
           useNativeDriver: true,
-        }).start(() => {
-          router.setParams({ cameraId: '' });
+        }).start(({ finished }) => {
+          if (finished) {
+            router.setParams({ cameraId: '' });
+          }
         });
       } else {
         // Bounce back to center
