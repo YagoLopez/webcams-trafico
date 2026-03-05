@@ -10,6 +10,7 @@ interface CamCardProps {
 
 export const CamCard: React.FC<CamCardProps> = React.memo(({ item }) => {
   const isOffline = item.status === 'offline';
+  const cacheBuster = Math.floor(Date.now() / (1000 * 60 * 5));
 
   return (
     <Link href={`/cam/${item.id}`} asChild>
@@ -20,7 +21,7 @@ export const CamCard: React.FC<CamCardProps> = React.memo(({ item }) => {
             <MaterialIcons name="videocam-off" size={48} color="#cbd5e1" />
           ) : (
             <Image
-              source={{ uri: item.imageUrl }}
+              source={{ uri: `${item.imageUrl}?t=${cacheBuster}` }}
               className="h-full w-full"
               resizeMode="cover"
             />

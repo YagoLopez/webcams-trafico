@@ -18,7 +18,9 @@ export default function GalleryScreen() {
 
   // Asegura que tomamos un string incluso si Expo Router devuelve un array,
   // con lo cual garantizamos el tipado correcto de runtime.
-  const imageUrl = Array.isArray(image) ? image[0] : image;
+  const rawImageUrl = Array.isArray(image) ? image[0] : image;
+  const cacheBuster = Math.floor(Date.now() / (1000 * 60 * 5));
+  const imageUrl = rawImageUrl ? `${rawImageUrl}?t=${cacheBuster}` : undefined;
 
   // Estado para las dimensiones reales de la imagen
   const [imageSize, setImageSize] = useState<{ width: number, height: number } | null>(null);

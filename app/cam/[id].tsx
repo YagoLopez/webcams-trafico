@@ -38,6 +38,7 @@ export default function CamDetailScreen() {
   }
 
   const isOffline = cam.status === 'offline';
+  const cacheBuster = Math.floor(Date.now() / (1000 * 60 * 5));
 
   return (
     <View className="flex-1 bg-white dark:bg-background-dark">
@@ -71,7 +72,7 @@ export default function CamDetailScreen() {
               router.push({ pathname: '/cam/[id]/gallery', params: { id: cam.id, image: cam.imageUrl } });
             }} className="flex-1" accessibilityLabel="Open gallery">
               <Image
-                source={{ uri: cam.imageUrl }}
+                source={{ uri: `${cam.imageUrl}?t=${cacheBuster}` }}
                 className="w-full h-full"
                 resizeMode="cover"
               />
