@@ -65,5 +65,7 @@ export default defineConfig({
     command: 'npm run web',
     url: 'http://localhost:8081',
     reuseExistingServer: !process.env.CI,
+    stdout: 'ignore',
+    stderr: 'pipe',
   },
 });
