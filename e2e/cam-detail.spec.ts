@@ -23,7 +23,7 @@ test.describe('Camera Detail Screen', () => {
 
     // Verify action buttons
     await expect(page.getByText('Add to Favorites', { exact: true }).first()).toBeVisible();
-    await expect(page.getByText('Open Full Map', { exact: true }).first()).toBeVisible();
+    await expect(page.getByText('Mostrar en mapa', { exact: true }).first()).toBeVisible();
   });
 
   test('go back from camera detail screen', async ({ page }) => {

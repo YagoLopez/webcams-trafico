@@ -50,6 +50,15 @@ export class JsonCamsRepository implements ICamsRepository {
       filtered = filtered.filter(c => c.location === filters.province);
     }
 
+    if (filters.searchQuery) {
+      const query = filters.searchQuery.toLowerCase();
+      filtered = filtered.filter(c =>
+        (c.location && c.location.toLowerCase().includes(query)) ||
+        (c.kilometer && c.kilometer.toLowerCase().includes(query)) ||
+        (c.road && c.road.toLowerCase().includes(query))
+      );
+    }
+
     return Promise.resolve(filtered);
   }
 }

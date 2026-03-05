@@ -1,5 +1,6 @@
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { CamFilters, ICamsRepository } from '../lib/ICamsRepository';
+import { ArrayPaginator } from '../lib/paginator/ArrayPaginator';
 
 export const useRoads = (cams: ICamsRepository) => {
   return useQuery({
@@ -27,5 +28,22 @@ export const useCamById = (cams: ICamsRepository, id: string) => {
     queryKey: ['cam', id],
     queryFn: () => cams.getCamById(id),
     enabled: !!id,
+  });
+};
+
+export const useInfiniteFilteredCams = (cams: ICamsRepository, filters: CamFilters, pageSize: number = 20) => {
+  return useInfiniteQuery({
+    queryKey: ['filteredCams', 'infinite', filters, pageSize],
+    queryFn: async ({ pageParam }) => {
+      // 1. Obtenemos TOODAS las cámaras filtradas del repositorio
+      const allFilteredCams = await cams.getFilteredCams(filters);
+      // 2. Extraemos solo la página que necesitamos usando nuestro Paginador Agnóstico
+      return ArrayPaginator.paginate(allFilteredCams, pageParam, pageSize);
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      // Si hay más páginas, devolvemos el número de la siguiente página
+      return lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined;
+    },
   });
 };

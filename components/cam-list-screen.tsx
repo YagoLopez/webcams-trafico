@@ -2,7 +2,7 @@ import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
 import { useAppStore } from '@/store/use-app-store';
 import React, { useCallback, useEffect } from 'react';
 import { ActivityIndicator, FlatList, View, useWindowDimensions } from 'react-native';
-import { useFilteredCams } from '../hooks/use-cams';
+import { useInfiniteFilteredCams } from '../hooks/use-cams';
 import { Cam } from '../types/cam';
 import { CamCard } from './cam-card';
 
@@ -14,14 +14,25 @@ export const CamListScreen = () => {
   const { width } = useWindowDimensions();
   const numColumns = width >= 1280 ? 3 : width >= 640 ? 2 : 1;
 
-  const { data: filteredCams = [], isLoading } = useFilteredCams(cams, {
+  const {
+    data,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useInfiniteFilteredCams(cams, {
     road: selectedRoad,
     province: selectedProvince,
   });
 
+  // Aplanar todas las páginas cargadas en un solo array para el FlatList
+  const flattenedCams = data?.pages.flatMap(page => page.data) || [];
+  // Para el contador total en la cabecera, podemos usar el totalItems de la primera página
+  const totalCamsCount = data?.pages[0]?.totalItems || 0;
+
   useEffect(() => {
-    setCamCount(filteredCams.length);
-  }, [filteredCams.length, setCamCount]);
+    setCamCount(totalCamsCount);
+  }, [totalCamsCount, setCamCount]);
 
   const renderItem = useCallback(({ item }: { item: Cam }) => (
     <View className="px-1" style={{ width: numColumns === 3 ? '33.33%' : numColumns === 2 ? '50%' : '100%' }}>
@@ -40,12 +51,25 @@ export const CamListScreen = () => {
         <FlatList
           key={`camera-list-${numColumns}-cols`}
           className="flex-1 bg-white dark:bg-background-dark px-2"
-          data={filteredCams}
+          data={flattenedCams}
           renderItem={renderItem}
           keyExtractor={(item) => item.id}
           numColumns={numColumns}
           contentContainerStyle={{ paddingBottom: 100 }}
           showsVerticalScrollIndicator={false}
+          onEndReached={() => {
+            if (hasNextPage && !isFetchingNextPage) {
+              fetchNextPage();
+            }
+          }}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={
+            isFetchingNextPage ? (
+              <View className="py-4 items-center justify-center">
+                <ActivityIndicator size="small" className="text-primary" />
+              </View>
+            ) : null
+          }
         />
       )}
     </View>

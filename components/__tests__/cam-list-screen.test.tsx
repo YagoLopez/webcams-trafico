@@ -28,16 +28,26 @@ jest.mock('react-native-safe-area-context', () => {
 jest.mock('../../hooks/use-cams', () => ({
   useRoads: () => ({ data: ['A-1', 'A-2'], isLoading: false }),
   useProvinces: () => ({ data: ['MADRID', 'BARCELONA'], isLoading: false }),
-  useFilteredCams: () => ({
-    data: [
-      {
-        id: 'cam-1',
-        road: 'A-1',
-        location: 'MADRID',
-        status: 'Activa',
-      },
-    ],
+  useInfiniteFilteredCams: () => ({
+    data: {
+      pages: [
+        {
+          data: [
+            {
+              id: 'cam-1',
+              road: 'A-1',
+              location: 'MADRID',
+              status: 'Activa',
+            },
+          ],
+          totalItems: 1,
+        }
+      ]
+    },
     isLoading: false,
+    fetchNextPage: jest.fn(),
+    hasNextPage: false,
+    isFetchingNextPage: false,
   }),
 }));
 
