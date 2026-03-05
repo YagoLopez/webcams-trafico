@@ -51,11 +51,13 @@ export class JsonCamsRepository implements ICamsRepository {
     }
 
     if (filters.searchQuery) {
-      const query = filters.searchQuery.toLowerCase();
+      // Escapar caracteres especiales y crear una RegExp case-insensitive una sola vez
+      const escapedQuery = filters.searchQuery.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
+      const regex = new RegExp(escapedQuery, 'i');
       filtered = filtered.filter(c =>
-        (c.location && c.location.toLowerCase().includes(query)) ||
-        (c.kilometer && c.kilometer.toLowerCase().includes(query)) ||
-        (c.road && c.road.toLowerCase().includes(query))
+        (c.location && regex.test(c.location)) ||
+        (c.kilometer && regex.test(c.kilometer)) ||
+        (c.road && regex.test(c.road))
       );
     }
 

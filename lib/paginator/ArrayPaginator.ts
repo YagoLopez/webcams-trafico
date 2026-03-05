@@ -24,6 +24,12 @@ export class ArrayPaginator {
     const validPageSize = Math.max(1, pageSize);
 
     const startIndex = (validPageNumber - 1) * validPageSize;
+
+    // Retorno anticipado si ya estamos fuera de los límites del array
+    if (startIndex >= items.length) {
+      return { data: [], hasNextPage: false, totalItems: items.length, currentPage: validPageNumber };
+    }
+
     const endIndex = startIndex + validPageSize;
 
     return {
