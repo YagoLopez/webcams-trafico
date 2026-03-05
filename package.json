@@ -86,7 +86,8 @@
       "node_modules/(?!((jest-)?react-native|@react-native(-community)?)|react-native-map-clustering|supercluster|kdbush|expo(nent)?|@exponent/.*|@expo(nent)?/.*|react-navigation|@react-navigation/.*|@sentry/react-native|nativewind|react-native-css-interop|@tanstack/react-query)"
     ],
     "setupFilesAfterEnv": [
-      "@testing-library/jest-native/extend-expect"
+      "@testing-library/jest-native/extend-expect",
+      "<rootDir>/jest-setup.ts"
     ],
     "testPathIgnorePatterns": [
       "<rootDir>/tests/",
