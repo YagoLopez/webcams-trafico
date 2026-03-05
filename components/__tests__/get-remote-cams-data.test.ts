@@ -1,5 +1,5 @@
-import axios from 'axios';
 import { GET } from '@/app/api/get-remote-cams-data+api';
+import axios from 'axios';
 
 // Properly type Axios mock
 jest.mock('axios');
@@ -76,6 +76,7 @@ describe('GET /get-remote-cams-data', () => {
   });
 
   it('should handle network errors correctly', async () => {
+    const consoleSpy = jest.spyOn(console, 'error').mockImplementation(() => { });
     mockedAxios.get.mockRejectedValueOnce(new Error('Network failure'));
 
     const request = new Request('http://localhost/test');
@@ -84,5 +85,6 @@ describe('GET /get-remote-cams-data', () => {
     expect(response.status).toBe(500);
     const data = await response.json();
     expect(data.error).toBe('Internal Server Error');
+    consoleSpy.mockRestore();
   });
 });

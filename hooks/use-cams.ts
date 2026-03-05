@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { CamFilters, ICamsRepository } from '../lib/ICamsRepository';
 
 export const useRoads = (cams: ICamsRepository) => {
@@ -18,7 +18,10 @@ export const useProvinces = (cams: ICamsRepository) => {
 export const useFilteredCams = (cams: ICamsRepository, filters: CamFilters) => {
   return useQuery({
     queryKey: ['filteredCams', filters],
-    queryFn: () => cams.getFilteredCams(filters),
+    queryFn: async () => {
+      const result = await cams.getFilteredCams(filters);
+      return result.data; // map.tsx expects Cam[]
+    },
   });
 };
 
@@ -27,5 +30,22 @@ export const useCamById = (cams: ICamsRepository, id: string) => {
     queryKey: ['cam', id],
     queryFn: () => cams.getCamById(id),
     enabled: !!id,
+  });
+};
+
+const DEFAULT_PAGE_SIZE = 20;
+
+export const useInfiniteFilteredCams = (cams: ICamsRepository, filters: CamFilters, pageSize: number = DEFAULT_PAGE_SIZE) => {
+  return useInfiniteQuery({
+    queryKey: ['filteredCams', 'infinite', filters, pageSize],
+    queryFn: async ({ pageParam }) => {
+      // Pedimos solo la página que necesitamos al repositorio
+      return cams.getFilteredCams(filters, pageParam, pageSize);
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage) => {
+      // Si hay más páginas, devolvemos el número de la siguiente página
+      return lastPage.hasNextPage ? lastPage.currentPage + 1 : undefined;
+    },
   });
 };
