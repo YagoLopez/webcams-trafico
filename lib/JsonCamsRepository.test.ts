@@ -36,15 +36,15 @@ describe('JsonCamsRepository', () => {
   });
 
   test('getFilteredCams should filter by road', async () => {
-    const filtered = await repository.getFilteredCams({ road: 'A-62' });
-    expect(filtered.every(c => c.road === 'A-62')).toBe(true);
-    expect(filtered.length).toBeGreaterThan(0);
+    const result = await repository.getFilteredCams({ road: 'A-62' });
+    expect(result.data.every(c => c.road === 'A-62')).toBe(true);
+    expect(result.data.length).toBeGreaterThan(0);
   });
 
   test('getFilteredCams should filter by province', async () => {
-    const filtered = await repository.getFilteredCams({ province: 'PALENCIA' });
-    expect(filtered.every(c => c.location === 'PALENCIA')).toBe(true);
-    expect(filtered.length).toBeGreaterThan(0);
+    const result = await repository.getFilteredCams({ province: 'PALENCIA' });
+    expect(result.data.every(c => c.location === 'PALENCIA')).toBe(true);
+    expect(result.data.length).toBeGreaterThan(0);
   });
 
   test('getCamById should return specific cam', async () => {

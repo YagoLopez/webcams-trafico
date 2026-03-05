@@ -1,5 +1,6 @@
 import { CamFilters } from '@/types/cam-filters';
 import { Cam } from '../types/cam';
+import { PaginationResult } from './paginator/ArrayPaginator';
 export type { CamFilters };
 
 export interface ICamsRepository {
@@ -15,6 +16,6 @@ export interface ICamsRepository {
   /** Gets a unique and sorted list of all provinces */
   getAllProvinces(): Promise<string[]>;
 
-  /** Gets the cameras applying the road and/or province filters */
-  getFilteredCams(filters: CamFilters): Promise<Cam[]>;
+  /** Gets the cameras applying the road and/or province filters. Can optionally be paginated. */
+  getFilteredCams(filters: CamFilters, page?: number, pageSize?: number): Promise<PaginationResult<Cam>>;
 }

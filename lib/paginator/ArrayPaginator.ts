@@ -9,13 +9,22 @@ export class ArrayPaginator {
   /**
    * Pagina un array en memoria de forma agnóstica.
    * @param items El array completo de elementos.
-   * @param pageNumber El número de página actual (empezando en 1).
-   * @param pageSize La cantidad de elementos por página.
+   * @param pageNumber El número de página actual (empezando en 1). Opcional.
+   * @param pageSize La cantidad de elementos por página. Opcional.
    * @returns Un objeto PaginationResult.
    */
-  static paginate<T>(items: T[], pageNumber: number, pageSize: number): PaginationResult<T> {
+  static paginate<T>(items: T[], pageNumber?: number, pageSize?: number): PaginationResult<T> {
     if (!items || items.length === 0) {
-      return { data: [], hasNextPage: false, totalItems: 0, currentPage: pageNumber };
+      return { data: [], hasNextPage: false, totalItems: 0, currentPage: pageNumber || 1 };
+    }
+
+    if (pageNumber === undefined || pageSize === undefined) {
+      return {
+        data: items,
+        hasNextPage: false,
+        totalItems: items.length,
+        currentPage: 1,
+      };
     }
 
     // Por seguridad, si nos piden página 0 o negativa, forzamos a 1

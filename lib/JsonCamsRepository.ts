@@ -1,6 +1,7 @@
 import webcamsData from '../data/webcams.json';
 import { Cam } from '../types/cam';
 import { CamFilters, ICamsRepository } from './ICamsRepository';
+import { ArrayPaginator, PaginationResult } from './paginator/ArrayPaginator';
 
 export class JsonCamsRepository implements ICamsRepository {
   private static instance: JsonCamsRepository;
@@ -39,7 +40,7 @@ export class JsonCamsRepository implements ICamsRepository {
     return Promise.resolve(uniqueProvinces);
   }
 
-  async getFilteredCams(filters: CamFilters): Promise<Cam[]> {
+  async getFilteredCams(filters: CamFilters, page?: number, pageSize?: number): Promise<PaginationResult<Cam>> {
     let filtered = this.data;
 
     if (filters.road) {
@@ -61,6 +62,6 @@ export class JsonCamsRepository implements ICamsRepository {
       );
     }
 
-    return Promise.resolve(filtered);
+    return Promise.resolve(ArrayPaginator.paginate(filtered, page, pageSize));
   }
 }
