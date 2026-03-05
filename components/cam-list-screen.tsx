@@ -1,7 +1,7 @@
 import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
 import { useAppStore } from '@/store/use-app-store';
-import React, { useCallback, useEffect } from 'react';
-import { ActivityIndicator, FlatList, View, useWindowDimensions } from 'react-native';
+import React, { useCallback, useEffect, useMemo } from 'react';
+import { ActivityIndicator, FlatList, Text, View, useWindowDimensions } from 'react-native';
 import { useInfiniteFilteredCams } from '../hooks/use-cams';
 import { Cam } from '../types/cam';
 import { CamCard } from './cam-card';
@@ -26,7 +26,10 @@ export const CamListScreen = () => {
   });
 
   // Aplanar todas las páginas cargadas en un solo array para el FlatList
-  const flattenedCams = data?.pages.flatMap(page => page.data) || [];
+  const flattenedCams = useMemo(
+    () => data?.pages.flatMap(page => page.data) || [],
+    [data?.pages]
+  );
   // Para el contador total en la cabecera, podemos usar el totalItems de la primera página
   const totalCamsCount = data?.pages[0]?.totalItems || 0;
 
@@ -39,6 +42,12 @@ export const CamListScreen = () => {
       <CamCard item={item} />
     </View>
   ), [numColumns]);
+
+  const handleEndReached = useCallback(() => {
+    if (hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
   return (
     <View className="flex-1 w-full lg:w-[70%] bg-white dark:bg-background-dark mt-4">
@@ -57,12 +66,15 @@ export const CamListScreen = () => {
           numColumns={numColumns}
           contentContainerStyle={{ paddingBottom: 100 }}
           showsVerticalScrollIndicator={false}
-          onEndReached={() => {
-            if (hasNextPage && !isFetchingNextPage) {
-              fetchNextPage();
-            }
-          }}
+          onEndReached={handleEndReached}
           onEndReachedThreshold={0.5}
+          ListEmptyComponent={
+            <View className="flex-1 items-center justify-center py-10">
+              <Text className="text-gray-500 dark:text-gray-400">
+                No se encontraron cámaras con los filtros aplicados.
+              </Text>
+            </View>
+          }
           ListFooterComponent={
             isFetchingNextPage ? (
               <View className="py-4 items-center justify-center">

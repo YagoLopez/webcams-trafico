@@ -52,4 +52,23 @@ describe('JsonCamsRepository', () => {
     const cam = await repository.getCamById(firstCam.id);
     expect(cam).toEqual(firstCam);
   });
+
+  test('getFilteredCams should filter by searchQuery', async () => {
+    const result = await repository.getFilteredCams({ searchQuery: 'A-62' });
+    expect(result.data.length).toBeGreaterThan(0);
+    expect(result.data.every(c =>
+      c.location?.includes('A-62') || c.kilometer?.includes('A-62') || c.road?.includes('A-62')
+    )).toBe(true);
+  });
+
+  test('getFilteredCams should return empty when searchQuery has no matches', async () => {
+    const result = await repository.getFilteredCams({ searchQuery: 'xyznonexistent999' });
+    expect(result.data).toHaveLength(0);
+  });
+
+  test('getFilteredCams should safely handle special regex characters in searchQuery', async () => {
+    // Should not throw even with regex-special characters
+    const result = await repository.getFilteredCams({ searchQuery: '(test)+.*' });
+    expect(result.data).toBeDefined();
+  });
 });

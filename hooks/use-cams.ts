@@ -33,7 +33,9 @@ export const useCamById = (cams: ICamsRepository, id: string) => {
   });
 };
 
-export const useInfiniteFilteredCams = (cams: ICamsRepository, filters: CamFilters, pageSize: number = 20) => {
+const DEFAULT_PAGE_SIZE = 20;
+
+export const useInfiniteFilteredCams = (cams: ICamsRepository, filters: CamFilters, pageSize: number = DEFAULT_PAGE_SIZE) => {
   return useInfiniteQuery({
     queryKey: ['filteredCams', 'infinite', filters, pageSize],
     queryFn: async ({ pageParam }) => {

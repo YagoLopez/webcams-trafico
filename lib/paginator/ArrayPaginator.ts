@@ -2,6 +2,7 @@ export interface PaginationResult<T> {
   data: T[];
   hasNextPage: boolean;
   totalItems: number;
+  totalPages: number;
   currentPage: number;
 }
 
@@ -15,7 +16,7 @@ export class ArrayPaginator {
    */
   static paginate<T>(items: T[], pageNumber?: number, pageSize?: number): PaginationResult<T> {
     if (!items || items.length === 0) {
-      return { data: [], hasNextPage: false, totalItems: 0, currentPage: pageNumber || 1 };
+      return { data: [], hasNextPage: false, totalItems: 0, totalPages: 0, currentPage: pageNumber || 1 };
     }
 
     if (pageNumber === undefined || pageSize === undefined) {
@@ -23,6 +24,7 @@ export class ArrayPaginator {
         data: items,
         hasNextPage: false,
         totalItems: items.length,
+        totalPages: 1,
         currentPage: 1,
       };
     }
@@ -35,8 +37,10 @@ export class ArrayPaginator {
     const startIndex = (validPageNumber - 1) * validPageSize;
 
     // Retorno anticipado si ya estamos fuera de los límites del array
+    const totalPages = Math.ceil(items.length / validPageSize);
+
     if (startIndex >= items.length) {
-      return { data: [], hasNextPage: false, totalItems: items.length, currentPage: validPageNumber };
+      return { data: [], hasNextPage: false, totalItems: items.length, totalPages, currentPage: validPageNumber };
     }
 
     const endIndex = startIndex + validPageSize;
@@ -45,6 +49,7 @@ export class ArrayPaginator {
       data: items.slice(startIndex, endIndex),
       hasNextPage: endIndex < items.length,
       totalItems: items.length,
+      totalPages,
       currentPage: validPageNumber,
     };
   }
