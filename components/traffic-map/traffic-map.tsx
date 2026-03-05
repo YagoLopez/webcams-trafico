@@ -20,6 +20,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
   const router = useRouter();
   const [activeCam, setActiveCam] = React.useState<Cam | null>(null);
   const pan = useRef(new Animated.ValueXY()).current;
+  const cacheBuster = Math.floor(Date.now() / (1000 * 60 * 5));
 
   const onGestureEvent = Animated.event<PanGestureHandlerGestureEvent>(
     [{ nativeEvent: { translationX: pan.x } }],
@@ -155,7 +156,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
               className="active:opacity-70"
               onPress={() => router.push({ pathname: '/cam/[id]/gallery', params: { id: activeCam.id, image: activeCam.imageUrl } })}
             >
-              <Image className="w-full h-[200px] rounded-lg bg-[#e1e4e8] mb-3" source={{ uri: activeCam.imageUrl }} resizeMode="cover" />
+              <Image className="w-full h-[200px] rounded-lg bg-[#e1e4e8] mb-3" source={{ uri: `${activeCam.imageUrl}?t=${cacheBuster}` }} resizeMode="cover" />
             </Pressable>
             <View className="justify-between">
               <Text className="text-base font-bold text-[#333] mb-1" numberOfLines={1}>{activeCam.location}</Text>

@@ -89,6 +89,7 @@ export default function TrafficMapWebClient({ cams, center, selectedCameraId }: 
   const [activeCameraId, setActiveCameraId] = React.useState<string | undefined>(selectedCameraId);
   const internalCenterUpdateRef = useRef<{ lat: number, lon: number } | null>(null);
   const mapRef = useRef<L.Map | null>(null);
+  const cacheBuster = Math.floor(Date.now() / (1000 * 60 * 5));
 
   useEffect(() => {
     setActiveCameraId(selectedCameraId);
@@ -193,7 +194,7 @@ export default function TrafficMapWebClient({ cams, center, selectedCameraId }: 
                       className="w-full active:opacity-80 cursor-pointer"
                     >
                       <Image
-                        source={{ uri: cam.imageUrl }}
+                        source={{ uri: `${cam.imageUrl}?t=${cacheBuster}` }}
                         className="w-full h-[140px] rounded-lg bg-gray-200"
                         contentFit="cover"
                       />
