@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
 import { Animated, Image, Pressable, Text, View } from 'react-native';
-import { PanGestureHandler, PanGestureHandlerGestureEvent, PanGestureHandlerStateChangeEvent, State } from 'react-native-gesture-handler';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import MapViewClustered from 'react-native-map-clustering';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
@@ -22,18 +22,17 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
   const pan = useRef(new Animated.ValueXY()).current;
   const cacheBuster = Math.floor(Date.now() / (1000 * 60 * 5));
 
-  const onGestureEvent = Animated.event<PanGestureHandlerGestureEvent>(
-    [{ nativeEvent: { translationX: pan.x } }],
-    { useNativeDriver: true }
-  );
-
-  const onHandlerStateChange = (event: PanGestureHandlerStateChangeEvent) => {
-    if (event.nativeEvent.oldState === State.ACTIVE) {
-      const { translationX } = event.nativeEvent;
-      if (Math.abs(translationX) > 100) {
+  const panGesture = Gesture.Pan()
+    .runOnJS(true)
+    .activeOffsetX([-20, 20])
+    .onUpdate((event) => {
+      pan.x.setValue(event.translationX);
+    })
+    .onEnd((event) => {
+      if (Math.abs(event.translationX) > 100) {
         // Swipe out
         Animated.timing(pan, {
-          toValue: { x: translationX > 0 ? 500 : -500, y: 0 },
+          toValue: { x: event.translationX > 0 ? 500 : -500, y: 0 },
           duration: 200,
           useNativeDriver: true,
         }).start(({ finished }) => {
@@ -48,8 +47,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
           useNativeDriver: true,
         }).start();
       }
-    }
-  };
+    });
 
   useEffect(() => {
     if (selectedCameraId) {
@@ -135,11 +133,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
       </MapViewClustered>
 
       {activeCam && (
-        <PanGestureHandler
-          onGestureEvent={onGestureEvent}
-          onHandlerStateChange={onHandlerStateChange}
-          activeOffsetX={[-20, 20]}
-        >
+        <GestureDetector gesture={panGesture}>
           <Animated.View
             testID="pseudo-callout"
             className="absolute top-10 left-5 right-5 bg-white rounded-xl p-3 shadow-lg elevation-5 flex-col"
@@ -169,7 +163,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
               </Pressable>
             </View>
           </Animated.View>
-        </PanGestureHandler>
+        </GestureDetector>
       )}
     </View>
   );
