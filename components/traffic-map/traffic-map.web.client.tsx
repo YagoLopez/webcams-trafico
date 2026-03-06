@@ -11,7 +11,6 @@ import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 're
 import MarkerClusterGroup from 'react-leaflet-cluster';
 
 const DURATION = 1;
-
 const SELECTED_CAMERA_COLOR = '#ae00ffff';
 const CLUSTER_BG_COLOR = '#1e3a8a';
 
