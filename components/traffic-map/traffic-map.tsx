@@ -63,25 +63,25 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
   }, [selectedCameraId, cams, pan]);
 
   useEffect(() => {
-    if (center && mapRef.current) {
-      if (isInitialCenter.current) {
-        // First load from camera detail: zoom + center
-        mapRef.current.animateToRegion({
+    if (!center || !mapRef.current) return;
+
+    if (isInitialCenter.current) {
+      // First load from camera detail: zoom + center
+      mapRef.current.animateToRegion({
+        latitude: center.lat,
+        longitude: center.lon,
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05,
+      }, 500);
+      isInitialCenter.current = false;
+    } else {
+      // Subsequent marker taps: only center, keep current zoom
+      mapRef.current.animateCamera({
+        center: {
           latitude: center.lat,
           longitude: center.lon,
-          latitudeDelta: 0.05,
-          longitudeDelta: 0.05,
-        }, 500);
-        isInitialCenter.current = false;
-      } else {
-        // Subsequent marker taps: only center, keep current zoom
-        mapRef.current.animateCamera({
-          center: {
-            latitude: center.lat,
-            longitude: center.lon,
-          },
-        }, { duration: 500 });
-      }
+        },
+      }, { duration: 500 });
     }
   }, [center]);
 
