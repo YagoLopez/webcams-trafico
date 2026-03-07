@@ -5,6 +5,7 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import MapViewClustered from 'react-native-map-clustering';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
+import { MapColors } from '@/constants/theme';
 import { Cam } from '@/types/cam';
 
 interface TrafficMapProps {
@@ -124,7 +125,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
         }}
         provider={PROVIDER_GOOGLE}
         showsUserLocation={true}
-        clusterColor="#3b82f6"
+        clusterColor={MapColors.clusterBackground}
         spiralEnabled={false}
         onPress={() => {
           if (activeCam) {
@@ -166,8 +167,8 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
               <Image className="w-full h-[200px] rounded-lg bg-[#e1e4e8] mb-3" source={{ uri: `${activeCam.imageUrl}?t=${cacheBuster}` }} resizeMode="cover" />
             </Pressable>
             <View className="justify-between">
-              <Text className="text-base font-bold text-[#333] mb-1" numberOfLines={1}>{activeCam.location}</Text>
-              <Text className="text-sm text-[#666] mb-2">{activeCam.road} - Km {activeCam.kilometer}</Text>
+              <Text style={{ color: MapColors.calloutTitle }} className="text-base font-bold mb-1" numberOfLines={1}>{activeCam.location}</Text>
+              <Text style={{ color: MapColors.calloutSubtitle }} className="text-sm mb-2">{activeCam.road} - Km {activeCam.kilometer}</Text>
               <Pressable
                 className="bg-[#3b82f6] py-3 px-3 rounded-md self-start active:opacity-70"
                 onPress={() => router.push(`/cam/${activeCam.id}`)}

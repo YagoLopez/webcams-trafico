@@ -27,6 +27,23 @@ export const Colors = {
   },
 };
 
+export const MapColors = {
+  /** Color of a camera marker when it is selected/active */
+  markerSelected: '#ae00ff',
+  /** Default color of a camera marker */
+  markerDefault: '#3b82f6',
+  /** Background color of map clusters */
+  clusterBackground: '#1e3a8a',
+  /** Text/icon color inside a cluster dot */
+  clusterForeground: '#ffffff',
+  /** ActivityIndicator color on the map loading screen */
+  loadingSpinner: '#3b82f6',
+  /** Color of the pseudo-callout title text */
+  calloutTitle: '#333333',
+  /** Color of the pseudo-callout subtitle text */
+  calloutSubtitle: '#666666',
+};
+
 export const Fonts = Platform.select({
   ios: {
     /** iOS `UIFontDescriptorSystemDesignDefault` */
