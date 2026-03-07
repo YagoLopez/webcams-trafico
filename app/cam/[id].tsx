@@ -129,7 +129,7 @@ export default function CamDetailScreen() {
                 // Small delay to allow the UI to render the loading indicator before
                 // the JS thread gets busy mounting the map screen.
                 setTimeout(() => {
-                  router.push({ pathname: '/cam/[id]/map', params: { id: cam.id, lat: cam.latitude, lon: cam.longitude, cameraId: cam.id } });
+                  router.push({ pathname: '/cam/[id]/map', params: { id: cam.id, lat: cam.latitude, lon: cam.longitude } });
                   setTimeout(() => setIsNavigatingToMap(false), 500);
                 }, 50);
               }
