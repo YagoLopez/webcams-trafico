@@ -1,16 +1,19 @@
-import { useLocalSearchParams } from 'expo-router';
+import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 
-import TrafficMap from '../../../components/traffic-map';
-import { useFilteredCams } from '@/hooks/use-cams';
+import { useCamById, useFilteredCams } from '@/hooks/use-cams';
 import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
+import TrafficMap from '../../../components/traffic-map';
 
 const camsRepository = JsonCamsRepository.getInstance();
 
 export default function CameraMapScreen() {
-  const params = useLocalSearchParams();
-  
+  const params = useLocalSearchParams<{ id: string; lat: string; lon: string; cameraId: string }>();
+
+  // Fetch camera details for the header title
+  const { data: cam } = useCamById(camsRepository, params.id);
+
   // We need to fetch all cameras so the map can render them
   const { data: cams = [], isLoading: camsLoading } = useFilteredCams(camsRepository, {});
 
@@ -21,8 +24,8 @@ export default function CameraMapScreen() {
     // If we have lat and lon from params, set the center
     if (params.lat && params.lon) {
       setCenter({
-        lat: parseFloat(Array.isArray(params.lat) ? params.lat[0] : params.lat),
-        lon: parseFloat(Array.isArray(params.lon) ? params.lon[0] : params.lon)
+        lat: parseFloat(params.lat),
+        lon: parseFloat(params.lon)
       });
     }
     setLoadingLocation(false);
@@ -39,7 +42,16 @@ export default function CameraMapScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-      <TrafficMap cams={cams} center={center} selectedCameraId={params.cameraId as string} />
+      <Stack.Screen
+        options={{
+          headerShown: true,
+          title: 'Mapa de Webcams',
+          headerStyle: { backgroundColor: '#137fec' },
+          headerTintColor: 'white',
+          headerTitleStyle: { fontWeight: 'bold' }
+        }}
+      />
+      <TrafficMap cams={cams} center={center} selectedCameraId={params.cameraId} />
     </View>
   );
 }
