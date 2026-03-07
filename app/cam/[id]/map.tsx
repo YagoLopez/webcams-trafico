@@ -45,7 +45,7 @@ export default function CameraMapScreen() {
           title: 'Mapa de Webcams',
           headerStyle: { backgroundColor: '#137fec' },
           headerTintColor: 'white',
-          headerTitleStyle: { fontWeight: 'bold' }
+          headerTitleStyle: { fontWeight: 'light' }
         }}
       />
       <TrafficMap cams={cams} center={center} selectedCameraId={params.cameraId} />
