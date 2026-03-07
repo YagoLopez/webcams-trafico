@@ -2,21 +2,18 @@ import { Stack, useLocalSearchParams } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 
+import TrafficMap from '@/components/traffic-map';
 import { useCamById, useFilteredCams } from '@/hooks/use-cams';
 import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
-import TrafficMap from '../../../components/traffic-map';
 
 const camsRepository = JsonCamsRepository.getInstance();
 
 export default function CameraMapScreen() {
   const params = useLocalSearchParams<{ id: string; lat: string; lon: string; cameraId: string }>();
-
   // Fetch camera details for the header title
   const { data: cam } = useCamById(camsRepository, params.id);
-
   // We need to fetch all cameras so the map can render them
   const { data: cams = [], isLoading: camsLoading } = useFilteredCams(camsRepository, {});
-
   const [center, setCenter] = useState<{ lat: number; lon: number } | undefined>();
   const [loadingLocation, setLoadingLocation] = useState(true);
 
