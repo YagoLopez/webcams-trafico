@@ -111,29 +111,30 @@ export default function CamDetailScreen() {
         </View>
 
         {/* Map Preview */}
-        <Pressable
-          disabled={isNavigatingToMap}
-          onPress={() => {
-            if (cam.latitude && cam.longitude) {
-              setIsNavigatingToMap(true);
-              // Small delay to allow the UI to render the loading indicator before
-              // the JS thread gets busy mounting the map screen.
-              setTimeout(() => {
-                router.push({ pathname: '/map', params: { lat: cam.latitude, lon: cam.longitude, cameraId: cam.id } });
-                setTimeout(() => setIsNavigatingToMap(false), 500);
-              }, 50);
-            }
-          }}
-          style={({ pressed }) => [
-            { transform: [{ scale: pressed ? 0.8 : 1 }] }
-          ]}
-          className={`w-full self-center lg:w-[90%] h-32 mt-2 mb-8 rounded-xl overflow-hidden border border-white/10 dark:border-slate-600 shadow-md items-center justify-center bg-slate-100 dark:bg-slate-800 ${isNavigatingToMap ? 'opacity-90' : 'active:opacity-80'}`}>
+        <View
+          className={`w-full self-center lg:w-[100%] h-32 mt-2 mb-8 rounded-xl overflow-hidden border border-white/10 dark:border-slate-600 items-center justify-center bg-slate-100 dark:bg-slate-800 ${isNavigatingToMap ? 'opacity-90' : 'active:opacity-80'}`}>
           <Image
             source={require('../../assets/images/gmap.jpg')}
-            className="absolute top-0 left-0 w-full h-full opacity-70 dark:opacity-50"
+            style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0, width: '100%', height: '100%', opacity: colorScheme === 'dark' ? 0.5 : 0.7 }}
             resizeMode="cover"
           />
-          <View className="flex-row items-center border-2 border-slate-300 dark:border-slate-600 gap-2 bg-white dark:bg-slate-900 px-5 py-4 rounded-lg shadow-lg">
+          <Pressable
+            disabled={isNavigatingToMap}
+            style={({ pressed }) => [
+              { position: 'relative', transform: [{ scale: pressed ? 0.8 : 1 }] }
+            ]}
+            onPress={() => {
+              if (cam.latitude && cam.longitude) {
+                setIsNavigatingToMap(true);
+                // Small delay to allow the UI to render the loading indicator before
+                // the JS thread gets busy mounting the map screen.
+                setTimeout(() => {
+                  router.push({ pathname: '/cam/[id]/map', params: { id: cam.id, lat: cam.latitude, lon: cam.longitude } });
+                  setTimeout(() => setIsNavigatingToMap(false), 500);
+                }, 50);
+              }
+            }}
+            className="flex-row items-center border-2 border-slate-300 dark:border-slate-600 gap-2 bg-white dark:bg-slate-900 px-5 py-4 rounded-lg shadow-lg">
             {isNavigatingToMap ? (
               <>
                 <ActivityIndicator size="small" color="#137fec" />
@@ -149,8 +150,8 @@ export default function CamDetailScreen() {
                 </Text>
               </>
             )}
-          </View>
-        </Pressable>
+          </Pressable>
+        </View>
 
         {/* Action Buttons */}
         <View className="flex-row gap-3 mb-6 w-full lg:w-[300px] self-center">

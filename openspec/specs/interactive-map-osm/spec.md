@@ -32,3 +32,14 @@ The system SHALL display all available traffic cameras as markers on the map, gr
 #### Scenario: Interacting with a cluster
 - **WHEN** the user taps or clicks on a cluster marker
 - **THEN** the map automatically zooms into the bounds of that cluster to reveal more individual markers
+
+### Requirement: Cluster Visual Representation
+The system SHALL render clusters with a consistent, performance-optimized visual design across all platforms.
+
+#### Scenario: Cluster appearance
+- **THEN** the visual representation MUST be a solid red circular badge (e.g., `#ef4444`)
+- **AND** it MUST contain the total number of cameras within that cluster in white text, centered both horizontally and vertically.
+
+#### Scenario: Performance optimizations (Web)
+- **THEN** the map MUST NOT draw geometric coverage polygons when hover/tapping a cluster.
+- **AND** the map MUST NOT draw "spiderfy" interaction lines connecting markers when clicking a maximum-zoom cluster.

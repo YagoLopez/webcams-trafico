@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 // Leaflet and React-Leaflet imports
+import { MapColors } from '@/constants/theme';
 import { Cam } from '@/types/cam';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -11,9 +12,6 @@ import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 're
 import MarkerClusterGroup from 'react-leaflet-cluster';
 
 const DURATION = 1;
-
-const SELECTED_CAMERA_COLOR = '#ae00ffff';
-const CLUSTER_BG_COLOR = '#1e3a8a';
 
 // Fix for default Leaflet icon paths in React Native Web/Webpack
 delete (L.Icon.Default.prototype as any)._getIconUrl;
@@ -35,7 +33,7 @@ interface MarkerCluster {
 
 // Custom camera icons (using SVG to match Ionicons 'videocam')
 const createCameraIcon = (isSelected: boolean) => {
-  const bgColor = isSelected ? SELECTED_CAMERA_COLOR : '#3b82f6';
+  const bgColor = isSelected ? MapColors.markerSelected : MapColors.markerDefault;
   const scale = isSelected ? 'transform: scale(1.25); z-index: 10;' : '';
   const html = `<div style="background-color: ${bgColor}; border-radius: 8px; border: 2px solid white; box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1); width: 34px; height: 34px; display: flex; align-items: center; justify-content: center; ${scale}">
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="16" height="16" fill="white">
@@ -117,7 +115,7 @@ export default function TrafficMapWebClient({ cams, center, selectedCameraId }: 
   const iconCreateFunction = React.useCallback((cluster: MarkerCluster) => {
     const count = cluster.getChildCount();
     return L.divIcon({
-      html: `<div style="background-color: ${CLUSTER_BG_COLOR}; border-radius: 50%; width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 16px; border: 2px solid white; box-shadow: 0 0 0 3px ${CLUSTER_BG_COLOR}, 0 0 0 5px white, 0 4px 6px 4px rgba(0,0,0,0.3); box-sizing: border-box;">${count}</div>`,
+      html: `<div style="background-color: ${MapColors.clusterBackground}; border-radius: 50%; width: 46px; height: 46px; display: flex; align-items: center; justify-content: center; color: ${MapColors.clusterForeground}; font-weight: bold; font-size: 16px; border: 2px solid white; box-shadow: 0 0 0 3px ${MapColors.clusterBackground}, 0 0 0 5px white, 0 4px 6px 4px rgba(0,0,0,0.3); box-sizing: border-box;">${count}</div>`,
       className: '',
       iconSize: [46, 46],
     });
