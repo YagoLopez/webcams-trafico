@@ -20,18 +20,19 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
   const router = useRouter();
   const [activeCam, setActiveCam] = React.useState<Cam | null>(null);
   const pan = useRef(new Animated.ValueXY()).current;
+  const slideAnim = useRef(new Animated.Value(1000)).current;
   const cacheBuster = Math.floor(Date.now() / (1000 * 60 * 5));
 
   const panGesture = Gesture.Pan()
-    .activeOffsetX([-20, 20])
+    .activeOffsetY([-20, 20])
     .onUpdate((e) => {
-      pan.setValue({ x: e.translationX, y: 0 });
+      pan.setValue({ x: 0, y: e.translationY });
     })
     .onEnd((e) => {
-      if (Math.abs(e.translationX) > 100) {
-        // Swipe out
+      if (e.translationY > 100) {
+        // Swipe out downwards
         Animated.timing(pan, {
-          toValue: { x: e.translationX > 0 ? 500 : -500, y: 0 },
+          toValue: { x: 0, y: 500 },
           duration: 200,
           useNativeDriver: true,
         }).start(({ finished }) => {
@@ -54,12 +55,20 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
       const cam = cams.find((c) => String(c.id) === String(selectedCameraId));
       if (cam) {
         pan.setValue({ x: 0, y: 0 }); // Reset position when a new camera is selected
+        slideAnim.setValue(1000); // Start from below the screen
         setActiveCam(cam);
+
+        Animated.spring(slideAnim, {
+          toValue: 0,
+          useNativeDriver: true,
+          damping: 20,
+          stiffness: 90,
+        }).start();
       }
     } else {
       setActiveCam(null);
     }
-  }, [selectedCameraId, cams, pan]);
+  }, [selectedCameraId, cams, pan, slideAnim]);
 
   useEffect(() => {
     if (center && mapRef.current) {
@@ -136,8 +145,8 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
         <GestureDetector gesture={panGesture}>
           <Animated.View
             testID="pseudo-callout"
-            className="absolute top-10 left-5 right-5 bg-white rounded-xl p-3 shadow-lg elevation-5 flex-col"
-            style={{ transform: [{ translateX: pan.x }] }}
+            className="absolute bottom-10 left-5 right-5 bg-white rounded-xl p-3 shadow-lg elevation-5 flex-col"
+            style={{ transform: [{ translateY: Animated.add(slideAnim, pan.y) }] }}
           >
             <Pressable
               className="absolute -top-2 -right-2 z-10 bg-white rounded-full w-6 h-6 items-center justify-center shadow-sm elevation-2 active:opacity-70"
