@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import { Animated, Image, Pressable, Text, View } from 'react-native';
 import { PanGestureHandler, PanGestureHandlerGestureEvent, PanGestureHandlerStateChangeEvent, State } from 'react-native-gesture-handler';
 import MapViewClustered from 'react-native-map-clustering';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 
 import { Cam } from '@/types/cam';
 
@@ -125,7 +125,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
             router.setParams({ cameraId: '' });
           }
         }}
-        onRegionChange={(region, details) => {
+        onRegionChange={(region: Region, details?: { isGesture?: boolean }) => {
           if (activeCam && details?.isGesture) {
             router.setParams({ cameraId: '' });
           }
