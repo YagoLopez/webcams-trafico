@@ -1,9 +1,8 @@
 import { useRouter } from 'expo-router';
-import React, { useEffect, useRef } from 'react';
-import { Animated, Image, Pressable, Text, View } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import MapViewClustered from 'react-native-map-clustering';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import React, { useEffect, useRef, useState } from 'react';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import MapView from 'react-native-map-clustering';
+import RNMapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 
 import { MapColors } from '@/constants/theme';
 import { Cam } from '@/types/cam';
@@ -14,60 +13,40 @@ interface TrafficMapProps {
   selectedCameraId?: string;
 }
 
-const camIcon = require('@/assets/images/cam-icon4.png');
+const INITIAL_REGION: Region = {
+  latitude: 40.4168,
+  longitude: -3.7038,
+  latitudeDelta: 5.0,
+  longitudeDelta: 5.0,
+};
 
 export default function TrafficMapNative({ cams, center, selectedCameraId }: TrafficMapProps) {
-  const mapRef = useRef<MapView>(null);
+  const mapRef = useRef<RNMapView>(null);
   const router = useRouter();
-  const [activeCam, setActiveCam] = React.useState<Cam | null>(null);
-  const pan = useRef(new Animated.ValueXY()).current;
-  const cacheBuster = Math.floor(Date.now() / (1000 * 60 * 5));
   const isInitialCenter = useRef(true);
 
-  const panGesture = Gesture.Pan()
-    .runOnJS(true)
-    .activeOffsetX([-20, 20])
-    .onUpdate((event) => {
-      pan.x.setValue(event.translationX);
-    })
-    .onEnd((event) => {
-      if (Math.abs(event.translationX) > 100) {
-        // Swipe out
-        Animated.timing(pan, {
-          toValue: { x: event.translationX > 0 ? 500 : -500, y: 0 },
-          duration: 200,
-          useNativeDriver: true,
-        }).start(({ finished }) => {
-          if (finished) {
-            router.setParams({ cameraId: '' });
-          }
-        });
-      } else {
-        // Bounce back to center
-        Animated.spring(pan, {
-          toValue: { x: 0, y: 0 },
-          useNativeDriver: true,
-        }).start();
-      }
-    });
+  const initialRegion: Region = center
+    ? { latitude: center.lat, longitude: center.lon, latitudeDelta: 0.05, longitudeDelta: 0.05 }
+    : INITIAL_REGION;
 
+  // The active/selected camera for pseudo-callout
+  const [activeCam, setActiveCam] = useState<Cam | null>(null);
+
+  // Sync selectedCameraId prop → activeCam
   useEffect(() => {
-    if (selectedCameraId) {
-      const cam = cams.find((c) => String(c.id) === String(selectedCameraId));
-      if (cam) {
-        pan.setValue({ x: 0, y: 0 }); // Reset position when a new camera is selected
-        setActiveCam(cam);
-      }
-    } else {
+    if (!selectedCameraId) {
       setActiveCam(null);
+      return;
     }
-  }, [selectedCameraId, cams, pan]);
+    const found = cams.find(c => String(c.id) === String(selectedCameraId));
+    setActiveCam(found ?? null);
+  }, [selectedCameraId, cams]);
 
+  // Animate map when center changes
   useEffect(() => {
     if (!center || !mapRef.current) return;
 
     if (isInitialCenter.current) {
-      // First load from camera detail: zoom + center
       mapRef.current.animateToRegion({
         latitude: center.lat,
         longitude: center.lon,
@@ -76,109 +55,104 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
       }, 500);
       isInitialCenter.current = false;
     } else {
-      // Subsequent marker taps: only center, keep current zoom
-      mapRef.current.animateCamera({
-        center: {
-          latitude: center.lat,
-          longitude: center.lon,
-        },
-      }, { duration: 500 });
+      mapRef.current.animateCamera(
+        { center: { latitude: center.lat, longitude: center.lon } },
+        { duration: 500 }
+      );
     }
   }, [center]);
 
-  // Memoize markers to prevent re-render tearing when clicking
-  const markers = React.useMemo(() => cams.map((cam) => {
-    const lat = cam.latitude;
-    const lon = cam.longitude;
-    if (lat === undefined || lon === undefined) return null;
+  const handleMarkerPress = (cam: Cam) => {
+    setActiveCam(cam);
+    router.setParams({
+      cameraId: String(cam.id),
+      lat: String(cam.latitude),
+      lon: String(cam.longitude),
+    });
+  };
 
-    return (
-      <Marker
-        key={cam.id}
-        coordinate={{ latitude: lat, longitude: lon }}
-        anchor={{ x: 0.5, y: 0.5 }}
-        icon={camIcon}
-        tracksViewChanges={false}
-        testID={`map-marker-${cam.id}`}
-        onPress={(e) => {
-          e.stopPropagation();
-          router.setParams({
-            cameraId: String(cam.id),
-            lat: String(lat),
-            lon: String(lon)
-          });
-        }}
-      />
-    );
-  }), [cams, router]);
+  const validCams = cams.filter(
+    c => c.latitude !== undefined && c.longitude !== undefined
+  );
 
   return (
-    <View className="absolute inset-0">
-      <MapViewClustered
+    <View style={StyleSheet.absoluteFillObject}>
+      {/* react-native-map-clustering's MapView — drop-in replacement that handles clustering */}
+      <MapView
         ref={mapRef}
+        testID="map-clustering"
         style={{ flex: 1 }}
-        initialRegion={{
-          latitude: center?.lat || 40.4168,
-          longitude: center?.lon || -3.7038,
-          latitudeDelta: center ? 0.05 : 5.0,
-          longitudeDelta: center ? 0.05 : 5.0,
-        }}
+        initialRegion={initialRegion}
         provider={PROVIDER_GOOGLE}
         showsUserLocation={true}
         clusterColor={MapColors.clusterBackground}
-        spiralEnabled={false}
-        onPress={() => {
-          if (activeCam) {
-            router.setParams({ cameraId: '' });
-          }
-        }}
-        onPanDrag={() => {
-          if (activeCam) {
-            router.setParams({ cameraId: '' });
-          }
-        }}
-        onRegionChange={(region, details) => {
-          if (activeCam && details?.isGesture) {
-            router.setParams({ cameraId: '' });
-          }
-        }}
       >
-        {markers}
-      </MapViewClustered>
+        {validCams.map(cam => (
+          // IMPORTANT: coordinate prop MUST be set directly on Marker (not hidden in a wrapper)
+          // so that react-native-map-clustering can detect it as a valid Marker to cluster.
+          <Marker
+            key={cam.id}
+            testID={`map-marker-${cam.id}`}
+            coordinate={{ latitude: cam.latitude!, longitude: cam.longitude! }}
+            onPress={() => handleMarkerPress(cam)}
+          />
+        ))}
+      </MapView>
 
+      {/* Pseudo-callout overlay — shown above map, avoids Android Callout issues */}
       {activeCam && (
-        <GestureDetector gesture={panGesture}>
-          <Animated.View
-            testID="pseudo-callout"
-            className="absolute top-10 left-5 right-5 bg-white rounded-xl p-3 shadow-lg elevation-5 flex-col"
-            style={{ transform: [{ translateX: pan.x }] }}
+        <View testID="pseudo-callout" style={styles.pseudoCallout}>
+          <Text style={styles.calloutTitle}>{activeCam.location}</Text>
+          <Text style={styles.calloutSubtitle}>
+            {activeCam.road} - Km {activeCam.kilometer}
+          </Text>
+          <TouchableOpacity
+            style={styles.calloutCloseBtn}
+            onPress={() => setActiveCam(null)}
           >
-            <Pressable
-              className="absolute -top-2 -right-2 z-10 bg-white rounded-full w-6 h-6 items-center justify-center shadow-sm elevation-2 active:opacity-70"
-              onPress={() => router.setParams({ cameraId: '' })}
-            >
-              <Text className="text-[12px] text-[#333] font-bold">✕</Text>
-            </Pressable>
-
-            <Pressable
-              className="active:opacity-70"
-              onPress={() => router.push({ pathname: '/cam/[id]/gallery', params: { id: activeCam.id, image: activeCam.imageUrl } })}
-            >
-              <Image className="w-full h-[200px] rounded-lg bg-[#e1e4e8] mb-3" source={{ uri: `${activeCam.imageUrl}?t=${cacheBuster}` }} resizeMode="cover" />
-            </Pressable>
-            <View className="justify-between">
-              <Text style={{ color: MapColors.calloutTitle }} className="text-base font-bold mb-1" numberOfLines={1}>{activeCam.location}</Text>
-              <Text style={{ color: MapColors.calloutSubtitle }} className="text-sm mb-2">{activeCam.road} - Km {activeCam.kilometer}</Text>
-              <Pressable
-                className="bg-[#3b82f6] py-3 px-3 rounded-md self-start active:opacity-70"
-                onPress={() => router.push(`/cam/${activeCam.id}`)}
-              >
-                <Text className="text-white text-sm font-medium">Ver detalles</Text>
-              </Pressable>
-            </View>
-          </Animated.View>
-        </GestureDetector>
+            <Text style={styles.calloutCloseText}>✕</Text>
+          </TouchableOpacity>
+        </View>
       )}
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  pseudoCallout: {
+    position: 'absolute',
+    bottom: 24,
+    left: 16,
+    right: 16,
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 14,
+    elevation: 6,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.18,
+    shadowRadius: 4,
+    flexDirection: 'column',
+  },
+  calloutTitle: {
+    fontSize: 15,
+    fontWeight: 'bold',
+    color: MapColors.calloutTitle,
+    marginBottom: 2,
+    paddingRight: 24,
+  },
+  calloutSubtitle: {
+    fontSize: 13,
+    color: MapColors.calloutSubtitle,
+  },
+  calloutCloseBtn: {
+    position: 'absolute',
+    top: 10,
+    right: 12,
+    padding: 4,
+  },
+  calloutCloseText: {
+    fontSize: 16,
+    color: MapColors.calloutSubtitle,
+  },
+});
