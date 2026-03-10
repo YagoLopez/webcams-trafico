@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import { Animated, Image, Pressable, Text, View } from 'react-native';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { Animated, Image, Text, View } from 'react-native';
+import { Gesture, GestureDetector, TouchableOpacity } from 'react-native-gesture-handler';
 import MapViewClustered from 'react-native-map-clustering';
 import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
 
@@ -148,28 +148,22 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
             className="absolute bottom-10 left-5 right-5 bg-white rounded-xl p-3 shadow-lg elevation-5 flex-col"
             style={{ transform: [{ translateY: Animated.add(slideAnim, pan.y) }] }}
           >
-            <Pressable
-              className="absolute -top-2 -right-2 z-10 bg-white rounded-full w-6 h-6 items-center justify-center shadow-sm elevation-2 active:opacity-70"
-              onPress={() => router.setParams({ cameraId: '' })}
-            >
-              <Text className="text-[12px] text-[#333] font-bold">✕</Text>
-            </Pressable>
-
-            <Pressable
-              className="active:opacity-70"
+            <TouchableOpacity
+              activeOpacity={0.7}
               onPress={() => router.push({ pathname: '/cam/[id]/gallery', params: { id: activeCam.id, image: activeCam.imageUrl } })}
             >
               <Image className="w-full h-[200px] rounded-lg bg-[#e1e4e8] mb-3" source={{ uri: `${activeCam.imageUrl}?t=${cacheBuster}` }} resizeMode="cover" />
-            </Pressable>
+            </TouchableOpacity>
             <View className="justify-between">
               <Text className="text-base font-bold text-[#333] mb-1" numberOfLines={1}>{activeCam.location}</Text>
               <Text className="text-sm text-[#666] mb-2">{activeCam.road} - Km {activeCam.kilometer}</Text>
-              <Pressable
-                className="bg-[#3b82f6] py-3 px-3 rounded-md self-start active:opacity-70"
+              <TouchableOpacity
+                className="bg-[#3b82f6] py-3 px-3 rounded-md self-start"
+                activeOpacity={0.7}
                 onPress={() => router.push(`/cam/${activeCam.id}`)}
               >
                 <Text className="text-white text-sm font-medium">Ver detalles</Text>
-              </Pressable>
+              </TouchableOpacity>
             </View>
           </Animated.View>
         </GestureDetector>
