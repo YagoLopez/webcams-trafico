@@ -25,7 +25,7 @@ export default function CameraMapScreen() {
       if (params.lat && params.lon) {
         setCenter({
           lat: parseFloat(Array.isArray(params.lat) ? params.lat[0] : params.lat),
-          lon: parseFloat(Array.isArray(params.lon) ? params.lon[0] : params.lon)
+          lon: parseFloat(Array.isArray(params.lon) ? params.lon[0] : params.lon),
         });
         setLoadingLocation(false);
         return;

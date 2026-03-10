@@ -112,7 +112,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
           router.setParams({
             cameraId: String(cam.id),
             lat: String(lat),
-            lon: String(lon)
+            lon: String(lon),
           });
         }}
       />
