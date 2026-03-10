@@ -13,7 +13,7 @@ interface TrafficMapProps {
   selectedCameraId?: string;
 }
 const camIcon = require('@/assets/images/cam-icon4.png');
-const selectedCamIcon = require('@/assets/images/cam-icon.png');
+const selectedCamIcon = require('@/assets/images/cam-icon7.png');
 
 export default function TrafficMapNative({ cams, center, selectedCameraId }: TrafficMapProps) {
   const mapRef = useRef<MapView>(null);
