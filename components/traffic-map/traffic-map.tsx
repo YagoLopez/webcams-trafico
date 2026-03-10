@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import { Animated, Image, Text, View } from 'react-native';
 import { Gesture, GestureDetector, TouchableOpacity } from 'react-native-gesture-handler';
 import MapViewClustered from 'react-native-map-clustering';
-import MapView, { Marker, PROVIDER_GOOGLE, Region } from 'react-native-maps';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
 import { Cam } from '@/types/cam';
 
@@ -70,14 +70,26 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
     }
   }, [selectedCameraId, cams, pan, slideAnim]);
 
+  const isInitialCenter = useRef(true);
+
   useEffect(() => {
     if (center && mapRef.current) {
-      mapRef.current.animateToRegion({
-        latitude: center.lat,
-        longitude: center.lon,
-        latitudeDelta: 0.05,
-        longitudeDelta: 0.05,
-      }, 500);
+      if (isInitialCenter.current) {
+        mapRef.current.animateToRegion({
+          latitude: center.lat,
+          longitude: center.lon,
+          latitudeDelta: 0.05,
+          longitudeDelta: 0.05,
+        }, 500);
+        isInitialCenter.current = false;
+      } else {
+        mapRef.current.animateCamera({
+          center: {
+            latitude: center.lat,
+            longitude: center.lon,
+          }
+        }, { duration: 500 });
+      }
     }
   }, [center]);
 
@@ -122,21 +134,6 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
         showsUserLocation={true}
         clusterColor="#3b82f6"
         spiralEnabled={false}
-        onPress={() => {
-          if (activeCam) {
-            router.setParams({ cameraId: '' });
-          }
-        }}
-        onPanDrag={() => {
-          if (activeCam) {
-            router.setParams({ cameraId: '' });
-          }
-        }}
-        onRegionChange={(region: Region, details?: { isGesture?: boolean }) => {
-          if (activeCam && details?.isGesture) {
-            router.setParams({ cameraId: '' });
-          }
-        }}
       >
         {markers}
       </MapViewClustered>
