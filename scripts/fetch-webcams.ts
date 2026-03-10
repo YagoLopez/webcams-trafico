@@ -10,6 +10,8 @@ interface WebcamData {
   road: string;      // e.g., "A-6"
   kilometer: string; // e.g., "Pk 12.5"
   location: string;  // e.g., "Madrid, Moncloa"
+  latitude?: number;
+  longitude?: number;
   status: 'active' | 'offline'; // 'active' by default
 }
 
@@ -87,16 +89,29 @@ async function fetchWebcams() {
         }
       }
 
-      // Kilometer and Province
+      // Location coordinates, Kilometer and Province
       // loc:tpegPointLocation -> loc:point -> loc:_tpegNonJunctionPointExtension -> loc:extendedTpegNonJunctionPoint
       let km = '';
       let province = '';
+      let latitude: number | undefined = undefined;
+      let longitude: number | undefined = undefined;
 
       const tpegKey = findKey(pointLocation, 'tpegPointLocation');
       if (tpegKey) {
         const pointKey = findKey(pointLocation[tpegKey], 'point');
         if (pointKey) {
           const point = pointLocation[tpegKey][pointKey];
+
+          // Coordinates
+          const coordsKey = findKey(point, 'pointCoordinates');
+          if (coordsKey) {
+            const coords = point[coordsKey];
+            const latKey = findKey(coords, 'latitude');
+            const lngKey = findKey(coords, 'longitude');
+            if (latKey && coords[latKey]) latitude = Number(coords[latKey]);
+            if (lngKey && coords[lngKey]) longitude = Number(coords[lngKey]);
+          }
+
           // Extension
           const extKey = Object.keys(point).find(k => k.includes('Extension'));
           if (extKey) {
@@ -118,6 +133,8 @@ async function fetchWebcams() {
         road: String(roadName),
         kilometer: km ? `Pk ${km}${roadDest ? ' - ' + roadDest : ''}` : (roadDest || ''),
         location: province || 'Unknown',
+        latitude,
+        longitude,
         status: 'active' // Inferred active since it's in the list
       };
 
