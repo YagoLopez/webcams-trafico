@@ -107,7 +107,7 @@ export default function CamDetailScreen() {
             </View>
           </View>
           <Text className="text-2xl font-bold text-[#111418] dark:text-white tracking-tight">{cam.location}</Text>
-          <Text className="text-slate-500 dark:text-slate-400 text-sm mt-1">{cam.kilometer}</Text>
+          <Text className="text-slate-500 dark:text-slate-400 text-sm mt-1">Km {cam.kilometer}</Text>
         </View>
 
         {/* Map Preview */}
@@ -170,7 +170,7 @@ export default function CamDetailScreen() {
               <MaterialIcons name="add-road" size={20} color={colorScheme === 'dark' ? '#94a3b8' : '#64748b'} />
               <Text className="text-slate-500 dark:text-slate-400 text-xs font-medium uppercase tracking-wider">Kilometer</Text>
             </View>
-            <Text className="text-[#111418] dark:text-white text-lg font-semibold">{cam.kilometer}</Text>
+            <Text className="text-[#111418] dark:text-white text-lg font-semibold">Km {cam.kilometer}</Text>
           </View>
 
           <View className="w-[48%] p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-800 mb-3">

@@ -45,7 +45,7 @@ const mockCams: Cam[] = [
     location: 'Madrid Center',
     roadName: 'M-30',
     roadDestination: '',
-    kilometer: '5',
+    kilometer: 5,
     imageUrl: 'https://example.com/cam1.jpg',
     status: 'active'
   },
@@ -56,7 +56,7 @@ const mockCams: Cam[] = [
     location: 'Madrid North',
     roadName: 'M-40',
     roadDestination: '',
-    kilometer: '10',
+    kilometer: 10,
     imageUrl: 'https://example.com/cam2.jpg',
     status: 'active'
   }

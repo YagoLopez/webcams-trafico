@@ -59,7 +59,7 @@ describe('GET /get-remote-cams-data', () => {
       imageUrl: "http://example.com/cam1.jpg",
       roadName: "A-6",
       roadDestination: "Madrid",
-      kilometer: "Pk 12.5",
+      kilometer: 12.5,
       location: "Madrid",
       status: "active"
     });

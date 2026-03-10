@@ -7,7 +7,7 @@ export interface CamData {
   imageUrl: string;
   roadName: string;
   roadDestination: string;
-  kilometer: string;
+  kilometer: number;
   location: string;
   status: 'active' | 'offline';
   latitude?: number;
@@ -79,7 +79,8 @@ export async function GET(request: Request) {
       const roadDest = navigate(info, ['roadDestination']) ?? '';
 
       const data = navigate(pointLocation, ['tpegPointLocation', 'point', 'Extension', 'extendedTpegNonJunctionPoint']);
-      const km = navigate(data, ['kilometerPoint']) ?? '';
+      const kmRaw = navigate(data, ['kilometerPoint']);
+      const km = kmRaw !== undefined ? Number(kmRaw) : 0;
       const province = navigate(data, ['province']) ?? '';
 
       const webcam: CamData = {
@@ -87,7 +88,7 @@ export async function GET(request: Request) {
         imageUrl: String(imageUrl),
         roadName: String(roadName),
         roadDestination: String(roadDest),
-        kilometer: km ? `Pk ${km}` : '',
+        kilometer: km,
         location: province || 'Unknown',
         status: 'active',
         latitude,

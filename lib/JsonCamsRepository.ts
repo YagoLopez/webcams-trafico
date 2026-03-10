@@ -57,7 +57,7 @@ export class JsonCamsRepository implements ICamsRepository {
       const regex = new RegExp(escapedQuery, 'i');
       filtered = filtered.filter(c =>
         (c.location && regex.test(c.location)) ||
-        (c.kilometer && regex.test(c.kilometer)) ||
+        (c.kilometer !== undefined && c.kilometer !== null && regex.test(c.kilometer.toString())) ||
         (c.roadName && regex.test(c.roadName)) ||
         (c.roadDestination && regex.test(c.roadDestination))
       );

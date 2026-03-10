@@ -57,7 +57,7 @@ describe('JsonCamsRepository', () => {
     const result = await repository.getFilteredCams({ searchQuery: 'A-62' });
     expect(result.data.length).toBeGreaterThan(0);
     expect(result.data.every(c =>
-      c.location?.includes('A-62') || c.kilometer?.includes('A-62') || c.roadName?.includes('A-62') || c.roadDestination?.includes('A-62')
+      c.location?.includes('A-62') || c.kilometer?.toString().includes('A-62') || c.roadName?.includes('A-62') || c.roadDestination?.includes('A-62')
     )).toBe(true);
   });
 

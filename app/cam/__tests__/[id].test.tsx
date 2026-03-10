@@ -83,7 +83,7 @@ describe('CamDetailScreen', () => {
       roadName: 'A-1',
       roadDestination: '',
       location: 'MADRID',
-      kilometer: 'Km 10',
+      kilometer: 10,
       status: 'Live',
       imageUrl: 'http://example.com/cam.jpg',
       latitude: 40.4168,
@@ -112,7 +112,7 @@ describe('CamDetailScreen', () => {
       roadName: 'A-2',
       roadDestination: '',
       location: 'BARCELONA',
-      kilometer: 'Km 20',
+      kilometer: 20,
       status: 'offline',
     };
 

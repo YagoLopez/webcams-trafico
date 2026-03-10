@@ -49,7 +49,7 @@ export const CamCard: React.FC<CamCardProps> = React.memo(({ item }) => {
           <View className="flex flex-row items-start justify-between gap-4">
             <View className="flex-1">
               <Text className={`text-base font-semibold ${isOffline ? 'text-slate-500 dark:text-slate-400' : 'text-[#111418] dark:text-white'}`} numberOfLines={1}>
-                {item.kilometer}
+                Km {item.kilometer}
               </Text>
               <View className="mt-1 flex flex-row items-center gap-1.5">
                 {isOffline ? (
