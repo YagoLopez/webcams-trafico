@@ -20,7 +20,6 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
   const router = useRouter();
   const [activeCam, setActiveCam] = React.useState<Cam | null>(null);
   const pan = useRef(new Animated.ValueXY()).current;
-  const slideAnim = useRef(new Animated.Value(1000)).current;
   const cacheBuster = Math.floor(Date.now() / (1000 * 60 * 5));
 
   const panGesture = Gesture.Pan()
@@ -55,20 +54,12 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
       const cam = cams.find((c) => String(c.id) === String(selectedCameraId));
       if (cam) {
         pan.setValue({ x: 0, y: 0 }); // Reset position when a new camera is selected
-        slideAnim.setValue(1000); // Start from below the screen
         setActiveCam(cam);
-
-        Animated.spring(slideAnim, {
-          toValue: 0,
-          useNativeDriver: true,
-          damping: 20,
-          stiffness: 90,
-        }).start();
       }
     } else {
       setActiveCam(null);
     }
-  }, [selectedCameraId, cams, pan, slideAnim]);
+  }, [selectedCameraId, cams, pan]);
 
   const isInitialCenter = useRef(true);
 
@@ -145,7 +136,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
           <Animated.View
             testID="pseudo-callout"
             className="absolute bottom-10 left-5 right-5 bg-white rounded-xl p-3 shadow-lg elevation-5 flex-col"
-            style={{ transform: [{ translateY: Animated.add(slideAnim, pan.y) }] }}
+            style={{ transform: [{ translateY: pan.y }] }}
           >
             <TouchableOpacity
               activeOpacity={0.7}
