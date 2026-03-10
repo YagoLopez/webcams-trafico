@@ -10,7 +10,7 @@ export interface ICamsRepository {
   /** Gets a specific camera by its ID */
   getCamById(id: string): Promise<Cam | null>;
 
-  /** Gets a unique and sorted list of all roads */
+  /** Gets a unique and sorted list of all road names */
   getAllRoads(): Promise<string[]>;
 
   /** Gets a unique and sorted list of all provinces */

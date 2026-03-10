@@ -28,7 +28,7 @@ export class JsonCamsRepository implements ICamsRepository {
   }
 
   async getAllRoads(): Promise<string[]> {
-    const roads = this.data.map(c => c.road).filter(Boolean);
+    const roads = this.data.map(c => c.roadName).filter(Boolean);
     const uniqueRoads = Array.from(new Set(roads));
     uniqueRoads.sort((a, b) => a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' }));
     return Promise.resolve(uniqueRoads);
@@ -43,8 +43,8 @@ export class JsonCamsRepository implements ICamsRepository {
   async getFilteredCams(filters: CamFilters, page?: number, pageSize?: number): Promise<PaginationResult<Cam>> {
     let filtered = this.data;
 
-    if (filters.road) {
-      filtered = filtered.filter(c => c.road === filters.road);
+    if (filters.roadName) {
+      filtered = filtered.filter(c => c.roadName === filters.roadName);
     }
 
     if (filters.province) {
@@ -58,7 +58,8 @@ export class JsonCamsRepository implements ICamsRepository {
       filtered = filtered.filter(c =>
         (c.location && regex.test(c.location)) ||
         (c.kilometer && regex.test(c.kilometer)) ||
-        (c.road && regex.test(c.road))
+        (c.roadName && regex.test(c.roadName)) ||
+        (c.roadDestination && regex.test(c.roadDestination))
       );
     }
 

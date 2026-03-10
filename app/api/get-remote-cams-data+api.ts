@@ -5,7 +5,8 @@ import { XMLParser } from 'fast-xml-parser';
 export interface CamData {
   id: string;
   imageUrl: string;
-  road: string;
+  roadName: string;
+  roadDestination: string;
   kilometer: string;
   location: string;
   status: 'active' | 'offline';
@@ -84,8 +85,9 @@ export async function GET(request: Request) {
       const webcam: CamData = {
         id: String(id),
         imageUrl: String(imageUrl),
-        road: String(roadName),
-        kilometer: km ? `Pk ${km}${roadDest ? ' - ' + roadDest : ''}` : (roadDest || ''),
+        roadName: String(roadName),
+        roadDestination: String(roadDest),
+        kilometer: km ? `Pk ${km}` : '',
         location: province || 'Unknown',
         status: 'active',
         latitude,

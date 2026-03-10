@@ -14,9 +14,9 @@ describe('<FiltersModal />', () => {
         onClose={jest.fn()}
         roads={['A-1']}
         provinces={['MADRID']}
-        selectedRoad={null}
+        selectedRoadName={null}
         selectedProvince={null}
-        onSelectRoad={jest.fn()}
+        onSelectRoadName={jest.fn()}
         onSelectProvince={jest.fn()}
       />
     );
@@ -36,9 +36,9 @@ describe('<FiltersModal />', () => {
         onClose={jest.fn()}
         roads={['A-1']}
         provinces={['MADRID']}
-        selectedRoad={null}
+        selectedRoadName={null}
         selectedProvince={null}
-        onSelectRoad={jest.fn()}
+        onSelectRoadName={jest.fn()}
         onSelectProvince={jest.fn()}
       />
     );

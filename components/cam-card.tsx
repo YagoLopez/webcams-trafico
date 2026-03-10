@@ -39,7 +39,7 @@ export const CamCard: React.FC<CamCardProps> = React.memo(({ item }) => {
           {/* Road Badge Bottom Left */}
           <View className={`absolute left-3 bottom-3 rounded-lg px-2.5 py-1 shadow-sm ${isOffline ? 'bg-slate-500' : 'bg-primary'}`}>
             <Text className="text-xs font-bold text-white" numberOfLines={1}>
-              {item.road}
+              {item.roadName}
             </Text>
           </View>
         </View>

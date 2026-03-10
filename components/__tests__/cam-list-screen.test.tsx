@@ -35,7 +35,7 @@ jest.mock('../../hooks/use-cams', () => ({
           data: [
             {
               id: 'cam-1',
-              road: 'A-1',
+              roadName: 'A-1',
               location: 'MADRID',
               status: 'Activa',
             },
@@ -55,7 +55,7 @@ jest.mock('../../hooks/use-cams', () => ({
 jest.mock('../../store/use-app-store', () => ({
   useAppStore: jest.fn((selector) => {
     const mockStore = {
-      selectedRoad: null,
+      selectedRoadName: null,
       selectedProvince: null,
       setCamCount: jest.fn(),
       isFilterModalVisible: false,

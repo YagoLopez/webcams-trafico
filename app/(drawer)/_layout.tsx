@@ -73,9 +73,9 @@ export default function DrawerLayout() {
         onClose={() => setIsFiltersModalVisible(false)}
         roads={roads}
         provinces={provinces}
-        selectedRoad={useAppStore((state) => state.selectedRoad)}
+        selectedRoadName={useAppStore((state) => state.selectedRoadName)}
         selectedProvince={useAppStore((state) => state.selectedProvince)}
-        onSelectRoad={useAppStore.getState().setSelectedRoad}
+        onSelectRoadName={useAppStore.getState().setSelectedRoadName}
         onSelectProvince={useAppStore.getState().setSelectedProvince}
       />
     </>

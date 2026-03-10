@@ -12,7 +12,7 @@ describe('JsonCamsRepository', () => {
     const cams = await repository.getAllCams();
     expect(cams).toHaveLength(webcamsData.length);
     expect(cams[0]).toHaveProperty('id');
-    expect(cams[0]).toHaveProperty('road');
+    expect(cams[0]).toHaveProperty('roadName');
   });
 
   test('getAllRoads should return unique sorted roads', async () => {
@@ -36,8 +36,8 @@ describe('JsonCamsRepository', () => {
   });
 
   test('getFilteredCams should filter by road', async () => {
-    const result = await repository.getFilteredCams({ road: 'A-62' });
-    expect(result.data.every(c => c.road === 'A-62')).toBe(true);
+    const result = await repository.getFilteredCams({ roadName: 'A-62' });
+    expect(result.data.every(c => c.roadName === 'A-62')).toBe(true);
     expect(result.data.length).toBeGreaterThan(0);
   });
 
@@ -57,7 +57,7 @@ describe('JsonCamsRepository', () => {
     const result = await repository.getFilteredCams({ searchQuery: 'A-62' });
     expect(result.data.length).toBeGreaterThan(0);
     expect(result.data.every(c =>
-      c.location?.includes('A-62') || c.kilometer?.includes('A-62') || c.road?.includes('A-62')
+      c.location?.includes('A-62') || c.kilometer?.includes('A-62') || c.roadName?.includes('A-62') || c.roadDestination?.includes('A-62')
     )).toBe(true);
   });
 

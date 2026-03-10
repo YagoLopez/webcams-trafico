@@ -16,7 +16,8 @@
     "test:watch": "jest --watch",
     "test:e2e": "playwright test",
     "test:e2e:ui": "playwright test --ui",
-    "test:all": "concurrently \"npm run test\" \"npm run test:e2e\""
+    "test:all": "concurrently \"npm run test\" \"npm run test:e2e\"",
+    "import-webcams": "tsx scripts/fetch-webcams.ts"
   },
   "dependencies": {
     "@expo/vector-icons": "^15.0.3",

@@ -7,7 +7,8 @@ import path from 'path';
 interface WebcamData {
   id: string;
   imageUrl: string;
-  road: string;      // e.g., "A-6"
+  roadName: string;      // e.g., "A-6"
+  roadDestination: string; // e.g., "Villalba"
   kilometer: string; // e.g., "Pk 12.5"
   location: string;  // e.g., "Madrid, Moncloa"
   latitude?: number;
@@ -130,8 +131,9 @@ async function fetchWebcams() {
       const webcam: WebcamData = {
         id: String(id),
         imageUrl: String(imageUrl),
-        road: String(roadName),
-        kilometer: km ? `Pk ${km}${roadDest ? ' - ' + roadDest : ''}` : (roadDest || ''),
+        roadName: String(roadName),
+        roadDestination: String(roadDest),
+        kilometer: km ? `Pk ${km}` : '',
         location: province || 'Unknown',
         latitude,
         longitude,

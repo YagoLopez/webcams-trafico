@@ -153,7 +153,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
             </TouchableOpacity>
             <View className="justify-between">
               <Text className="text-base font-bold text-[#333] mb-1" numberOfLines={1}>{activeCam.location}</Text>
-              <Text className="text-sm text-[#666] mb-2">{activeCam.road} - Km {activeCam.kilometer}</Text>
+              <Text className="text-sm text-[#666] mb-2">{activeCam.roadName} - Km {activeCam.kilometer}</Text>
               <TouchableOpacity
                 className="bg-[#3b82f6] py-3 px-3 rounded-md self-start"
                 activeOpacity={0.7}

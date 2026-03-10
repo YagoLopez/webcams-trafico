@@ -80,7 +80,8 @@ describe('CamDetailScreen', () => {
   test('renders camera details correctly', () => {
     const mockCam = {
       id: 'cam-1',
-      road: 'A-1',
+      roadName: 'A-1',
+      roadDestination: '',
       location: 'MADRID',
       kilometer: 'Km 10',
       status: 'Live',
@@ -108,7 +109,8 @@ describe('CamDetailScreen', () => {
   test('renders offline styling correctly', () => {
     const mockCamOffline = {
       id: 'cam-2',
-      road: 'A-2',
+      roadName: 'A-2',
+      roadDestination: '',
       location: 'BARCELONA',
       kilometer: 'Km 20',
       status: 'offline',

@@ -97,7 +97,7 @@ export default function CamDetailScreen() {
         <View className="mb-4">
           <View className="flex-row items-center gap-2 mb-1">
             <View className="bg-primary/10 dark:bg-primary/20 px-2 py-0.5 rounded border border-primary/20">
-              <Text className="text-primary dark:text-blue-400 text-xs font-bold">{cam.road}</Text>
+              <Text className="text-primary dark:text-blue-400 text-xs font-bold">{cam.roadName}</Text>
             </View>
             <View className={`flex-row items-center gap-1 px-2 py-0.5 rounded border ${isOffline ? 'bg-slate-100 dark:bg-slate-800 border-slate-200 dark:border-slate-700' : 'bg-emerald-50 dark:bg-emerald-900/30 border-emerald-100 dark:border-emerald-800'}`}>
               <MaterialIcons name={isOffline ? "error-outline" : "check-circle"} size={14} className={isOffline ? 'text-slate-500 dark:text-slate-400' : 'text-emerald-600 dark:text-emerald-400'} />

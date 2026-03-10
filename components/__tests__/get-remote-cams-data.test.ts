@@ -57,8 +57,9 @@ describe('GET /get-remote-cams-data', () => {
     expect(data[0]).toEqual({
       id: "1001",
       imageUrl: "http://example.com/cam1.jpg",
-      road: "A-6",
-      kilometer: "Pk 12.5 - Madrid",
+      roadName: "A-6",
+      roadDestination: "Madrid",
+      kilometer: "Pk 12.5",
       location: "Madrid",
       status: "active"
     });

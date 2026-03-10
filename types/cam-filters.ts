@@ -1,6 +1,6 @@
 
 export interface CamFilters {
-  road?: string | null;
+  roadName?: string | null;
   province?: string | null;
   searchQuery?: string | null;
 }

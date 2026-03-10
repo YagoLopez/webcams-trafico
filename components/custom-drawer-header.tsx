@@ -14,10 +14,10 @@ export function CustomDrawerHeader({ title }: CustomDrawerHeaderProps) {
   const navigation = useNavigation();
   const camCount = useAppStore((state) => state.camCount);
   const setIsFilterModalVisible = useAppStore((state) => state.setIsFilterModalVisible);
-  const selectedRoad = useAppStore((state) => state.selectedRoad);
+  const selectedRoadName = useAppStore((state) => state.selectedRoadName);
   const selectedProvince = useAppStore((state) => state.selectedProvince);
 
-  const isFilterActive = !!(selectedRoad || selectedProvince);
+  const isFilterActive = !!(selectedRoadName || selectedProvince);
 
   return (
     <SafeAreaView
