@@ -20,7 +20,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run Jules Agent
-        uses: google-labs-code/jules-action@v1 # Check for the latest version in the official repo
+        uses: google-labs-code/jules-action@v1.0.0 # Check for the latest version in the official repo
         with:
           # Here you give the specific instructions (the prompt) for its role
           prompt: |
@@ -36,10 +36,4 @@ jobs:
             8. Code duplication.
             10. Code documentation.
             Please make sure to follow the conventions in our AGENTS.md file.
-
-          # Pass the GitHub token so Jules can interact with the PR
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-        env:
-          # Your API key configured in the repository Secrets
-          JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
+          jules_api_key: ${{ secrets.JULES_API_KEY }}
