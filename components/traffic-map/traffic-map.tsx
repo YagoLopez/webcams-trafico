@@ -12,8 +12,8 @@ interface TrafficMapProps {
   center?: { lat: number; lon: number };
   selectedCameraId?: string;
 }
-
 const camIcon = require('@/assets/images/cam-icon4.png');
+const selectedCamIcon = require('@/assets/images/cam-icon.png');
 
 export default function TrafficMapNative({ cams, center, selectedCameraId }: TrafficMapProps) {
   const mapRef = useRef<MapView>(null);
@@ -99,12 +99,14 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
     const lon = cam.longitude;
     if (lat === undefined || lon === undefined) return null;
 
+    const isSelected = String(cam.id) === String(selectedCameraId);
+
     return (
       <Marker
         key={cam.id}
         coordinate={{ latitude: lat, longitude: lon }}
         anchor={{ x: 0.5, y: 0.5 }}
-        icon={camIcon}
+        icon={isSelected ? selectedCamIcon : camIcon}
         tracksViewChanges={false}
         testID={`map-marker-${cam.id}`}
         onPress={(e) => {
@@ -117,7 +119,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
         }}
       />
     );
-  }), [cams, router]);
+  }), [cams, router, selectedCameraId]);
 
   return (
     <View className="absolute inset-0">
