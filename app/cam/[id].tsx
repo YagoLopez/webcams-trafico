@@ -6,6 +6,7 @@ import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { formatKilometer } from '../../lib/utils/formatters';
 
 export default function CamDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -107,7 +108,7 @@ export default function CamDetailScreen() {
             </View>
           </View>
           <Text className="text-2xl font-bold text-[#111418] dark:text-white tracking-tight">{cam.location}</Text>
-          <Text className="text-slate-500 dark:text-slate-400 text-sm mt-1">Km {cam.kilometer}</Text>
+          <Text className="text-slate-500 dark:text-slate-400 text-sm mt-1">{formatKilometer(cam.kilometer)}</Text>
         </View>
 
         {/* Map Preview */}
@@ -121,12 +122,9 @@ export default function CamDetailScreen() {
               setTimeout(() => {
                 router.push({ pathname: '/cam/[id]/map', params: { id: cam.id, lat: cam.latitude, lon: cam.longitude, cameraId: cam.id } });
                 setTimeout(() => setIsNavigatingToMap(false), 500);
-              }, 50);
+              }, 0);
             }
           }}
-          style={({ pressed }) => [
-            { transform: [{ scale: pressed ? 0.8 : 1 }] }
-          ]}
           className={`w-full self-center lg:w-[90%] h-32 mt-2 mb-8 rounded-xl overflow-hidden border border-white/10 dark:border-slate-600 shadow-md items-center justify-center bg-slate-100 dark:bg-slate-800 ${isNavigatingToMap ? 'opacity-90' : 'active:opacity-80'}`}>
           <Image
             source={require('../../assets/images/gmap.jpg')}
@@ -170,7 +168,7 @@ export default function CamDetailScreen() {
               <MaterialIcons name="add-road" size={20} color={colorScheme === 'dark' ? '#94a3b8' : '#64748b'} />
               <Text className="text-slate-500 dark:text-slate-400 text-xs font-medium uppercase tracking-wider">Kilometer</Text>
             </View>
-            <Text className="text-[#111418] dark:text-white text-lg font-semibold">Km {cam.kilometer}</Text>
+            <Text className="#111418] dark:text-white text-lg font-semibold">{formatKilometer(cam.kilometer)}</Text>
           </View>
 
           <View className="w-[48%] p-4 bg-slate-50 dark:bg-slate-800/50 rounded-lg border border-slate-100 dark:border-slate-800 mb-3">

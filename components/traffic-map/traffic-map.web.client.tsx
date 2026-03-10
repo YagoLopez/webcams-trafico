@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 // Leaflet and React-Leaflet imports
+import { formatKilometer } from '@/lib/utils/formatters';
 import { Cam } from '@/types/cam';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
@@ -183,7 +184,7 @@ export default function TrafficMapWebClient({ cams, center, selectedCameraId }: 
                 <Popup closeButton={true} autoPan={false}>
                   <View className="flex-row justify-center mt-2 px-1">
                     <Text className="font-bold text-xs">{cam.roadName}</Text>
-                    <Text className="text-gray-600 text-xs"> - {cam.kilometer}</Text>
+                    <Text className="text-gray-600 text-xs"> - {formatKilometer(cam.kilometer)}</Text>
                   </View>
 
                   <View className="w-[240px] p-1">

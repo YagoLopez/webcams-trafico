@@ -5,6 +5,7 @@ import { Gesture, GestureDetector, TouchableOpacity } from 'react-native-gesture
 import MapViewClustered from 'react-native-map-clustering';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
+import { formatKilometer } from '@/lib/utils/formatters';
 import { Cam } from '@/types/cam';
 
 interface TrafficMapProps {
@@ -153,7 +154,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
             </TouchableOpacity>
             <View className="justify-between">
               <Text className="text-base font-bold text-[#333] mb-1" numberOfLines={1}>{activeCam.location}</Text>
-              <Text className="text-sm text-[#666] mb-2">{activeCam.roadName} - Km {activeCam.kilometer}</Text>
+              <Text className="text-sm text-[#666] mb-2">{activeCam.roadName} - {formatKilometer(activeCam.kilometer)}</Text>
               <TouchableOpacity
                 className="bg-[#3b82f6] py-3 px-3 rounded-md self-start"
                 activeOpacity={0.7}
