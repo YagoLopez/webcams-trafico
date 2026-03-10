@@ -53,8 +53,15 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
     if (selectedCameraId) {
       const cam = cams.find((c) => String(c.id) === String(selectedCameraId));
       if (cam) {
-        pan.setValue({ x: 0, y: 0 }); // Reset position when a new camera is selected
+        pan.setValue({ x: 0, y: 500 }); // Start off-screen from below
         setActiveCam(cam);
+
+        Animated.spring(pan, {
+          toValue: { x: 0, y: 0 },
+          useNativeDriver: true,
+          bounciness: 4,
+          speed: 12,
+        }).start();
       }
     } else {
       setActiveCam(null);
