@@ -42,4 +42,4 @@ jobs:
 
         env:
           # Your API key configured in the repository Secrets
-          JULES_API_KEY: AQ.Ab8RN6Il-4FiWD-K1z77Hk0zSTzG_WqWQ2eLPmYo3NtA2W6amQ
+          JULES_API_KEY: ${{ secrets.JULES_API_KEY }}
