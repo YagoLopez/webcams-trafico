@@ -7,7 +7,7 @@ import { Cam } from '../types/cam';
 import { CamCard } from './cam-card';
 
 export const CamListScreen = () => {
-  const selectedRoad = useAppStore((state) => state.selectedRoad);
+  const selectedRoadName = useAppStore((state) => state.selectedRoadName);
   const selectedProvince = useAppStore((state) => state.selectedProvince);
   const setCamCount = useAppStore((state) => state.setCamCount);
   const cams = JsonCamsRepository.getInstance();
@@ -21,7 +21,7 @@ export const CamListScreen = () => {
     hasNextPage,
     isFetchingNextPage
   } = useInfiniteFilteredCams(cams, {
-    road: selectedRoad,
+    roadName: selectedRoadName,
     province: selectedProvince,
   });
 

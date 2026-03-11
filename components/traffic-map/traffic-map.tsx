@@ -5,6 +5,7 @@ import { Gesture, GestureDetector, TouchableOpacity } from 'react-native-gesture
 import MapViewClustered from 'react-native-map-clustering';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
+import { formatKilometer } from '@/lib/utils/formatters';
 import { Cam } from '@/types/cam';
 
 interface TrafficMapProps {
@@ -13,7 +14,7 @@ interface TrafficMapProps {
   selectedCameraId?: string;
 }
 const camIcon = require('@/assets/images/cam-icon4.png');
-const selectedCamIcon = require('@/assets/images/cam-icon.png');
+const selectedCamIcon = require('@/assets/images/cam-icon7.png');
 
 export default function TrafficMapNative({ cams, center, selectedCameraId }: TrafficMapProps) {
   const mapRef = useRef<MapView>(null);
@@ -111,8 +112,6 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
           e.stopPropagation();
           router.setParams({
             cameraId: String(cam.id),
-            lat: String(lat),
-            lon: String(lon),
           });
         }}
       />
@@ -134,6 +133,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
         showsUserLocation={true}
         clusterColor="#3b82f6"
         spiralEnabled={false}
+        moveOnMarkerPress={false}
       >
         {markers}
       </MapViewClustered>
@@ -153,7 +153,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
             </TouchableOpacity>
             <View className="justify-between">
               <Text className="text-base font-bold text-[#333] mb-1" numberOfLines={1}>{activeCam.location}</Text>
-              <Text className="text-sm text-[#666] mb-2">{activeCam.road} - Km {activeCam.kilometer}</Text>
+              <Text className="text-sm text-[#666] mb-2">{activeCam.roadName} - {formatKilometer(activeCam.kilometer)}</Text>
               <TouchableOpacity
                 className="bg-[#3b82f6] py-3 px-3 rounded-md self-start"
                 activeOpacity={0.7}

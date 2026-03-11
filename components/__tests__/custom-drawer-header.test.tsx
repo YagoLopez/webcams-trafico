@@ -33,7 +33,7 @@ describe('CustomDrawerHeader', () => {
       selector({
         camCount: 5,
         setIsFilterModalVisible: mockSetIsFilterModalVisible,
-        selectedRoad: '',
+        selectedRoadName: '',
         selectedProvince: '',
       })
     );
@@ -69,7 +69,7 @@ describe('CustomDrawerHeader', () => {
       selector({
         camCount: 5,
         setIsFilterModalVisible: mockSetIsFilterModalVisible,
-        selectedRoad: 'A-1',
+        selectedRoadName: 'A-1',
         selectedProvince: '',
       })
     );

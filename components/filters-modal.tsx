@@ -8,9 +8,9 @@ interface FiltersModalProps {
   onClose: () => void;
   roads: string[];
   provinces: string[];
-  selectedRoad: string | null;
+  selectedRoadName: string | null;
   selectedProvince: string | null;
-  onSelectRoad: (road: string | null) => void;
+  onSelectRoadName: (roadName: string | null) => void;
   onSelectProvince: (province: string | null) => void;
 }
 
@@ -19,9 +19,9 @@ export const FiltersModal = ({
   onClose,
   roads,
   provinces,
-  selectedRoad,
+  selectedRoadName,
   selectedProvince,
-  onSelectRoad,
+  onSelectRoadName,
   onSelectProvince,
 }: FiltersModalProps) => {
   return (
@@ -51,8 +51,8 @@ export const FiltersModal = ({
                   <SelectBox
                     label="Filtrar carreteras"
                     data={roads}
-                    value={selectedRoad}
-                    onValueChange={onSelectRoad}
+                    value={selectedRoadName}
+                    onValueChange={onSelectRoadName}
                     placeholder="Todas las carreteras"
                     searchPlaceholder="Buscar carretera..."
                   />
@@ -69,10 +69,10 @@ export const FiltersModal = ({
                   />
                 </View>
 
-                {(selectedRoad !== null || selectedProvince !== null) && (
+                {(selectedRoadName !== null || selectedProvince !== null) && (
                   <Pressable
                     onPress={() => {
-                      onSelectRoad(null);
+                      onSelectRoadName(null);
                       onSelectProvince(null);
                     }}
                     className="mt-6 flex-row items-center justify-center py-3 bg-red-50 dark:bg-red-900/20 rounded-xl"

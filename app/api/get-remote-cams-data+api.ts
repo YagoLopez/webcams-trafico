@@ -5,8 +5,9 @@ import { XMLParser } from 'fast-xml-parser';
 export interface CamData {
   id: string;
   imageUrl: string;
-  road: string;
-  kilometer: string;
+  roadName: string;
+  roadDestination: string;
+  kilometer: number;
   location: string;
   status: 'active' | 'offline';
   latitude?: number;
@@ -78,14 +79,16 @@ export async function GET(request: Request) {
       const roadDest = navigate(info, ['roadDestination']) ?? '';
 
       const data = navigate(pointLocation, ['tpegPointLocation', 'point', 'Extension', 'extendedTpegNonJunctionPoint']);
-      const km = navigate(data, ['kilometerPoint']) ?? '';
+      const kmRaw = navigate(data, ['kilometerPoint']);
+      const km = kmRaw !== undefined ? Number(kmRaw) : 0;
       const province = navigate(data, ['province']) ?? '';
 
       const webcam: CamData = {
         id: String(id),
         imageUrl: String(imageUrl),
-        road: String(roadName),
-        kilometer: km ? `Pk ${km}${roadDest ? ' - ' + roadDest : ''}` : (roadDest || ''),
+        roadName: String(roadName),
+        roadDestination: String(roadDest),
+        kilometer: km,
         location: province || 'Unknown',
         status: 'active',
         latitude,

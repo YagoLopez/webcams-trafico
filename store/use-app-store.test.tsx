@@ -7,7 +7,7 @@ describe('useAppStore', () => {
     const store = useAppStore.getState();
     store.setCamCount(0);
     store.setIsFilterModalVisible(false);
-    store.setSelectedRoad(null);
+    store.setSelectedRoadName(null);
     store.setSelectedProvince(null);
   });
 
@@ -15,7 +15,7 @@ describe('useAppStore', () => {
     const state = useAppStore.getState();
     expect(state.camCount).toBe(0);
     expect(state.isFilterModalVisible).toBe(false);
-    expect(state.selectedRoad).toBeNull();
+    expect(state.selectedRoadName).toBeNull();
     expect(state.selectedProvince).toBeNull();
   });
 
@@ -33,11 +33,11 @@ describe('useAppStore', () => {
     expect(useAppStore.getState().isFilterModalVisible).toBe(true);
   });
 
-  it('updates selectedRoad', () => {
+  it('updates selectedRoadName', () => {
     act(() => {
-      useAppStore.getState().setSelectedRoad('A-1');
+      useAppStore.getState().setSelectedRoadName('A-1');
     });
-    expect(useAppStore.getState().selectedRoad).toBe('A-1');
+    expect(useAppStore.getState().selectedRoadName).toBe('A-1');
   });
 
   it('updates selectedProvince', () => {

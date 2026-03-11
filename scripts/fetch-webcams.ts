@@ -7,8 +7,9 @@ import path from 'path';
 interface WebcamData {
   id: string;
   imageUrl: string;
-  road: string;      // e.g., "A-6"
-  kilometer: string; // e.g., "Pk 12.5"
+  roadName: string;      // e.g., "A-6"
+  roadDestination: string; // e.g., "Villalba"
+  kilometer: number; // e.g., 12.5
   location: string;  // e.g., "Madrid, Moncloa"
   latitude?: number;
   longitude?: number;
@@ -91,7 +92,7 @@ async function fetchWebcams() {
 
       // Location coordinates, Kilometer and Province
       // loc:tpegPointLocation -> loc:point -> loc:_tpegNonJunctionPointExtension -> loc:extendedTpegNonJunctionPoint
-      let km = '';
+      let km: number = 0;
       let province = '';
       let latitude: number | undefined = undefined;
       let longitude: number | undefined = undefined;
@@ -120,7 +121,7 @@ async function fetchWebcams() {
               const data = point[extKey][innerExtKey];
               const kmKey = findKey(data, 'kilometerPoint');
               const provKey = findKey(data, 'province');
-              if (kmKey) km = data[kmKey];
+              if (kmKey && data[kmKey]) km = Number(data[kmKey]);
               if (provKey) province = data[provKey];
             }
           }
@@ -130,8 +131,9 @@ async function fetchWebcams() {
       const webcam: WebcamData = {
         id: String(id),
         imageUrl: String(imageUrl),
-        road: String(roadName),
-        kilometer: km ? `Pk ${km}${roadDest ? ' - ' + roadDest : ''}` : (roadDest || ''),
+        roadName: String(roadName),
+        roadDestination: String(roadDest),
+        kilometer: km,
         location: province || 'Unknown',
         latitude,
         longitude,

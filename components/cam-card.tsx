@@ -2,6 +2,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Link } from 'expo-router';
 import React from 'react';
 import { Image, Pressable, Text, View } from 'react-native';
+import { formatKilometer } from '../lib/utils/formatters';
 import { Cam } from '../types/cam';
 
 interface CamCardProps {
@@ -39,7 +40,7 @@ export const CamCard: React.FC<CamCardProps> = React.memo(({ item }) => {
           {/* Road Badge Bottom Left */}
           <View className={`absolute left-3 bottom-3 rounded-lg px-2.5 py-1 shadow-sm ${isOffline ? 'bg-slate-500' : 'bg-primary'}`}>
             <Text className="text-xs font-bold text-white" numberOfLines={1}>
-              {item.road}
+              {item.roadName}
             </Text>
           </View>
         </View>
@@ -49,7 +50,7 @@ export const CamCard: React.FC<CamCardProps> = React.memo(({ item }) => {
           <View className="flex flex-row items-start justify-between gap-4">
             <View className="flex-1">
               <Text className={`text-base font-semibold ${isOffline ? 'text-slate-500 dark:text-slate-400' : 'text-[#111418] dark:text-white'}`} numberOfLines={1}>
-                {item.kilometer}
+                {formatKilometer(item.kilometer)}
               </Text>
               <View className="mt-1 flex flex-row items-center gap-1.5">
                 {isOffline ? (

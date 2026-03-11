@@ -43,8 +43,9 @@ const mockCams: Cam[] = [
     latitude: 40.4168,
     longitude: -3.7038,
     location: 'Madrid Center',
-    road: 'M-30',
-    kilometer: '5',
+    roadName: 'M-30',
+    roadDestination: '',
+    kilometer: 5,
     imageUrl: 'https://example.com/cam1.jpg',
     status: 'active'
   },
@@ -53,8 +54,9 @@ const mockCams: Cam[] = [
     latitude: 40.4268,
     longitude: -3.7138,
     location: 'Madrid North',
-    road: 'M-40',
-    kilometer: '10',
+    roadName: 'M-40',
+    roadDestination: '',
+    kilometer: 10,
     imageUrl: 'https://example.com/cam2.jpg',
     status: 'active'
   }

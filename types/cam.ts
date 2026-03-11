@@ -2,8 +2,9 @@ export class Cam {
   constructor(
     public id: string,
     public imageUrl: string,
-    public road: string,
-    public kilometer: string,
+    public roadName: string,
+    public roadDestination: string,
+    public kilometer: number,
     public location: string,
     public status: 'active' | 'offline' = 'active',
     public latitude?: number,
