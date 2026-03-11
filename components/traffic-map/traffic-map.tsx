@@ -112,8 +112,6 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
           e.stopPropagation();
           router.setParams({
             cameraId: String(cam.id),
-            lat: String(lat),
-            lon: String(lon),
           });
         }}
       />
@@ -135,6 +133,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
         showsUserLocation={true}
         clusterColor="#3b82f6"
         spiralEnabled={false}
+        moveOnMarkerPress={false}
       >
         {markers}
       </MapViewClustered>
