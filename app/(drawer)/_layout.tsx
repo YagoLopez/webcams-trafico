@@ -65,6 +65,14 @@ export default function DrawerLayout() {
             drawerIcon: ({ color }) => <IconSymbol size={28} name="map.fill" color={color} />,
           }}
         />
+        <Drawer.Screen
+          name="nearby-cam"
+          options={{
+            title: 'Cámara cercana',
+            drawerLabel: 'Cámara cercana',
+            drawerIcon: ({ color }) => <IconSymbol size={28} name="location.fill" color={color} />,
+          }}
+        />
       </Drawer>
 
       {/* Global Filters Modal */}
