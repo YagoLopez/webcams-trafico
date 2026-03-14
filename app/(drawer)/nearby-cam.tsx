@@ -203,6 +203,7 @@ export default function NearbyCamScreen() {
             cams={filteredCams}
             center={nearestCamCenter || userLocation}
             selectedCameraId={selectedCameraId}
+            centerDelta={nearestCamCenter ? 0.008 : 0.05}
           />
         ) : (
           <View className="flex-1 justify-center items-center px-6">

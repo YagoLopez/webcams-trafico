@@ -12,11 +12,13 @@ interface TrafficMapProps {
   cams: Cam[];
   center?: { lat: number; lon: number };
   selectedCameraId?: string;
+  /** Delta used when animating to `center`. Smaller = more zoomed-in. Default: 0.05 */
+  centerDelta?: number;
 }
 const camIcon = require('@/assets/images/cam-icon4.png');
 const selectedCamIcon = require('@/assets/images/cam-icon7.png');
 
-export default function TrafficMapNative({ cams, center, selectedCameraId }: TrafficMapProps) {
+export default function TrafficMapNative({ cams, center, selectedCameraId, centerDelta = 0.05 }: TrafficMapProps) {
   const mapRef = useRef<MapView>(null);
   const router = useRouter();
   const [activeCam, setActiveCam] = React.useState<Cam | null>(null);
@@ -73,20 +75,18 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
 
   useEffect(() => {
     if (center && mapRef.current) {
-      // Always use animateToRegion to ensure we zoom in to the target (0.05 delta)
-      // whenever the center changes (e.g., matching search results).
       mapRef.current.animateToRegion({
         latitude: center.lat,
         longitude: center.lon,
-        latitudeDelta: 0.05,
-        longitudeDelta: 0.05,
-      }, 500);
-      
+        latitudeDelta: centerDelta,
+        longitudeDelta: centerDelta,
+      }, 600);
+
       if (isInitialCenter.current) {
         isInitialCenter.current = false;
       }
     }
-  }, [center]);
+  }, [center, centerDelta]);
 
   // Memoize markers to prevent re-render tearing when clicking
   const markers = React.useMemo(() => cams.map((cam) => {
