@@ -42,15 +42,19 @@ export default function NearbyCamScreen() {
     if (current) {
       // User tapped a marker → show that camera
       setSelectedCameraId(current);
+
+      // Center map on the tapped camera
+      const tappedCam = filteredCams.find((c) => String(c.id) === String(current));
+      if (tappedCam?.latitude != null && tappedCam?.longitude != null) {
+        setNearestCamCenter({ lat: tappedCam.latitude, lon: tappedCam.longitude });
+      }
     } else if (prev) {
       // routeCameraId just became empty: user dismissed the callout → clear
       setSelectedCameraId(undefined);
     }
-    // If both are undefined (initial load), don't touch selectedCameraId
-    // so that nearestCamId set after a search still takes effect below.
 
     prevRouteCameraId.current = current;
-  }, [routeCameraId]);
+  }, [routeCameraId, filteredCams]);
 
   // Fetch initial user location on mount
   useEffect(() => {
