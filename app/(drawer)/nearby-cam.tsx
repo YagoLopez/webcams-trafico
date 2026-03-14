@@ -1,5 +1,6 @@
 import * as Location from 'expo-location';
 import { useLocalSearchParams } from 'expo-router';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 
@@ -114,6 +115,15 @@ export default function NearbyCamScreen() {
       setSearching(false);
     }
   }, [selectedRoad]);
+ 
+  const handleReset = useCallback(() => {
+    setSelectedRoad(null);
+    setFilteredCams([]);
+    setNearestCamId(null);
+    setNearestCamCenter(undefined);
+    setError(null);
+    setSelectedCameraId(undefined);
+  }, []);
 
   // selectedCameraId is now managed by local state (see useEffect above)
 
@@ -132,22 +142,34 @@ export default function NearbyCamScreen() {
           searchPlaceholder="Buscar carretera..."
         />
 
-        <Pressable
-          testID="search-nearest-btn"
-          onPress={handleSearch}
-          disabled={!selectedRoad || searching}
-          className={`mt-2 py-4 rounded-xl items-center ${
-            selectedRoad && !searching
-              ? 'bg-[#137fec] active:opacity-80'
-              : 'bg-slate-300 dark:bg-slate-700'
-          }`}
-        >
-          {searching ? (
-            <ActivityIndicator color="#ffffff" />
-          ) : (
-            <Text className="text-white font-bold text-base">Buscar cámara cercana</Text>
+        <View className="flex-row mt-2 space-x-2">
+          <Pressable
+            testID="search-nearest-btn"
+            onPress={handleSearch}
+            disabled={!selectedRoad || searching}
+            className={`flex-1 py-4 rounded-xl items-center ${
+              selectedRoad && !searching
+                ? 'bg-[#137fec] active:opacity-80'
+                : 'bg-slate-300 dark:bg-slate-700'
+            }`}
+          >
+            {searching ? (
+              <ActivityIndicator color="#ffffff" />
+            ) : (
+              <Text className="text-white font-bold text-base">Buscar cámara cercana</Text>
+            )}
+          </Pressable>
+
+          {selectedRoad && (
+            <Pressable
+              testID="reset-filter-btn"
+              onPress={handleReset}
+              className="px-4 py-4 bg-slate-100 dark:bg-slate-800 rounded-xl items-center justify-center active:opacity-70 border border-slate-200 dark:border-slate-700"
+            >
+              <MaterialIcons name="refresh" size={24} color="#64748b" />
+            </Pressable>
           )}
-        </Pressable>
+        </View>
 
         {error && (
           <View className="mt-3 p-3 bg-red-50 dark:bg-red-900/20 rounded-xl">
