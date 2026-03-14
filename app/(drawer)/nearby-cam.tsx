@@ -26,6 +26,8 @@ export default function NearbyCamScreen() {
   const [filteredCams, setFilteredCams] = useState<Cam[]>([]);
   const [nearestCamId, setNearestCamId] = useState<string | null>(null);
   const [nearestCamCenter, setNearestCamCenter] = useState<{ lat: number; lon: number } | undefined>();
+  const [userLocation, setUserLocation] = useState<{ lat: number; lon: number } | undefined>();
+
 
   // Selected camera: driven by local state to avoid nearestCamId re-opening
   // the callout after the user dismisses it.
@@ -49,6 +51,24 @@ export default function NearbyCamScreen() {
 
     prevRouteCameraId.current = current;
   }, [routeCameraId]);
+
+  // Fetch initial user location on mount
+  useEffect(() => {
+    (async () => {
+      try {
+        const { status } = await Location.requestForegroundPermissionsAsync();
+        if (status !== 'granted') return;
+
+        const location = await Location.getCurrentPositionAsync({});
+        setUserLocation({
+          lat: location.coords.latitude,
+          lon: location.coords.longitude,
+        });
+      } catch (e) {
+        console.log('Error fetching initial position', e);
+      }
+    })();
+  }, []);
 
   const handleSearch = useCallback(async () => {
     if (!selectedRoad) return;
@@ -124,7 +144,7 @@ export default function NearbyCamScreen() {
     setSelectedCameraId(undefined);
   }, [setSelectedRoadName]);
 
-  const showMap = filteredCams.length > 0 && nearestCamId && nearestCamCenter;
+  const showMap = (filteredCams.length > 0 && nearestCamId && nearestCamCenter) || !!userLocation;
 
   return (
     <View className="flex-1 bg-white dark:bg-background-dark">
@@ -181,16 +201,18 @@ export default function NearbyCamScreen() {
         {showMap ? (
           <TrafficMap
             cams={filteredCams}
-            center={nearestCamCenter}
+            center={nearestCamCenter || userLocation}
             selectedCameraId={selectedCameraId}
           />
         ) : (
           <View className="flex-1 justify-center items-center px-6">
-            <Text className="text-lg text-center text-slate-400 dark:text-slate-500">
-              Usa el botón de filtros en la barra superior para seleccionar una carretera y pulsa "Buscar" para encontrar la cámara de tráfico más cercana a tu ubicación.
+            <ActivityIndicator size="large" color="#137fec" />
+            <Text className="mt-4 text-slate-400 dark:text-slate-500 text-center">
+              Obteniendo tu ubicación...
             </Text>
           </View>
         )}
+
       </View>
     </View>
   );
