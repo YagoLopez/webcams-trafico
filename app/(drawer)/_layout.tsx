@@ -46,7 +46,7 @@ export default function DrawerLayout() {
                 : options.title !== undefined
                   ? options.title
                   : route.name;
-            const showFiltersButton = !route.name.includes('nearby-cam');
+            const showFiltersButton = true;
             return <CustomDrawerHeader title={title} showFiltersButton={showFiltersButton} />;
           },
         }}>

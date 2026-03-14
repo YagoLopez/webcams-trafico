@@ -73,21 +73,17 @@ export default function TrafficMapNative({ cams, center, selectedCameraId }: Tra
 
   useEffect(() => {
     if (center && mapRef.current) {
+      // Always use animateToRegion to ensure we zoom in to the target (0.05 delta)
+      // whenever the center changes (e.g., matching search results).
+      mapRef.current.animateToRegion({
+        latitude: center.lat,
+        longitude: center.lon,
+        latitudeDelta: 0.05,
+        longitudeDelta: 0.05,
+      }, 500);
+      
       if (isInitialCenter.current) {
-        mapRef.current.animateToRegion({
-          latitude: center.lat,
-          longitude: center.lon,
-          latitudeDelta: 0.05,
-          longitudeDelta: 0.05,
-        }, 500);
         isInitialCenter.current = false;
-      } else {
-        mapRef.current.animateCamera({
-          center: {
-            latitude: center.lat,
-            longitude: center.lon,
-          }
-        }, { duration: 500 });
       }
     }
   }, [center]);

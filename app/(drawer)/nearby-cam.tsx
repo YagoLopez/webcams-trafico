@@ -5,21 +5,20 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 
 import TrafficMap from '@/components/traffic-map';
-import { SelectBox } from '@/components/ui/select-box';
-import { useRoads } from '@/hooks/use-cams';
 import { ICamsRepository } from '@/lib/ICamsRepository';
 import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
 import { haversineDistance } from '@/lib/utils/haversine';
+import { useAppStore } from '@/store/use-app-store';
 import { Cam } from '@/types/cam';
 
 const camsRepository = JsonCamsRepository.getInstance();
 
 export default function NearbyCamScreen() {
-  const { data: roads = [] } = useRoads(camsRepository);
+  const selectedRoad = useAppStore((state) => state.selectedRoadName);
+  const setSelectedRoadName = useAppStore((state) => state.setSelectedRoadName);
 
   const { cameraId: routeCameraId } = useLocalSearchParams<{ cameraId?: string }>();
 
-  const [selectedRoad, setSelectedRoad] = useState<string | null>(null);
   const [searching, setSearching] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -115,34 +114,33 @@ export default function NearbyCamScreen() {
       setSearching(false);
     }
   }, [selectedRoad]);
- 
+
   const handleReset = useCallback(() => {
-    setSelectedRoad(null);
+    setSelectedRoadName(null);
     setFilteredCams([]);
     setNearestCamId(null);
     setNearestCamCenter(undefined);
     setError(null);
     setSelectedCameraId(undefined);
-  }, []);
-
-  // selectedCameraId is now managed by local state (see useEffect above)
+  }, [setSelectedRoadName]);
 
   const showMap = filteredCams.length > 0 && nearestCamId && nearestCamCenter;
 
   return (
     <View className="flex-1 bg-white dark:bg-background-dark">
-      {/* Top selector panel */}
+      {/* Top action panel */}
       <View className="px-4 pt-4 pb-3 bg-white dark:bg-background-dark border-b border-slate-200 dark:border-slate-700">
-        <SelectBox
-          label="Selecciona tu carretera"
-          data={roads}
-          value={selectedRoad}
-          onValueChange={setSelectedRoad}
-          placeholder="Todas las carreteras"
-          searchPlaceholder="Buscar carretera..."
-        />
+        {/* Active road filter indicator */}
+        {selectedRoad && (
+          <View className="flex-row items-center mb-3 px-3 py-2 bg-blue-50 dark:bg-blue-900/20 rounded-xl">
+            <MaterialIcons name="filter-list" size={18} color="#137fec" />
+            <Text className="ml-2 flex-1 text-sm font-medium text-[#137fec] dark:text-blue-400">
+              Carretera: {selectedRoad}
+            </Text>
+          </View>
+        )}
 
-        <View className="flex-row mt-2 space-x-2">
+        <View className="flex-row space-x-2">
           <Pressable
             testID="search-nearest-btn"
             onPress={handleSearch}
@@ -189,7 +187,7 @@ export default function NearbyCamScreen() {
         ) : (
           <View className="flex-1 justify-center items-center px-6">
             <Text className="text-lg text-center text-slate-400 dark:text-slate-500">
-              Selecciona una carretera y pulsa "Buscar" para encontrar la cámara de tráfico más cercana a tu ubicación.
+              Usa el botón de filtros en la barra superior para seleccionar una carretera y pulsa "Buscar" para encontrar la cámara de tráfico más cercana a tu ubicación.
             </Text>
           </View>
         )}

@@ -1,6 +1,6 @@
 import { useAppStore } from '@/store/use-app-store';
 import { DrawerActions } from '@react-navigation/native';
-import { useNavigation, useSegments } from 'expo-router';
+import { useNavigation } from 'expo-router';
 import React from 'react';
 import { Pressable, Text, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -11,11 +11,9 @@ interface CustomDrawerHeaderProps {
   showFiltersButton?: boolean;
 }
 
-export function CustomDrawerHeader({ title, showFiltersButton }: CustomDrawerHeaderProps) {
+export function CustomDrawerHeader({ title, showFiltersButton = true }: CustomDrawerHeaderProps) {
   const navigation = useNavigation();
-  const segments = useSegments();
-  const isNearbyCam = segments.some((s) => s === 'nearby-cam');
-  const shouldShowFilters = showFiltersButton !== undefined ? showFiltersButton : !isNearbyCam;
+  const shouldShowFilters = showFiltersButton;
   const camCount = useAppStore((state) => state.camCount);
   const setIsFilterModalVisible = useAppStore((state) => state.setIsFilterModalVisible);
   const selectedRoadName = useAppStore((state) => state.selectedRoadName);
