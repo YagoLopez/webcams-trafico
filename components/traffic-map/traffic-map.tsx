@@ -6,26 +6,9 @@ import MapViewClustered from 'react-native-map-clustering';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
 import { formatKilometer } from '@/lib/utils/formatters';
+import { getNextCamOnRoad, getPrevCamOnRoad } from '@/lib/utils/road-navigation';
 import { Cam } from '@/types/cam';
 
-/** Returns the next camera on the same road and in the same direction (roadDestination),
- *  i.e. the one with the smallest kilometer value strictly greater than currentCam.kilometer. */
-function getNextCamOnRoad(currentCam: Cam, allCams: Cam[]): Cam | null {
-  const norm = (s: string) => (s || '').trim().toLowerCase();
-  const currentRoad = norm(currentCam.roadName);
-  const currentDest = norm(currentCam.roadDestination);
-
-  return allCams
-    .filter(
-      (c) =>
-        norm(c.roadName) === currentRoad &&
-        norm(c.roadDestination) === currentDest &&
-        c.kilometer > currentCam.kilometer &&
-        c.latitude !== undefined &&
-        c.longitude !== undefined
-    )
-    .sort((a, b) => a.kilometer - b.kilometer)[0] ?? null;
-}
 
 interface TrafficMapProps {
   cams: Cam[];
@@ -48,6 +31,11 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
   const nextCam = React.useMemo(() => {
     if (!activeCam) return null;
     return getNextCamOnRoad(activeCam, cams);
+  }, [activeCam, cams]);
+
+  const prevCam = React.useMemo(() => {
+    if (!activeCam) return null;
+    return getPrevCamOnRoad(activeCam, cams);
   }, [activeCam, cams]);
 
   const pan = useRef(new Animated.ValueXY()).current;
@@ -172,13 +160,39 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
             <View className="justify-between">
               <Text className="text-base font-bold text-[#333] mb-1" numberOfLines={1}>{activeCam.location}</Text>
               <Text className="text-sm text-[#666] mb-2">{activeCam.roadName} - {formatKilometer(activeCam.kilometer)}</Text>
-              <View style={{ flexDirection: 'row', marginTop: 8 }}>
+              <View style={{ flexDirection: 'row', marginTop: 8, gap: 6 }}>
                 <TouchableOpacity
-                  style={{ flex: 1, backgroundColor: '#137fec', paddingVertical: 12, borderRadius: 8, marginRight: 8 }}
+                  style={{
+                    flex: 1,
+                    backgroundColor: '#137fec',
+                    paddingVertical: 12,
+                    borderRadius: 8,
+                    opacity: prevCam ? 1 : 0.35,
+                  }}
+                  activeOpacity={0.7}
+                  disabled={!prevCam}
+                  onPress={() => {
+                    if (!prevCam) return;
+                    mapRef.current?.animateToRegion({
+                      latitude: prevCam.latitude!,
+                      longitude: prevCam.longitude!,
+                      latitudeDelta: 0.05,
+                      longitudeDelta: 0.05,
+                    }, 500);
+                    router.setParams({ cameraId: String(prevCam.id) });
+                  }}
+                >
+                  <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold', textAlign: 'center' }}>
+                    ← Anterior
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={{ flex: 1, backgroundColor: '#137fec', paddingVertical: 12, borderRadius: 8 }}
                   activeOpacity={0.7}
                   onPress={() => router.push(`/cam/${activeCam.id}`)}
                 >
-                  <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold', textAlign: 'center' }}>
+                  <Text style={{ color: 'white', fontSize: 13, fontWeight: 'bold', textAlign: 'center' }}>
                     Ver detalles
                   </Text>
                 </TouchableOpacity>
