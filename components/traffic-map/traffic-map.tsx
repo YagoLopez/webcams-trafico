@@ -8,6 +8,25 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { formatKilometer } from '@/lib/utils/formatters';
 import { Cam } from '@/types/cam';
 
+/** Returns the next camera on the same road and in the same direction (roadDestination),
+ *  i.e. the one with the smallest kilometer value strictly greater than currentCam.kilometer. */
+function getNextCamOnRoad(currentCam: Cam, allCams: Cam[]): Cam | null {
+  const norm = (s: string) => (s || '').trim().toLowerCase();
+  const currentRoad = norm(currentCam.roadName);
+  const currentDest = norm(currentCam.roadDestination);
+
+  return allCams
+    .filter(
+      (c) =>
+        norm(c.roadName) === currentRoad &&
+        norm(c.roadDestination) === currentDest &&
+        c.kilometer > currentCam.kilometer &&
+        c.latitude !== undefined &&
+        c.longitude !== undefined
+    )
+    .sort((a, b) => a.kilometer - b.kilometer)[0] ?? null;
+}
+
 interface TrafficMapProps {
   cams: Cam[];
   center?: { lat: number; lon: number };
@@ -21,7 +40,16 @@ const selectedCamIcon = require('@/assets/images/cam-icon7.png');
 export default function TrafficMapNative({ cams, center, selectedCameraId, centerDelta = 0.05 }: TrafficMapProps) {
   const mapRef = useRef<MapView>(null);
   const router = useRouter();
-  const [activeCam, setActiveCam] = React.useState<Cam | null>(null);
+  const activeCam = React.useMemo(() => {
+    if (!selectedCameraId) return null;
+    return cams.find((c) => String(c.id) === String(selectedCameraId)) || null;
+  }, [selectedCameraId, cams]);
+
+  const nextCam = React.useMemo(() => {
+    if (!activeCam) return null;
+    return getNextCamOnRoad(activeCam, cams);
+  }, [activeCam, cams]);
+
   const pan = useRef(new Animated.ValueXY()).current;
   const cacheBuster = Math.floor(Date.now() / (1000 * 60 * 5));
 
@@ -53,23 +81,17 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
     .runOnJS(true);
 
   useEffect(() => {
-    if (selectedCameraId) {
-      const cam = cams.find((c) => String(c.id) === String(selectedCameraId));
-      if (cam) {
-        pan.setValue({ x: 0, y: 500 }); // Start off-screen from below
-        setActiveCam(cam);
+    if (selectedCameraId && activeCam) {
+      pan.setValue({ x: 0, y: 500 }); // Start off-screen from below
 
-        Animated.spring(pan, {
-          toValue: { x: 0, y: 0 },
-          useNativeDriver: true,
-          bounciness: 4,
-          speed: 12,
-        }).start();
-      }
-    } else {
-      setActiveCam(null);
+      Animated.spring(pan, {
+        toValue: { x: 0, y: 0 },
+        useNativeDriver: true,
+        bounciness: 4,
+        speed: 12,
+      }).start();
     }
-  }, [selectedCameraId, cams, pan]);
+  }, [selectedCameraId, activeCam, pan]);
 
   const isInitialCenter = useRef(true);
 
@@ -150,13 +172,43 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
             <View className="justify-between">
               <Text className="text-base font-bold text-[#333] mb-1" numberOfLines={1}>{activeCam.location}</Text>
               <Text className="text-sm text-[#666] mb-2">{activeCam.roadName} - {formatKilometer(activeCam.kilometer)}</Text>
-              <TouchableOpacity
-                className="bg-[#3b82f6] py-3 px-3 rounded-md self-start"
-                activeOpacity={0.7}
-                onPress={() => router.push(`/cam/${activeCam.id}`)}
-              >
-                <Text className="text-white text-sm font-medium">Ver detalles</Text>
-              </TouchableOpacity>
+              <View style={{ flexDirection: 'row', marginTop: 8 }}>
+                <TouchableOpacity
+                  style={{ flex: 1, backgroundColor: '#137fec', paddingVertical: 12, borderRadius: 8, marginRight: 8 }}
+                  activeOpacity={0.7}
+                  onPress={() => router.push(`/cam/${activeCam.id}`)}
+                >
+                  <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold', textAlign: 'center' }}>
+                    Ver detalles
+                  </Text>
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={{
+                    flex: 1,
+                    backgroundColor: '#137fec',
+                    paddingVertical: 12,
+                    borderRadius: 8,
+                    opacity: nextCam ? 1 : 0.35,
+                  }}
+                  activeOpacity={0.7}
+                  disabled={!nextCam}
+                  onPress={() => {
+                    if (!nextCam) return;
+                    mapRef.current?.animateToRegion({
+                      latitude: nextCam.latitude!,
+                      longitude: nextCam.longitude!,
+                      latitudeDelta: 0.05,
+                      longitudeDelta: 0.05,
+                    }, 500);
+                    router.setParams({ cameraId: String(nextCam.id) });
+                  }}
+                >
+                  <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold', textAlign: 'center' }}>
+                    Siguiente →
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </Animated.View>
         </GestureDetector>
