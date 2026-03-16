@@ -1,5 +1,5 @@
 import webcamsData from '../data/webcams.json';
-import { Cam } from '../types/cam';
+import { Cam } from '@/domain/entities/cam';
 import { CamFilters, ICamsRepository } from './ICamsRepository';
 import { ArrayPaginator, PaginationResult } from './paginator/ArrayPaginator';
 

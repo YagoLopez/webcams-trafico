@@ -9,7 +9,7 @@ import { ICamsRepository } from '@/lib/ICamsRepository';
 import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
 import { haversineDistance } from '@/lib/utils/haversine';
 import { useAppStore } from '@/store/use-app-store';
-import { Cam } from '@/types/cam';
+import { Cam } from '@/domain/entities/cam';
 
 const camsRepository = JsonCamsRepository.getInstance();
 

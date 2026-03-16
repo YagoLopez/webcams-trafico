@@ -11,4 +11,3 @@ export class Cam {
     public longitude?: number
   ) { }
 }
-

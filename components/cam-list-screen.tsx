@@ -3,7 +3,7 @@ import { useAppStore } from '@/store/use-app-store';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { ActivityIndicator, FlatList, Text, View, useWindowDimensions } from 'react-native';
 import { useInfiniteFilteredCams } from '../hooks/use-cams';
-import { Cam } from '../types/cam';
+import { Cam } from '@/domain/entities/cam';
 import { CamCard } from './cam-card';
 
 export const CamListScreen = () => {

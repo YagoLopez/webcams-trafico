@@ -1,4 +1,4 @@
-import { Cam } from '@/types/cam';
+import { Cam } from '@/domain/entities/cam';
 
 const norm = (s: string): string => (s ?? '').trim().toLowerCase();
 

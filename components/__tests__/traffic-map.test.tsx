@@ -1,4 +1,4 @@
-import { Cam } from '@/types/cam';
+import { Cam } from '@/domain/entities/cam';
 import { render } from '@testing-library/react-native';
 import React from 'react';
 import TrafficMap from '../traffic-map/traffic-map';

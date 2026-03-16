@@ -1,5 +1,5 @@
-import { Cam } from '@/types/cam';
-import { getNextCamOnRoad, getPrevCamOnRoad } from './road-navigation';
+import { Cam } from '@/domain/entities/cam';
+import { getNextCamOnRoad, getPrevCamOnRoad } from '@/domain/services/cam-navigation';
 
 // Helper to create a minimal valid Cam
 const makeCam = (overrides: Partial<Cam> & { id: string }): Cam =>

@@ -1,5 +1,5 @@
 import { CamFilters } from '@/types/cam-filters';
-import { Cam } from '../types/cam';
+import { Cam } from '@/domain/entities/cam';
 import { PaginationResult } from './paginator/ArrayPaginator';
 export type { CamFilters };
 

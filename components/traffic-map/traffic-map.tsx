@@ -6,8 +6,8 @@ import MapViewClustered from 'react-native-map-clustering';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
 import { formatKilometer } from '@/lib/utils/formatters';
-import { getNextCamOnRoad, getPrevCamOnRoad } from '@/lib/utils/road-navigation';
-import { Cam } from '@/types/cam';
+import { getNextCamOnRoad, getPrevCamOnRoad } from '@/domain/services/cam-navigation';
+import { Cam } from '@/domain/entities/cam';
 
 
 interface TrafficMapProps {
