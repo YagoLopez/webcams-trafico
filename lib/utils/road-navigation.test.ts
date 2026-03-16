@@ -29,23 +29,25 @@ const CAMS: Cam[] = [
 ];
 
 describe('getNextCamOnRoad', () => {
-  it('returns the camera with the immediately higher kilometer', () => {
+  it('returns the camera with the immediately higher kilometer regardless of direction', () => {
     const cam = CAMS.find((c) => c.id === 'a')!;
     const next = getNextCamOnRoad(cam, CAMS);
-    // 'noloc' at km=50 has no coords → excluded. Next valid BURGOS > km25 is 'b'(km43).
-    expect(next?.id).toBe('b');
+    // All A-62 cams sorted by km: a(25), d(31), b(43), c(78), e(87), g(91)
+    // Next valid > km25 is 'd' at km31 (PORTUGAL direction — now included)
+    expect(next?.id).toBe('d');
   });
 
-  it('returns null for the last camera in the section', () => {
-    const last = CAMS.find((c) => c.id === 'c')!; // km 78, last BURGOS
+  it('returns null for the last camera on the road', () => {
+    const last = CAMS.find((c) => c.id === 'g')!; // km 91, last A-62 cam
     expect(getNextCamOnRoad(last, CAMS)).toBeNull();
   });
 
-  it('does not cross into the opposite direction (different roadDestination)', () => {
-    const cam = CAMS.find((c) => c.id === 'a')!; // BURGOS
+  it('includes cameras from the opposite direction (different roadDestination)', () => {
+    const cam = CAMS.find((c) => c.id === 'a')!; // BURGOS km25
     const next = getNextCamOnRoad(cam, CAMS);
-    expect(next?.roadDestination).toBe('BURGOS');
-    expect(['d', 'e']).not.toContain(next?.id); // PORTUGAL cams must be excluded
+    // Next by km is 'd' (PORTUGAL km31) — opposite direction now included
+    expect(next?.id).toBe('d');
+    expect(next?.roadDestination).toBe('PORTUGAL');
   });
 
   it('does not cross into a different road', () => {
@@ -55,17 +57,18 @@ describe('getNextCamOnRoad', () => {
   });
 
   it('ignores cameras without GPS coordinates', () => {
-    const cam = CAMS.find((c) => c.id === 'a')!; // km 25
+    const cam = CAMS.find((c) => c.id === 'b')!; // km 43
     const next = getNextCamOnRoad(cam, CAMS);
-    // 'noloc' (km50, no coords) must be excluded; next valid is 'b' at km43
-    expect(next?.id).toBe('b');
+    // 'noloc' (km50, no coords) must be excluded; next valid is 'c' at km78
+    expect(next?.id).toBe('c');
     expect(next?.id).not.toBe('noloc');
   });
 
-  it('treats cameras with empty roadDestination as their own group', () => {
-    const cam = CAMS.find((c) => c.id === 'g')!; // dest=""
-    // No other A-62 camera has dest="" with km > 91
-    expect(getNextCamOnRoad(cam, CAMS)).toBeNull();
+  it('includes cameras with empty roadDestination in the same road group', () => {
+    const cam = CAMS.find((c) => c.id === 'e')!; // PORTUGAL km87
+    const next = getNextCamOnRoad(cam, CAMS);
+    // 'g' at km91 (empty dest) is now included as part of the same road
+    expect(next?.id).toBe('g');
   });
 
   it('is case-insensitive and trims whitespace in road/destination', () => {
@@ -77,28 +80,28 @@ describe('getNextCamOnRoad', () => {
 });
 
 describe('getPrevCamOnRoad', () => {
-  it('returns the camera with the immediately lower kilometer', () => {
+  it('returns the camera with the immediately lower kilometer regardless of direction', () => {
     const cam = CAMS.find((c) => c.id === 'c')!; // km 78
     const prev = getPrevCamOnRoad(cam, CAMS);
-    expect(prev?.id).toBe('b'); // km 43 is closest < 78 for BURGOS
+    expect(prev?.id).toBe('b'); // km 43 is closest < 78 across all directions
   });
 
-  it('returns null for the first camera in the section', () => {
-    const first = CAMS.find((c) => c.id === 'a')!; // km 25, first BURGOS
+  it('returns null for the first camera on the road', () => {
+    const first = CAMS.find((c) => c.id === 'a')!; // km 25, first on A-62
     expect(getPrevCamOnRoad(first, CAMS)).toBeNull();
   });
 
-  it('does not cross into the opposite direction', () => {
+  it('includes cameras from the opposite direction', () => {
     const cam = CAMS.find((c) => c.id === 'e')!; // PORTUGAL km 87
     const prev = getPrevCamOnRoad(cam, CAMS);
-    expect(prev?.roadDestination).toBe('PORTUGAL');
-    expect(prev?.id).toBe('d');
+    // Closest < km87 is 'c' (BURGOS km78) — cross-direction now included
+    expect(prev?.id).toBe('c');
   });
 
   it('ignores cameras without GPS coordinates', () => {
     const cam = CAMS.find((c) => c.id === 'b')!; // km 43
-    // 'noloc' at km 50 (no coords) is irrelevant; prev should be 'a' at km 25
+    // 'noloc' at km 50 (no coords) is irrelevant; prev should be 'd' at km 31
     const prev = getPrevCamOnRoad(cam, CAMS);
-    expect(prev?.id).toBe('a');
+    expect(prev?.id).toBe('d');
   });
 });
