@@ -1,5 +1,5 @@
 import { Cam } from '@/domain/entities/cam';
-import { getNextCamOnRoad } from '@/domain/services/cam-navigation';
+import { getNextCamOnRoad } from '@/domain/services/cam.navigation.service';
 import { ICamsRepository } from '@/lib/ICamsRepository';
 
 export class GetNextCamUseCase {

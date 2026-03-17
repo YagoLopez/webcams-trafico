@@ -1,5 +1,5 @@
 import { Cam } from '@/domain/entities/cam';
-import { getPrevCamOnRoad } from '@/domain/services/cam-navigation';
+import { getPrevCamOnRoad } from '@/domain/services/cam.navigation.service';
 import { ICamsRepository } from '@/lib/ICamsRepository';
 
 export class GetPrevCamUseCase {

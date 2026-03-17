@@ -1,5 +1,5 @@
 import { Cam } from '@/domain/entities/cam';
-import { getNextCamOnRoad, getPrevCamOnRoad } from '@/domain/services/cam-navigation';
+import { getNextCamOnRoad, getPrevCamOnRoad } from '@/domain/services/cam.navigation.service';
 
 // Helper to create a minimal valid Cam
 const makeCam = (overrides: Partial<Cam> & { id: string }): Cam =>
@@ -17,13 +17,13 @@ const makeCam = (overrides: Partial<Cam> & { id: string }): Cam =>
 
 // ── Shared fixture ────────────────────────────────────────────────────────────
 const CAMS: Cam[] = [
-  makeCam({ id: 'a', roadName: 'A-62', roadDestination: 'BURGOS',   kilometer: 25 }),
-  makeCam({ id: 'b', roadName: 'A-62', roadDestination: 'BURGOS',   kilometer: 43 }),
-  makeCam({ id: 'c', roadName: 'A-62', roadDestination: 'BURGOS',   kilometer: 78 }),
+  makeCam({ id: 'a', roadName: 'A-62', roadDestination: 'BURGOS', kilometer: 25 }),
+  makeCam({ id: 'b', roadName: 'A-62', roadDestination: 'BURGOS', kilometer: 43 }),
+  makeCam({ id: 'c', roadName: 'A-62', roadDestination: 'BURGOS', kilometer: 78 }),
   makeCam({ id: 'd', roadName: 'A-62', roadDestination: 'PORTUGAL', kilometer: 31 }),
   makeCam({ id: 'e', roadName: 'A-62', roadDestination: 'PORTUGAL', kilometer: 87 }),
-  makeCam({ id: 'f', roadName: 'A-1',  roadDestination: 'BURGOS',   kilometer: 10 }),
-  makeCam({ id: 'g', roadName: 'A-62', roadDestination: '',          kilometer: 91 }),
+  makeCam({ id: 'f', roadName: 'A-1', roadDestination: 'BURGOS', kilometer: 10 }),
+  makeCam({ id: 'g', roadName: 'A-62', roadDestination: '', kilometer: 91 }),
   // Camera without coordinates → should be ignored by the filter
   { id: 'noloc', imageUrl: '', roadName: 'A-62', roadDestination: 'BURGOS', kilometer: 50, location: 'X', status: 'active', latitude: undefined, longitude: undefined } as unknown as Cam,
 ];
@@ -72,7 +72,7 @@ describe('getNextCamOnRoad', () => {
   });
 
   it('is case-insensitive and trims whitespace in road/destination', () => {
-    const camUpper = makeCam({ id: 'x', roadName: 'A-62', roadDestination: 'BURGOS',   kilometer: 30 });
+    const camUpper = makeCam({ id: 'x', roadName: 'A-62', roadDestination: 'BURGOS', kilometer: 30 });
     const camLower = makeCam({ id: 'y', roadName: 'a-62', roadDestination: 'burgos  ', kilometer: 50 });
     const next = getNextCamOnRoad(camUpper, [camUpper, camLower]);
     expect(next?.id).toBe('y');
