@@ -1,5 +1,5 @@
 import { Cam } from '@/domain/entities/cam';
-import { getNextCamOnRoad } from '@/domain/services/cam.navigation.service';
+import { CamNavigationService } from '@/domain/services/cam.navigation.service';
 import { ICamsRepository } from '@/lib/ICamsRepository';
 
 export class GetNextCamUseCase {
@@ -12,6 +12,6 @@ export class GetNextCamUseCase {
     const roadCams = await this.camRepository.getCamsByRoad(currentCam.roadName);
     
     // 2. Execute domain logic
-    return getNextCamOnRoad(currentCam, roadCams);
+    return CamNavigationService.getNextCamOnRoad(currentCam, roadCams);
   }
 }
