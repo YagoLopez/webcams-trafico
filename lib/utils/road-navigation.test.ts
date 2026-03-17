@@ -1,5 +1,5 @@
 import { Cam } from '@/domain/entities/cam';
-import { CamNavigationService } from '@/domain/services/cam.navigation.service';
+import { CamNavigationService } from '@/domain/services/cam-navigation-service';
 
 // Helper to create a minimal valid Cam
 const makeCam = (overrides: Partial<Cam> & { id: string }): Cam =>
