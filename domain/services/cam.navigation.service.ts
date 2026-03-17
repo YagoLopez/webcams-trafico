@@ -7,7 +7,7 @@ const norm = (s: string): string => (s ?? '').trim().toLowerCase();
  * sorted by ascending kilometer, excluding `currentCam` itself and any camera
  * that lacks GPS coordinates.
  */
-function sameSectionCams(currentCam: Cam, allCams: Cam[]): Cam[] {
+function getSameRoadCams(currentCam: Cam, allCams: Cam[]): Cam[] {
   const road = norm(currentCam.roadName);
 
   return allCams
@@ -28,7 +28,7 @@ function sameSectionCams(currentCam: Cam, allCams: Cam[]): Cam[] {
  */
 export function getNextCamOnRoad(currentCam: Cam, allCams: Cam[]): Cam | null {
   return (
-    sameSectionCams(currentCam, allCams).find(
+    getSameRoadCams(currentCam, allCams).find(
       (c) => c.kilometer > currentCam.kilometer,
     ) ?? null
   );
@@ -40,7 +40,7 @@ export function getNextCamOnRoad(currentCam: Cam, allCams: Cam[]): Cam | null {
  * Returns `null` if `currentCam` is already the first camera on this road.
  */
 export function getPrevCamOnRoad(currentCam: Cam, allCams: Cam[]): Cam | null {
-  const section = sameSectionCams(currentCam, allCams);
-  const prev = section.filter((c) => c.kilometer < currentCam.kilometer);
+  const sameRoadCams = getSameRoadCams(currentCam, allCams);
+  const prev = sameRoadCams.filter((c) => c.kilometer < currentCam.kilometer);
   return prev.length > 0 ? prev[prev.length - 1] : null;
 }
