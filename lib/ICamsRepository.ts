@@ -18,4 +18,7 @@ export interface ICamsRepository {
 
   /** Gets the cameras applying the road and/or province filters. Can optionally be paginated. */
   getFilteredCams(filters: CamFilters, page?: number, pageSize?: number): Promise<PaginationResult<Cam>>;
+
+  /** Gets all cameras for a specific road */
+  getCamsByRoad(roadName: string): Promise<Cam[]>;
 }

@@ -6,7 +6,8 @@ import MapViewClustered from 'react-native-map-clustering';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
 import { formatKilometer } from '@/lib/utils/formatters';
-import { getNextCamOnRoad, getPrevCamOnRoad } from '@/domain/services/cam-navigation';
+import { useNextCam, usePrevCam } from '@/hooks/use-cams';
+import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
 import { Cam } from '@/domain/entities/cam';
 
 
@@ -19,6 +20,7 @@ interface TrafficMapProps {
 }
 const camIcon = require('@/assets/images/cam-icon4.png');
 const selectedCamIcon = require('@/assets/images/cam-icon7.png');
+const camsRepository = JsonCamsRepository.getInstance();
 
 export default function TrafficMapNative({ cams, center, selectedCameraId, centerDelta = 0.05 }: TrafficMapProps) {
   const mapRef = useRef<MapView>(null);
@@ -28,15 +30,9 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
     return cams.find((c) => String(c.id) === String(selectedCameraId)) || null;
   }, [selectedCameraId, cams]);
 
-  const nextCam = React.useMemo(() => {
-    if (!activeCam) return null;
-    return getNextCamOnRoad(activeCam, cams);
-  }, [activeCam, cams]);
 
-  const prevCam = React.useMemo(() => {
-    if (!activeCam) return null;
-    return getPrevCamOnRoad(activeCam, cams);
-  }, [activeCam, cams]);
+  const { data: nextCam } = useNextCam(camsRepository, activeCam);
+  const { data: prevCam } = usePrevCam(camsRepository, activeCam);
 
   const pan = useRef(new Animated.ValueXY()).current;
   const cacheBuster = Math.floor(Date.now() / (1000 * 60 * 5));

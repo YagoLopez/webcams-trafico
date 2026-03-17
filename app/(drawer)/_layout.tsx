@@ -11,6 +11,8 @@ import { Drawer } from 'expo-router/drawer';
 import React from 'react';
 import { Dimensions } from 'react-native';
 
+const cams = JsonCamsRepository.getInstance();
+
 export default function DrawerLayout() {
   const colorScheme = useColorScheme();
 
@@ -19,7 +21,6 @@ export default function DrawerLayout() {
   const setIsFiltersModalVisible = useAppStore((state) => state.setIsFilterModalVisible);
 
   // We need to fetch basic data for the filters modal here since it's now living in the layout
-  const cams = JsonCamsRepository.getInstance();
   const { data: roads = [] } = useRoads(cams);
   const { data: provinces = [] } = useProvinces(cams);
 

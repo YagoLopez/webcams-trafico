@@ -21,6 +21,11 @@ jest.mock('react-native-map-clustering', () => {
   return MockClustering;
 });
 
+jest.mock('@/hooks/use-cams', () => ({
+  useNextCam: jest.fn(() => ({ data: null })),
+  usePrevCam: jest.fn(() => ({ data: null })),
+}));
+
 jest.mock('react-native-maps', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports
   const { View } = require('react-native');

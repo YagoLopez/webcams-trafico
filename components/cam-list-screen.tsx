@@ -6,11 +6,12 @@ import { useInfiniteFilteredCams } from '../hooks/use-cams';
 import { Cam } from '@/domain/entities/cam';
 import { CamCard } from './cam-card';
 
+const cams = JsonCamsRepository.getInstance();
+
 export const CamListScreen = () => {
   const selectedRoadName = useAppStore((state) => state.selectedRoadName);
   const selectedProvince = useAppStore((state) => state.selectedProvince);
   const setCamCount = useAppStore((state) => state.setCamCount);
-  const cams = JsonCamsRepository.getInstance();
   const { width } = useWindowDimensions();
   const numColumns = width >= 1280 ? 3 : width >= 640 ? 2 : 1;
 

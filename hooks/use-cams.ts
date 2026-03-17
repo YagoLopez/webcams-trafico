@@ -1,5 +1,8 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { CamFilters, ICamsRepository } from '../lib/ICamsRepository';
+import { GetNextCamUseCase } from '@/application/get-next-cam.use-case';
+import { GetPrevCamUseCase } from '@/application/get-prev-cam.use-case';
+import { Cam } from '@/domain/entities/cam';
 
 export const useRoads = (cams: ICamsRepository) => {
   return useQuery({
@@ -49,3 +52,28 @@ export const useInfiniteFilteredCams = (cams: ICamsRepository, filters: CamFilte
     },
   });
 };
+
+export const useNextCam = (cams: ICamsRepository, currentCam: Cam | null) => {
+  return useQuery({
+    queryKey: ['nextCam', currentCam?.id],
+    queryFn: async () => {
+      if (!currentCam) return null;
+      const useCase = new GetNextCamUseCase(cams);
+      return useCase.execute(currentCam);
+    },
+    enabled: !!currentCam,
+  });
+};
+
+export const usePrevCam = (cams: ICamsRepository, currentCam: Cam | null) => {
+  return useQuery({
+    queryKey: ['prevCam', currentCam?.id],
+    queryFn: async () => {
+      if (!currentCam) return null;
+      const useCase = new GetPrevCamUseCase(cams);
+      return useCase.execute(currentCam);
+    },
+    enabled: !!currentCam,
+  });
+};
+

@@ -65,4 +65,11 @@ export class JsonCamsRepository implements ICamsRepository {
 
     return Promise.resolve(ArrayPaginator.paginate(filtered, page, pageSize));
   }
+
+  async getCamsByRoad(roadName: string): Promise<Cam[]> {
+    const camsOnRoad = this.data.filter(c => 
+      c.roadName && c.roadName.trim().toLowerCase() === roadName.trim().toLowerCase()
+    );
+    return Promise.resolve(camsOnRoad);
+  }
 }

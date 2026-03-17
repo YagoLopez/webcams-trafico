@@ -8,13 +8,14 @@ import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from 'rea
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { formatKilometer } from '../../lib/utils/formatters';
 
+const camsRepository = JsonCamsRepository.getInstance();
+
 export default function CamDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
   const insets = useSafeAreaInsets();
   const colorScheme = useColorScheme();
 
-  const camsRepository = JsonCamsRepository.getInstance();
   const { data: cam, isLoading } = useCamById(camsRepository, id);
   const [isNavigatingToMap, setIsNavigatingToMap] = useState(false);
 
