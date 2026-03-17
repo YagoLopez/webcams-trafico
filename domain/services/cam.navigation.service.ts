@@ -12,13 +12,13 @@ function getSameRoadCams(currentCam: Cam, allCams: Cam[]): Cam[] {
 
   return allCams
     .filter(
-      (c) =>
-        String(c.id) !== String(currentCam.id) &&
-        norm(c.roadName) === road &&
-        c.latitude !== undefined &&
-        c.longitude !== undefined,
+      (cam) =>
+        String(cam.id) !== String(currentCam.id) &&
+        norm(cam.roadName) === road &&
+        cam.latitude !== undefined &&
+        cam.longitude !== undefined,
     )
-    .sort((a, b) => a.kilometer - b.kilometer);
+    .sort((cam1, cam2) => cam1.kilometer - cam2.kilometer);
 }
 
 /**
@@ -29,7 +29,7 @@ function getSameRoadCams(currentCam: Cam, allCams: Cam[]): Cam[] {
 export function getNextCamOnRoad(currentCam: Cam, allCams: Cam[]): Cam | null {
   return (
     getSameRoadCams(currentCam, allCams).find(
-      (c) => c.kilometer > currentCam.kilometer,
+      (cam) => cam.kilometer > currentCam.kilometer,
     ) ?? null
   );
 }
@@ -41,6 +41,6 @@ export function getNextCamOnRoad(currentCam: Cam, allCams: Cam[]): Cam | null {
  */
 export function getPrevCamOnRoad(currentCam: Cam, allCams: Cam[]): Cam | null {
   const sameRoadCams = getSameRoadCams(currentCam, allCams);
-  const prev = sameRoadCams.filter((c) => c.kilometer < currentCam.kilometer);
-  return prev.length > 0 ? prev[prev.length - 1] : null;
+  const prevCams = sameRoadCams.filter((cam) => cam.kilometer < currentCam.kilometer);
+  return prevCams.length > 0 ? prevCams[prevCams.length - 1] : null;
 }
