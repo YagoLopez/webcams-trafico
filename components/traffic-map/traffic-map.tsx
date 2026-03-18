@@ -1,7 +1,7 @@
 import { useRouter } from 'expo-router';
 import React, { useEffect, useRef } from 'react';
-import { Animated, Image, Text, View } from 'react-native';
-import { Gesture, GestureDetector, TouchableOpacity } from 'react-native-gesture-handler';
+import { Animated, Image, Pressable, Text, View } from 'react-native';
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import MapViewClustered from 'react-native-map-clustering';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
@@ -147,25 +147,18 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
             className="absolute bottom-10 left-5 right-5 bg-white rounded-xl p-3 shadow-lg elevation-5 flex-col"
             style={{ transform: [{ translateY: pan.y }] }}
           >
-            <TouchableOpacity
-              activeOpacity={0.7}
+            <Pressable
+              className="active:opacity-70"
               onPress={() => router.push({ pathname: '/cam/[id]/gallery', params: { id: activeCam.id, image: activeCam.imageUrl } })}
             >
               <Image className="w-full h-[200px] rounded-lg bg-[#e1e4e8] mb-3" source={{ uri: `${activeCam.imageUrl}?t=${cacheBuster}` }} resizeMode="cover" />
-            </TouchableOpacity>
+            </Pressable>
             <View className="justify-between">
               <Text className="text-base font-bold text-[#333] mb-1" numberOfLines={1}>{activeCam.location}</Text>
               <Text className="text-sm text-[#666] mb-2">{activeCam.roadName} - {formatKilometer(activeCam.kilometer)}</Text>
               <View style={{ flexDirection: 'row', marginTop: 8, gap: 6 }}>
-                <TouchableOpacity
-                  style={{
-                    flex: 1,
-                    backgroundColor: '#137fec',
-                    paddingVertical: 12,
-                    borderRadius: 8,
-                    opacity: prevCam ? 1 : 0.35,
-                  }}
-                  activeOpacity={0.7}
+                <Pressable
+                  className={`flex-1 bg-[#137fec] py-3 rounded-lg active:opacity-70 ${!prevCam ? 'opacity-35' : ''}`}
                   disabled={!prevCam}
                   onPress={() => {
                     if (!prevCam) return;
@@ -178,30 +171,22 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
                     router.setParams({ cameraId: String(prevCam.id) });
                   }}
                 >
-                  <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold', textAlign: 'center' }}>
+                  <Text className="color-white text-sm font-bold text-center">
                     ← Anterior
                   </Text>
-                </TouchableOpacity>
+                </Pressable>
 
-                <TouchableOpacity
-                  style={{ flex: 1, backgroundColor: '#137fec', paddingVertical: 12, borderRadius: 8 }}
-                  activeOpacity={0.7}
+                <Pressable
+                  className="flex-1 bg-[#137fec] py-3 rounded-lg active:opacity-70"
                   onPress={() => router.push(`/cam/${activeCam.id}`)}
                 >
-                  <Text style={{ color: 'white', fontSize: 13, fontWeight: 'bold', textAlign: 'center' }}>
+                  <Text className="color-white text-[13px] font-bold text-center">
                     Ver detalles
                   </Text>
-                </TouchableOpacity>
+                </Pressable>
 
-                <TouchableOpacity
-                  style={{
-                    flex: 1,
-                    backgroundColor: '#137fec',
-                    paddingVertical: 12,
-                    borderRadius: 8,
-                    opacity: nextCam ? 1 : 0.35,
-                  }}
-                  activeOpacity={0.7}
+                <Pressable
+                  className={`flex-1 bg-[#137fec] py-3 rounded-lg active:opacity-70 ${!nextCam ? 'opacity-35' : ''}`}
                   disabled={!nextCam}
                   onPress={() => {
                     if (!nextCam) return;
@@ -214,10 +199,10 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
                     router.setParams({ cameraId: String(nextCam.id) });
                   }}
                 >
-                  <Text style={{ color: 'white', fontSize: 14, fontWeight: 'bold', textAlign: 'center' }}>
+                  <Text className="color-white text-sm font-bold text-center">
                     Siguiente →
                   </Text>
-                </TouchableOpacity>
+                </Pressable>
               </View>
             </View>
           </Animated.View>
