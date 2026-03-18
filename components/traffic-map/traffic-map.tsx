@@ -156,7 +156,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
             <View className="justify-between">
               <Text className="text-base font-bold text-[#333] mb-1" numberOfLines={1}>{activeCam.location}</Text>
               <Text className="text-sm text-[#666] mb-2">{activeCam.roadName} - {formatKilometer(activeCam.kilometer)}</Text>
-              <View style={{ flexDirection: 'row', marginTop: 8, gap: 6 }}>
+              <View className="flex-row mt-2 gap-1.5">
                 <Pressable
                   className={`flex-1 bg-[#137fec] py-3 rounded-lg active:opacity-70 ${!prevCam ? 'opacity-35' : ''}`}
                   disabled={!prevCam}
