@@ -136,6 +136,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
         clusterColor="#3b82f6"
         spiralEnabled={false}
         moveOnMarkerPress={false}
+        maxZoom={14}
       >
         {markers}
       </MapViewClustered>
@@ -165,8 +166,8 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
                     mapRef.current?.animateToRegion({
                       latitude: prevCam.latitude!,
                       longitude: prevCam.longitude!,
-                      latitudeDelta: 0.005,
-                      longitudeDelta: 0.005,
+                      latitudeDelta: 0.05,
+                      longitudeDelta: 0.05,
                     }, 500);
                     router.setParams({ cameraId: String(prevCam.id) });
                   }}
