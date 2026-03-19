@@ -1,0 +1,11 @@
+import { ICamsRepository, CamFilters } from '@/lib/ICamsRepository';
+import { Cam } from '@/architecture/domain/entities/cam';
+import { PaginationResult } from '@/lib/paginator/ArrayPaginator';
+
+export class GetFilteredCamsUseCase {
+  constructor(private readonly camRepository: ICamsRepository) {}
+
+  async execute(filters: CamFilters, page?: number, pageSize?: number): Promise<PaginationResult<Cam>> {
+    return this.camRepository.getFilteredCams(filters, page, pageSize);
+  }
+}
