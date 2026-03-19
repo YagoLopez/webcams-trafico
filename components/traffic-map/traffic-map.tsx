@@ -165,8 +165,8 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
                     mapRef.current?.animateToRegion({
                       latitude: prevCam.latitude!,
                       longitude: prevCam.longitude!,
-                      latitudeDelta: 0.05,
-                      longitudeDelta: 0.05,
+                      latitudeDelta: 0.005,
+                      longitudeDelta: 0.005,
                     }, 500);
                     router.setParams({ cameraId: String(prevCam.id) });
                   }}
@@ -193,8 +193,8 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
                     mapRef.current?.animateToRegion({
                       latitude: nextCam.latitude!,
                       longitude: nextCam.longitude!,
-                      latitudeDelta: 0.05,
-                      longitudeDelta: 0.05,
+                      latitudeDelta: 0.005,
+                      longitudeDelta: 0.005,
                     }, 500);
                     router.setParams({ cameraId: String(nextCam.id) });
                   }}
