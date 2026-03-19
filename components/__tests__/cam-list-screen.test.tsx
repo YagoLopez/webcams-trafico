@@ -51,21 +51,24 @@ jest.mock('@/architecture/infraestructure/use-cams', () => ({
   }),
 }));
 
+const mockStore = {
+  selectedRoadName: null,
+  selectedProvince: null,
+  setCamCount: jest.fn(),
+  isFilterModalVisible: false,
+  setIsFilterModalVisible: jest.fn(),
+};
+
 // Mock the Zustand store
 jest.mock('../../store/use-app-store', () => ({
-  useAppStore: jest.fn((selector) => {
-    const mockStore = {
-      selectedRoadName: null,
-      selectedProvince: null,
-      setCamCount: jest.fn(),
-      isFilterModalVisible: false,
-      setIsFilterModalVisible: jest.fn(),
-    };
-    return selector(mockStore);
-  }),
+  useAppStore: jest.fn((selector) => selector(mockStore)),
 }));
 
 describe('CamsListScreen', () => {
+  afterEach(() => {
+    jest.clearAllMocks();
+  });
+
   test('renders the list cards directly based on mocked hooks', () => {
     // We don't need QueryClientProvider if we mock the hooks returning data!
     render(
