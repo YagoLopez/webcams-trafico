@@ -7,7 +7,7 @@ import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import TrafficMap from '@/components/traffic-map';
 import { ICamsRepository } from '@/lib/ICamsRepository';
 import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
-import { haversineDistance } from '@/lib/utils/haversine';
+import { Coordinates } from '@/architecture/domain/value-objects/Coordinates';
 import { useAppStore } from '@/store/use-app-store';
 import { Cam } from '@/architecture/domain/entities/cam';
 
@@ -105,12 +105,15 @@ export default function NearbyCamScreen() {
       }
 
       // 4. Find nearest camera using Haversine
+      // 4. Find nearest camera using Coordinates Distance
       let minDistance = Infinity;
       let nearestId: string | null = null;
+      const userCoords = new Coordinates(userLat, userLon);
 
       for (const cam of roadCams) {
         if (cam.latitude == null || cam.longitude == null) continue;
-        const dist = haversineDistance(userLat, userLon, cam.latitude, cam.longitude);
+        const camCoords = new Coordinates(cam.latitude, cam.longitude);
+        const dist = userCoords.distanceTo(camCoords);
         if (dist < minDistance) {
           minDistance = dist;
           nearestId = cam.id;
