@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Text, View } from 'react-native';
 import TrafficMap from '../../components/traffic-map';
 
-import { useFilteredCams } from '@/hooks/use-cams';
+import { useFilteredCams } from '@/architecture/infraestructure/use-cams';
 import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
 
 const camsRepository = JsonCamsRepository.getInstance();

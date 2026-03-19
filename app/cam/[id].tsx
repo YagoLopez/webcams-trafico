@@ -1,4 +1,4 @@
-import { useCamById } from '@/hooks/use-cams';
+import { useCamById } from '@/architecture/infraestructure/use-cams';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';

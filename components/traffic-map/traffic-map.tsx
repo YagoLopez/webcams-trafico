@@ -5,10 +5,10 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import MapViewClustered from 'react-native-map-clustering';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
-import { formatKilometer } from '@/lib/utils/formatters';
-import { useNextCam, usePrevCam } from '@/hooks/use-cams';
-import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
 import { Cam } from '@/architecture/domain/entities/cam';
+import { useNextCam, usePrevCam } from '@/architecture/infraestructure/use-cams';
+import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
+import { formatKilometer } from '@/lib/utils/formatters';
 
 
 interface TrafficMapProps {

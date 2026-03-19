@@ -1,9 +1,9 @@
+import { useProvinces, useRoads } from '@/architecture/infraestructure/use-cams';
 import { CustomDrawerContent } from '@/components/custom-drawer-content';
 import { CustomDrawerHeader } from '@/components/custom-drawer-header';
 import { FiltersModal } from '@/components/filters-modal';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
-import { useProvinces, useRoads } from '@/hooks/use-cams';
 import { useColorScheme } from '@/hooks/use-color-scheme';
 import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
 import { useAppStore } from '@/store/use-app-store';

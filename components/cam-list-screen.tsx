@@ -1,9 +1,9 @@
+import { Cam } from '@/architecture/domain/entities/cam';
 import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
 import { useAppStore } from '@/store/use-app-store';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { ActivityIndicator, FlatList, Text, View, useWindowDimensions } from 'react-native';
-import { useInfiniteFilteredCams } from '../hooks/use-cams';
-import { Cam } from '@/architecture/domain/entities/cam';
+import { useInfiniteFilteredCams } from '../architecture/infraestructure/use-cams';
 import { CamCard } from './cam-card';
 
 const cams = JsonCamsRepository.getInstance();

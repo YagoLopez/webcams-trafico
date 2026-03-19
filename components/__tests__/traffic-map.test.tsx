@@ -21,7 +21,7 @@ jest.mock('react-native-map-clustering', () => {
   return MockClustering;
 });
 
-jest.mock('@/hooks/use-cams', () => ({
+jest.mock('@/architecture/infraestructure/use-cams', () => ({
   useNextCam: jest.fn(() => ({ data: null })),
   usePrevCam: jest.fn(() => ({ data: null })),
 }));

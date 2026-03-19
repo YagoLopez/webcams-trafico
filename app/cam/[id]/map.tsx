@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
-import { useFilteredCams } from '@/hooks/use-cams';
+import { useFilteredCams } from '@/architecture/infraestructure/use-cams';
 import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
 
 const camsRepository = JsonCamsRepository.getInstance();
