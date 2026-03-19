@@ -3,7 +3,7 @@ import { Link } from 'expo-router';
 import React from 'react';
 import { Image, Pressable, Text, View } from 'react-native';
 import { formatKilometer } from '../lib/utils/formatters';
-import { Cam } from '@/domain/entities/cam';
+import { Cam } from '@/architecture/domain/entities/cam';
 
 interface CamCardProps {
   item: Cam;

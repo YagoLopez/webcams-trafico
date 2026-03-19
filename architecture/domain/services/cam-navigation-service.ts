@@ -1,4 +1,4 @@
-import { Cam } from '@/domain/entities/cam';
+import { Cam } from '@/architecture/domain/entities/cam';
 
 export class CamNavigationService {
   private constructor() {}

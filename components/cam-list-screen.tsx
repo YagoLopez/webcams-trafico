@@ -3,7 +3,7 @@ import { useAppStore } from '@/store/use-app-store';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { ActivityIndicator, FlatList, Text, View, useWindowDimensions } from 'react-native';
 import { useInfiniteFilteredCams } from '../hooks/use-cams';
-import { Cam } from '@/domain/entities/cam';
+import { Cam } from '@/architecture/domain/entities/cam';
 import { CamCard } from './cam-card';
 
 const cams = JsonCamsRepository.getInstance();

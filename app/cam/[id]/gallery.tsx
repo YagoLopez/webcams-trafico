@@ -60,8 +60,6 @@ export default function GalleryScreen() {
     return null; // Should not happen in normal flow
   }
 
-  const calculatedImageWidth = imageSize ? imageSize.width * (screenHeight / imageSize.height) : 0;
-
   return (
     <View className="flex-1 bg-black">
       <Stack.Screen

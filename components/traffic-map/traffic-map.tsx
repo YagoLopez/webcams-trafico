@@ -8,7 +8,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { formatKilometer } from '@/lib/utils/formatters';
 import { useNextCam, usePrevCam } from '@/hooks/use-cams';
 import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
-import { Cam } from '@/domain/entities/cam';
+import { Cam } from '@/architecture/domain/entities/cam';
 
 
 interface TrafficMapProps {

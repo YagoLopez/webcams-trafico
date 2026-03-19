@@ -1,8 +1,8 @@
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 import { CamFilters, ICamsRepository } from '../lib/ICamsRepository';
-import { GetNextCamUseCase } from '@/application/get-next-cam.use-case';
-import { GetPrevCamUseCase } from '@/application/get-prev-cam.use-case';
-import { Cam } from '@/domain/entities/cam';
+import { GetNextCamUseCase } from '@/architecture/application/get-next-cam.use-case';
+import { GetPrevCamUseCase } from '@/architecture/application/get-prev-cam.use-case';
+import { Cam } from '@/architecture/domain/entities/cam';
 
 export const useRoads = (cams: ICamsRepository) => {
   return useQuery({

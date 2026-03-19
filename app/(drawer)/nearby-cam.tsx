@@ -9,7 +9,7 @@ import { ICamsRepository } from '@/lib/ICamsRepository';
 import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
 import { haversineDistance } from '@/lib/utils/haversine';
 import { useAppStore } from '@/store/use-app-store';
-import { Cam } from '@/domain/entities/cam';
+import { Cam } from '@/architecture/domain/entities/cam';
 
 const camsRepository = JsonCamsRepository.getInstance();
 
@@ -169,11 +169,10 @@ export default function NearbyCamScreen() {
             testID="search-nearest-btn"
             onPress={handleSearch}
             disabled={!selectedRoad || searching}
-            className={`flex-1 py-4 rounded-xl items-center ${
-              selectedRoad && !searching
+            className={`flex-1 py-4 rounded-xl items-center ${selectedRoad && !searching
                 ? 'bg-[#137fec] active:opacity-80'
                 : 'bg-slate-300 dark:bg-slate-700'
-            }`}
+              }`}
           >
             {searching ? (
               <ActivityIndicator color="#ffffff" />

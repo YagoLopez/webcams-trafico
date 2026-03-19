@@ -5,7 +5,7 @@ import { Pressable, Text, View } from 'react-native';
 
 // Leaflet and React-Leaflet imports
 import { formatKilometer } from '@/lib/utils/formatters';
-import { Cam } from '@/domain/entities/cam';
+import { Cam } from '@/architecture/domain/entities/cam';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { MapContainer, Marker, Popup, TileLayer, useMap, useMapEvents } from 'react-leaflet';
