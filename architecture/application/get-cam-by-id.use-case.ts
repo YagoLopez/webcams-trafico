@@ -1,4 +1,4 @@
-import { ICamsRepository } from '@/lib/ICamsRepository';
+import { ICamsRepository } from '@/architecture/domain/repositories/ICamsRepository';
 import { Cam } from '@/architecture/domain/entities/cam';
 
 export class GetCamByIdUseCase {

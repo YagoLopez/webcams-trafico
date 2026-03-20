@@ -1,4 +1,4 @@
-import { ICamsRepository } from '@/lib/ICamsRepository';
+import { ICamsRepository } from '@/architecture/domain/repositories/ICamsRepository';
 
 export class GetAllRoadsUseCase {
   constructor(private readonly camRepository: ICamsRepository) {}

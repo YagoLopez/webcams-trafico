@@ -1,5 +1,5 @@
 import { Cam } from '@/architecture/domain/entities/cam';
-import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
+import { JsonCamsRepository } from '@/architecture/infraestructure/repositories/JsonCamsRepository';
 import { useAppStore } from '@/store/use-app-store';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { ActivityIndicator, FlatList, Text, View, useWindowDimensions } from 'react-native';

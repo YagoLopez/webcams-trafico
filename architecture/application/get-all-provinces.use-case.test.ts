@@ -1,4 +1,4 @@
-import { ICamsRepository } from '@/lib/ICamsRepository';
+import { ICamsRepository } from '@/architecture/domain/repositories/ICamsRepository';
 import { GetAllProvincesUseCase } from './get-all-provinces.use-case';
 
 describe('GetAllProvincesUseCase', () => {

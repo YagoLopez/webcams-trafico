@@ -5,8 +5,8 @@ import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 
 import TrafficMap from '@/components/traffic-map';
-import { ICamsRepository } from '@/lib/ICamsRepository';
-import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
+import { ICamsRepository } from '@/architecture/domain/repositories/ICamsRepository';
+import { JsonCamsRepository } from '@/architecture/infraestructure/repositories/JsonCamsRepository';
 import { Coordinates } from '@/architecture/domain/value-objects/Coordinates';
 import { useAppStore } from '@/store/use-app-store';
 import { Cam } from '@/architecture/domain/entities/cam';

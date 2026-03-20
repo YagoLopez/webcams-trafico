@@ -11,7 +11,7 @@ import {
   useNextCam,
   usePrevCam,
 } from './use-cams';
-import { ICamsRepository, CamFilters } from '@/lib/ICamsRepository';
+import { ICamsRepository, CamFilters } from '@/architecture/domain/repositories/ICamsRepository';
 import { Cam } from '@/architecture/domain/entities/cam';
 import { PaginationResult } from '@/lib/paginator/ArrayPaginator';
 

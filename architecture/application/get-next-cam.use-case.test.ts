@@ -1,4 +1,4 @@
-import { ICamsRepository } from '@/lib/ICamsRepository';
+import { ICamsRepository } from '@/architecture/domain/repositories/ICamsRepository';
 import { GetNextCamUseCase } from './get-next-cam.use-case';
 import { Cam } from '@/architecture/domain/entities/cam';
 

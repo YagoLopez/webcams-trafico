@@ -1,4 +1,4 @@
-import webcamsData from '../data/webcams.json';
+import webcamsData from '@/data/webcams.json';
 import { JsonCamsRepository } from './JsonCamsRepository';
 
 describe('JsonCamsRepository', () => {

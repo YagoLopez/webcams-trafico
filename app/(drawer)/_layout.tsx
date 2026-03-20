@@ -5,7 +5,7 @@ import { FiltersModal } from '@/components/filters-modal';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
+import { JsonCamsRepository } from '@/architecture/infraestructure/repositories/JsonCamsRepository';
 import { useAppStore } from '@/store/use-app-store';
 import { Drawer } from 'expo-router/drawer';
 import React from 'react';

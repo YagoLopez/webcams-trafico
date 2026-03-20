@@ -2,7 +2,7 @@ import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Link } from 'expo-router';
 import React from 'react';
 import { Image, Pressable, Text, View } from 'react-native';
-import { formatKilometer } from '../lib/utils/formatters';
+import { formatKilometer } from '@/architecture/infraestructure/utils/formatters';
 import { Cam } from '@/architecture/domain/entities/cam';
 
 interface CamCardProps {

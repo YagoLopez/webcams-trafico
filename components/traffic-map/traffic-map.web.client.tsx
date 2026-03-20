@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from 'react';
 import { Pressable, Text, View } from 'react-native';
 
 // Leaflet and React-Leaflet imports
-import { formatKilometer } from '@/lib/utils/formatters';
+import { formatKilometer } from '@/architecture/infraestructure/utils/formatters';
 import { Cam } from '@/architecture/domain/entities/cam';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';

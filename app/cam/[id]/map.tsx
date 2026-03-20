@@ -6,7 +6,7 @@ import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 import { useFilteredCams } from '@/architecture/infraestructure/use-cams';
-import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
+import { JsonCamsRepository } from '@/architecture/infraestructure/repositories/JsonCamsRepository';
 
 const camsRepository = JsonCamsRepository.getInstance();
 

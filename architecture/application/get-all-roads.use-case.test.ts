@@ -1,4 +1,4 @@
-import { ICamsRepository } from '@/lib/ICamsRepository';
+import { ICamsRepository } from '@/architecture/domain/repositories/ICamsRepository';
 import { GetAllRoadsUseCase } from './get-all-roads.use-case';
 
 describe('GetAllRoadsUseCase', () => {
