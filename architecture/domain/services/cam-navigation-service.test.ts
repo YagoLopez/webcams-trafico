@@ -63,4 +63,49 @@ describe('CamNavigationService', () => {
             expect(prev).toBeNull();
         });
     });
+
+    describe('Edge Cases and Error Handling', () => {
+        it('should handle undefined roadName in currentCam (normalization)', () => {
+            const undefRoadCam = cam('undef', undefined as any, 10, 40, -3);
+            const next = CamNavigationService.getNextCamOnRoad(undefRoadCam, allCams);
+            // allCams does not contain any cam with empty/undefined roadName that has GPS
+            expect(next).toBeNull();
+        });
+
+        it('should handle undefined roadName in allCams', () => {
+            const camWithUndefRoad = cam('undef2', undefined as any, 15, 40, -3);
+            const undefRoadCam = cam('undef1', undefined as any, 10, 40, -3);
+            const next = CamNavigationService.getNextCamOnRoad(undefRoadCam, [undefRoadCam, camWithUndefRoad]);
+            expect(next?.id).toBe('undef2');
+        });
+
+        it('should return null if allCams is empty', () => {
+            const next = CamNavigationService.getNextCamOnRoad(cam1, []);
+            expect(next).toBeNull();
+            const prev = CamNavigationService.getPrevCamOnRoad(cam1, []);
+            expect(prev).toBeNull();
+        });
+
+        it('should handle currentCam not being in allCams', () => {
+            // It should still find the next cam in allCams if the road matches
+            const externalCam = cam('ext', roadA, 5, 40, -3);
+            const next = CamNavigationService.getNextCamOnRoad(externalCam, allCams);
+            expect(next?.id).toBe('1'); // cam1 is at 10km
+        });
+
+        it('should handle duplicate kilometers by taking the next index (as sorted)', () => {
+            const camDup1 = cam('dup1', roadA, 15, 40, -3);
+            const camDup2 = cam('dup2', roadA, 15, 41, -3);
+            const current = cam('curr', roadA, 10, 39, -3);
+            const next = CamNavigationService.getNextCamOnRoad(current, [current, camDup1, camDup2]);
+            // Should return one of them (the first after sort)
+            expect(['dup1', 'dup2']).toContain(next?.id);
+        });
+
+        it('should cover Cam entity default status branch', () => {
+            // @ts-ignore - testing default parameter
+            const defaultStatusCam = new Cam('def', 'url', 'road', 'dest', 10, 'loc');
+            expect(defaultStatusCam.status).toBe('active');
+        });
+    });
 });
