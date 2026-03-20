@@ -1,7 +1,7 @@
 import { ICamsRepository, CamFilters } from '@/architecture/domain/repositories/ICamsRepository';
 import { GetFilteredCamsUseCase } from './get-filtered-cams.use-case';
 import { Cam } from '@/architecture/domain/entities/cam';
-import { PaginationResult } from '@/lib/paginator/ArrayPaginator';
+import { PaginationResult } from '@/architecture/infraestructure/paginator/ArrayPaginator';
 
 describe('GetFilteredCamsUseCase', () => {
   let useCase: GetFilteredCamsUseCase;

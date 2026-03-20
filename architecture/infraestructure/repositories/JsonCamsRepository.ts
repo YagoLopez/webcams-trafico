@@ -2,7 +2,7 @@ import webcamsData from '@/data/webcams.json';
 import { Cam } from '@/architecture/domain/entities/cam';
 import { CamFilters, ICamsRepository } from '@/architecture/domain/repositories/ICamsRepository';
 import { ArrayPaginator } from '@/architecture/infraestructure/paginator/ArrayPaginator';
-import { PaginationResult } from '@/architecture/domain/repositories/PaginationResult';
+import { PaginationResult } from '@/architecture/infraestructure/paginator/ArrayPaginator';
 
 export class JsonCamsRepository implements ICamsRepository {
   private static instance: JsonCamsRepository;

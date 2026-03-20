@@ -13,7 +13,7 @@ import {
 } from './use-cams';
 import { ICamsRepository, CamFilters } from '@/architecture/domain/repositories/ICamsRepository';
 import { Cam } from '@/architecture/domain/entities/cam';
-import { PaginationResult } from '@/lib/paginator/ArrayPaginator';
+import { PaginationResult } from '@/architecture/infraestructure/paginator/ArrayPaginator';
 
 // Mocks for the underlying UseCases
 jest.mock('@/architecture/application/get-all-roads.use-case', () => ({

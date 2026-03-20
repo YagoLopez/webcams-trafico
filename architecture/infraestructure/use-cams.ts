@@ -6,7 +6,7 @@ import { GetNextCamUseCase } from '@/architecture/application/get-next-cam.use-c
 import { GetPrevCamUseCase } from '@/architecture/application/get-prev-cam.use-case';
 import { Cam } from '@/architecture/domain/entities/cam';
 import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
-import { CamFilters } from '@/types/cam-filters';
+import { CamFilters } from '@/architecture/domain/entities/CamFilters';
 import { ICamsRepository } from '@/architecture/domain/repositories/ICamsRepository';
 
 export const useRoads = (camsRepository: ICamsRepository) => {

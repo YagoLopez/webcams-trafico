@@ -1,4 +1,10 @@
-import { PaginationResult } from '@/architecture/domain/repositories/PaginationResult';
+export interface PaginationResult<T> {
+  data: T[];
+  hasNextPage: boolean;
+  totalItems: number;
+  totalPages: number;
+  currentPage: number;
+}
 
 export class ArrayPaginator {
   /**

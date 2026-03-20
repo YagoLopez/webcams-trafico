@@ -128,7 +128,7 @@ export default function NearbyCamScreen() {
       if (nearestId) setSelectedCameraId(nearestId);
 
       // Center map on nearest camera (not just user GPS point)
-      const nearestCam = nearestId ? roadCams.find((c) => String(c.id) === String(nearestId)) : null;
+      const nearestCam = nearestId ? roadCams.find((c: Cam) => String(c.id) === String(nearestId)) : null;
       if (nearestCam?.latitude != null && nearestCam?.longitude != null) {
         setNearestCamCenter({ lat: nearestCam.latitude, lon: nearestCam.longitude });
       } else {

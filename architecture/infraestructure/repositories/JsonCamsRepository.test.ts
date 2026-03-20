@@ -1,4 +1,5 @@
 import webcamsData from '@/data/webcams.json';
+import { Cam } from '@/architecture/domain/entities/cam';
 import { JsonCamsRepository } from './JsonCamsRepository';
 
 describe('JsonCamsRepository', () => {
@@ -37,7 +38,7 @@ describe('JsonCamsRepository', () => {
 
   test('getFilteredCams should filter by road', async () => {
     const result = await repository.getFilteredCams({ roadName: 'A-62' });
-    expect(result.data.every(c => c.roadName === 'A-62')).toBe(true);
+    expect(result.data.every((c: Cam) => c.roadName === 'A-62')).toBe(true);
     expect(result.data.length).toBeGreaterThan(0);
   });
 
@@ -56,7 +57,7 @@ describe('JsonCamsRepository', () => {
   test('getFilteredCams should filter by searchQuery', async () => {
     const result = await repository.getFilteredCams({ searchQuery: 'A-62' });
     expect(result.data.length).toBeGreaterThan(0);
-    expect(result.data.every(c =>
+    expect(result.data.every((c: Cam) =>
       c.location?.includes('A-62') || c.kilometer?.toString().includes('A-62') || c.roadName?.includes('A-62') || c.roadDestination?.includes('A-62')
     )).toBe(true);
   });
