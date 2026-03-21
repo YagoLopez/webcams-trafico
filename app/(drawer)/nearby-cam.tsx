@@ -1,15 +1,15 @@
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import * as Location from 'expo-location';
 import { useLocalSearchParams } from 'expo-router';
-import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 
-import TrafficMap from '@/components/traffic-map';
-import { ICamsRepository } from '@/architecture/domain/repositories/ICamsRepository';
-import { JsonCamsRepository } from '@/architecture/infraestructure/repositories/JsonCamsRepository';
-import { Coordinates } from '@/architecture/domain/value-objects/Coordinates';
-import { useAppStore } from '@/store/use-app-store';
 import { Cam } from '@/architecture/domain/entities/cam';
+import { ICamsRepository } from '@/architecture/domain/repositories/ICamsRepository';
+import { Coordinates } from '@/architecture/domain/value-objects/Coordinates';
+import { JsonCamsRepository } from '@/architecture/infrastructure/repositories/JsonCamsRepository';
+import TrafficMap from '@/components/traffic-map';
+import { useAppStore } from '@/store/use-app-store';
 
 const camsRepository = JsonCamsRepository.getInstance();
 
@@ -173,8 +173,8 @@ export default function NearbyCamScreen() {
             onPress={handleSearch}
             disabled={!selectedRoad || searching}
             className={`flex-1 py-4 rounded-xl items-center ${selectedRoad && !searching
-                ? 'bg-[#137fec] active:opacity-80'
-                : 'bg-slate-300 dark:bg-slate-700'
+              ? 'bg-[#137fec] active:opacity-80'
+              : 'bg-slate-300 dark:bg-slate-700'
               }`}
           >
             {searching ? (

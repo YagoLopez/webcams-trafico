@@ -1,4 +1,4 @@
-import { useCamById } from '@/architecture/infraestructure/use-cams';
+import { useCamById } from '@/architecture/infrastructure/use-cams';
 import { fireEvent, render, screen } from '@testing-library/react-native';
 import { useRouter } from 'expo-router';
 import React from 'react';
@@ -20,7 +20,7 @@ jest.mock('@/hooks/use-color-scheme', () => ({
   useColorScheme: () => 'light',
 }));
 
-jest.mock('@/architecture/infraestructure/use-cams', () => ({
+jest.mock('@/architecture/infrastructure/use-cams', () => ({
   useCamById: jest.fn(),
 }));
 

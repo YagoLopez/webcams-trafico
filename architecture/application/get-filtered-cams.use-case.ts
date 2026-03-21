@@ -1,6 +1,6 @@
-import { ICamsRepository, CamFilters } from '@/architecture/domain/repositories/ICamsRepository';
 import { Cam } from '@/architecture/domain/entities/cam';
-import { PaginationResult } from '@/architecture/infraestructure/paginator/ArrayPaginator';
+import { CamFilters, ICamsRepository } from '@/architecture/domain/repositories/ICamsRepository';
+import { PaginationResult } from '@/architecture/infrastructure/paginator/ArrayPaginator';
 
 export class GetFilteredCamsUseCase {
   constructor(private readonly camRepository: ICamsRepository) { }

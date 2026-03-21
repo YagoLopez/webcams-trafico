@@ -1,12 +1,12 @@
-import { useCamById } from '@/architecture/infraestructure/use-cams';
+import { JsonCamsRepository } from '@/architecture/infrastructure/repositories/JsonCamsRepository';
+import { useCamById } from '@/architecture/infrastructure/use-cams';
+import { formatKilometer } from '@/architecture/infrastructure/utils/formatters';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { JsonCamsRepository } from '@/architecture/infraestructure/repositories/JsonCamsRepository';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { formatKilometer } from '@/architecture/infraestructure/utils/formatters';
 
 const camsRepository = JsonCamsRepository.getInstance();
 

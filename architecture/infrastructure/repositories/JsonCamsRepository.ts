@@ -1,8 +1,7 @@
-import webcamsData from '@/data/webcams.json';
 import { Cam } from '@/architecture/domain/entities/cam';
 import { CamFilters, ICamsRepository } from '@/architecture/domain/repositories/ICamsRepository';
-import { ArrayPaginator } from '@/architecture/infraestructure/paginator/ArrayPaginator';
-import { PaginationResult } from '@/architecture/infraestructure/paginator/ArrayPaginator';
+import { ArrayPaginator, PaginationResult } from '@/architecture/infrastructure/paginator/ArrayPaginator';
+import webcamsData from '@/data/webcams.json';
 
 export class JsonCamsRepository implements ICamsRepository {
   private static instance: JsonCamsRepository;
@@ -68,7 +67,7 @@ export class JsonCamsRepository implements ICamsRepository {
   }
 
   async getCamsByRoad(roadName: string): Promise<Cam[]> {
-    const camsOnRoad = this.data.filter(c => 
+    const camsOnRoad = this.data.filter(c =>
       c.roadName && c.roadName.trim().toLowerCase() === roadName.trim().toLowerCase()
     );
     return Promise.resolve(camsOnRoad);

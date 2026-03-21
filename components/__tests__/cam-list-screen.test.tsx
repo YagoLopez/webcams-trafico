@@ -25,7 +25,7 @@ jest.mock('react-native-safe-area-context', () => {
 });
 
 // Mock the custom hooks completely
-jest.mock('@/architecture/infraestructure/use-cams', () => ({
+jest.mock('@/architecture/infrastructure/use-cams', () => ({
   useRoads: () => ({ data: ['A-1', 'A-2'], isLoading: false }),
   useProvinces: () => ({ data: ['MADRID', 'BARCELONA'], isLoading: false }),
   useInfiniteFilteredCams: () => ({

@@ -1,19 +1,19 @@
-import { renderHook, waitFor } from '@testing-library/react-native';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { renderHook, waitFor } from '@testing-library/react-native';
 import React from 'react';
 
+import { Cam } from '@/architecture/domain/entities/cam';
+import { CamFilters, ICamsRepository } from '@/architecture/domain/repositories/ICamsRepository';
+import { PaginationResult } from '@/architecture/infrastructure/paginator/ArrayPaginator';
 import {
-  useRoads,
-  useProvinces,
-  useFilteredCams,
   useCamById,
+  useFilteredCams,
   useInfiniteFilteredCams,
   useNextCam,
   usePrevCam,
+  useProvinces,
+  useRoads,
 } from './use-cams';
-import { ICamsRepository, CamFilters } from '@/architecture/domain/repositories/ICamsRepository';
-import { Cam } from '@/architecture/domain/entities/cam';
-import { PaginationResult } from '@/architecture/infraestructure/paginator/ArrayPaginator';
 
 // Mocks for the underlying UseCases
 jest.mock('@/architecture/application/get-all-roads.use-case', () => ({
@@ -161,7 +161,7 @@ describe('use-cams hooks', () => {
 
       await waitFor(() => expect(result.current.isSuccess).toBe(true));
       expect(mockGetFilteredCamsExecute).toHaveBeenCalledWith(filters, 1, 1);
-      
+
       // Check first page data
       expect(result.current.data?.pages[0]).toEqual(page1Result);
       expect(result.current.hasNextPage).toBe(true);

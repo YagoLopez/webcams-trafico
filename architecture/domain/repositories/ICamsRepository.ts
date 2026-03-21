@@ -1,6 +1,6 @@
 import { Cam } from '@/architecture/domain/entities/cam';
 import { CamFilters } from '@/architecture/domain/entities/CamFilters';
-import { PaginationResult } from '@/architecture/infraestructure/paginator/ArrayPaginator';
+import { PaginationResult } from '@/architecture/infrastructure/paginator/ArrayPaginator';
 
 export type { CamFilters };
 
