@@ -1,4 +1,4 @@
-import { Cam } from '@/architecture/domain/entities/cam';
+import { Cam } from '@/architecture/domain/entities/Cam';
 import { formatKilometer } from '@/architecture/infrastructure/utils/formatters';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Link } from 'expo-router';

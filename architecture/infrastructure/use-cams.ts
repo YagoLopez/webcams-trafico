@@ -4,10 +4,10 @@ import { GetCamByIdUseCase } from '@/architecture/application/get-cam-by-id.use-
 import { GetFilteredCamsUseCase } from '@/architecture/application/get-filtered-cams.use-case';
 import { GetNextCamUseCase } from '@/architecture/application/get-next-cam.use-case';
 import { GetPrevCamUseCase } from '@/architecture/application/get-prev-cam.use-case';
-import { Cam } from '@/architecture/domain/entities/cam';
-import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
+import { Cam } from '@/architecture/domain/entities/Cam';
 import { CamFilters } from '@/architecture/domain/entities/CamFilters';
 import { ICamsRepository } from '@/architecture/domain/repositories/ICamsRepository';
+import { useInfiniteQuery, useQuery } from '@tanstack/react-query';
 
 export const useRoads = (camsRepository: ICamsRepository) => {
   return useQuery({

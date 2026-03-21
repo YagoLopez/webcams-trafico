@@ -1,4 +1,4 @@
-import { Cam } from '@/architecture/domain/entities/cam';
+import { Cam } from '@/architecture/domain/entities/Cam';
 import { CamFilters, ICamsRepository } from '@/architecture/domain/repositories/ICamsRepository';
 import { ArrayPaginator, PaginationResult } from '@/architecture/infrastructure/paginator/ArrayPaginator';
 import webcamsData from '@/data/webcams.json';

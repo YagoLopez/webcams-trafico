@@ -1,5 +1,5 @@
+import { Cam } from '@/architecture/domain/entities/Cam';
 import webcamsData from '@/data/webcams.json';
-import { Cam } from '@/architecture/domain/entities/cam';
 import { JsonCamsRepository } from './JsonCamsRepository';
 
 describe('JsonCamsRepository', () => {

@@ -1,6 +1,6 @@
-import { Cam } from '@/architecture/domain/entities/cam';
-import { CamNavigationService } from '@/architecture/domain/services/cam-navigation-service';
+import { Cam } from '@/architecture/domain/entities/Cam';
 import { ICamsRepository } from '@/architecture/domain/repositories/ICamsRepository';
+import { CamNavigationService } from '@/architecture/domain/services/cam-navigation-service';
 
 export class GetPrevCamUseCase {
   constructor(private readonly camRepository: ICamsRepository) { }

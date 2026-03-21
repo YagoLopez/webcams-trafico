@@ -2,7 +2,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { renderHook, waitFor } from '@testing-library/react-native';
 import React from 'react';
 
-import { Cam } from '@/architecture/domain/entities/cam';
+import { Cam } from '@/architecture/domain/entities/Cam';
 import { CamFilters, ICamsRepository } from '@/architecture/domain/repositories/ICamsRepository';
 import { PaginationResult } from '@/architecture/infrastructure/paginator/ArrayPaginator';
 import {

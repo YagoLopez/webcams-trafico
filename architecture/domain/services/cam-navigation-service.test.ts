@@ -1,8 +1,8 @@
-import { Cam } from '@/architecture/domain/entities/cam';
+import { Cam } from '@/architecture/domain/entities/Cam';
 import { CamNavigationService } from './cam-navigation-service';
 
 describe('CamNavigationService', () => {
-    const cam = (id: string, road: string, km: number, lat?: number, lon?: number): Cam => 
+    const cam = (id: string, road: string, km: number, lat?: number, lon?: number): Cam =>
         new Cam(id, `url-${id}`, road, 'Dest', km, 'Loc', 'active', lat, lon);
 
     const roadA = 'A-1';

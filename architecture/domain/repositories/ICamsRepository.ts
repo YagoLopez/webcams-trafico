@@ -1,4 +1,4 @@
-import { Cam } from '@/architecture/domain/entities/cam';
+import { Cam } from '@/architecture/domain/entities/Cam';
 import { CamFilters } from '@/architecture/domain/entities/CamFilters';
 import { PaginationResult } from '@/architecture/infrastructure/paginator/ArrayPaginator';
 

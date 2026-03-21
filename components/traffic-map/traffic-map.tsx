@@ -5,7 +5,7 @@ import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import MapViewClustered from 'react-native-map-clustering';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
-import { Cam } from '@/architecture/domain/entities/cam';
+import { Cam } from '@/architecture/domain/entities/Cam';
 import { JsonCamsRepository } from '@/architecture/infrastructure/repositories/JsonCamsRepository';
 import { useNextCam, usePrevCam } from '@/architecture/infrastructure/use-cams';
 import { formatKilometer } from '@/architecture/infrastructure/utils/formatters';

@@ -1,6 +1,6 @@
+import { Cam } from '@/architecture/domain/entities/Cam';
 import { ICamsRepository } from '@/architecture/domain/repositories/ICamsRepository';
 import { GetPrevCamUseCase } from './get-prev-cam.use-case';
-import { Cam } from '@/architecture/domain/entities/cam';
 
 describe('GetPrevCamUseCase', () => {
   let useCase: GetPrevCamUseCase;

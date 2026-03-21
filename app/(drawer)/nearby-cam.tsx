@@ -4,7 +4,7 @@ import { useLocalSearchParams } from 'expo-router';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { ActivityIndicator, Pressable, Text, View } from 'react-native';
 
-import { Cam } from '@/architecture/domain/entities/cam';
+import { Cam } from '@/architecture/domain/entities/Cam';
 import { ICamsRepository } from '@/architecture/domain/repositories/ICamsRepository';
 import { Coordinates } from '@/architecture/domain/value-objects/Coordinates';
 import { JsonCamsRepository } from '@/architecture/infrastructure/repositories/JsonCamsRepository';

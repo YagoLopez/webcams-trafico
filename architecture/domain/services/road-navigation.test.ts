@@ -1,4 +1,4 @@
-import { Cam } from '@/architecture/domain/entities/cam';
+import { Cam } from '@/architecture/domain/entities/Cam';
 import { CamNavigationService } from '@/architecture/domain/services/cam-navigation-service';
 
 // Helper to create a minimal valid Cam

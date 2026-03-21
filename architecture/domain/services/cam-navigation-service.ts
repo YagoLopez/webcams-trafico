@@ -1,7 +1,7 @@
-import { Cam } from '@/architecture/domain/entities/cam';
+import { Cam } from '@/architecture/domain/entities/Cam';
 
 export class CamNavigationService {
-  private constructor() {}
+  private constructor() { }
 
   private static norm(s: string): string {
     return (s ?? '').trim().toLowerCase();

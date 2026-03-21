@@ -1,4 +1,4 @@
-import { Cam } from '@/architecture/domain/entities/cam';
+import { Cam } from '@/architecture/domain/entities/Cam';
 import { JsonCamsRepository } from '@/architecture/infrastructure/repositories/JsonCamsRepository';
 import { useAppStore } from '@/store/use-app-store';
 import React, { useCallback, useEffect, useMemo } from 'react';
