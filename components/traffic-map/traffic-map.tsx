@@ -6,9 +6,9 @@ import MapViewClustered from 'react-native-map-clustering';
 import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 
 import { Cam } from '@/architecture/domain/entities/cam';
-import { useNextCam, usePrevCam } from '@/architecture/infraestructure/use-cams';
-import { JsonCamsRepository } from '@/architecture/infraestructure/repositories/JsonCamsRepository';
-import { formatKilometer } from '@/architecture/infraestructure/utils/formatters';
+import { JsonCamsRepository } from '@/architecture/infrastructure/repositories/JsonCamsRepository';
+import { useNextCam, usePrevCam } from '@/architecture/infrastructure/use-cams';
+import { formatKilometer } from '@/architecture/infrastructure/utils/formatters';
 
 
 interface TrafficMapProps {
