@@ -1,15 +1,17 @@
+import { JsonCamsRepository } from '@/architecture/infrastructure/repositories/JsonCamsRepository';
+import { useProvinces, useRoads } from '@/architecture/infrastructure/use-cams';
 import { CustomDrawerContent } from '@/components/custom-drawer-content';
 import { CustomDrawerHeader } from '@/components/custom-drawer-header';
 import { FiltersModal } from '@/components/filters-modal';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
-import { useProvinces, useRoads } from '@/hooks/use-cams';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
 import { useAppStore } from '@/store/use-app-store';
 import { Drawer } from 'expo-router/drawer';
 import React from 'react';
 import { Dimensions } from 'react-native';
+
+const cams = JsonCamsRepository.getInstance();
 
 export default function DrawerLayout() {
   const colorScheme = useColorScheme();
@@ -19,7 +21,6 @@ export default function DrawerLayout() {
   const setIsFiltersModalVisible = useAppStore((state) => state.setIsFilterModalVisible);
 
   // We need to fetch basic data for the filters modal here since it's now living in the layout
-  const cams = JsonCamsRepository.getInstance();
   const { data: roads = [] } = useRoads(cams);
   const { data: provinces = [] } = useProvinces(cams);
 
@@ -46,7 +47,8 @@ export default function DrawerLayout() {
                 : options.title !== undefined
                   ? options.title
                   : route.name;
-            return <CustomDrawerHeader title={title} />;
+            const showFiltersButton = true;
+            return <CustomDrawerHeader title={title} showFiltersButton={showFiltersButton} />;
           },
         }}>
         <Drawer.Screen
@@ -63,6 +65,14 @@ export default function DrawerLayout() {
             title: 'Mapa de Cámaras',
             drawerLabel: 'Mapa de Cámaras',
             drawerIcon: ({ color }) => <IconSymbol size={28} name="map.fill" color={color} />,
+          }}
+        />
+        <Drawer.Screen
+          name="nearby-cam"
+          options={{
+            title: 'Cámara cercana',
+            drawerLabel: 'Cámara cercana',
+            drawerIcon: ({ color }) => <IconSymbol size={28} name="location.fill" color={color} />,
           }}
         />
       </Drawer>

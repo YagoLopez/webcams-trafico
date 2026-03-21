@@ -1,16 +1,17 @@
-import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
+import { Cam } from '@/architecture/domain/entities/cam';
+import { JsonCamsRepository } from '@/architecture/infrastructure/repositories/JsonCamsRepository';
 import { useAppStore } from '@/store/use-app-store';
 import React, { useCallback, useEffect, useMemo } from 'react';
 import { ActivityIndicator, FlatList, Text, View, useWindowDimensions } from 'react-native';
-import { useInfiniteFilteredCams } from '../hooks/use-cams';
-import { Cam } from '../types/cam';
+import { useInfiniteFilteredCams } from '../architecture/infrastructure/use-cams';
 import { CamCard } from './cam-card';
+
+const cams = JsonCamsRepository.getInstance();
 
 export const CamListScreen = () => {
   const selectedRoadName = useAppStore((state) => state.selectedRoadName);
   const selectedProvince = useAppStore((state) => state.selectedProvince);
   const setCamCount = useAppStore((state) => state.setCamCount);
-  const cams = JsonCamsRepository.getInstance();
   const { width } = useWindowDimensions();
   const numColumns = width >= 1280 ? 3 : width >= 640 ? 2 : 1;
 

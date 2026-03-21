@@ -1,12 +1,14 @@
-import { useCamById } from '@/hooks/use-cams';
+import { JsonCamsRepository } from '@/architecture/infrastructure/repositories/JsonCamsRepository';
+import { useCamById } from '@/architecture/infrastructure/use-cams';
+import { formatKilometer } from '@/architecture/infrastructure/utils/formatters';
 import { useColorScheme } from '@/hooks/use-color-scheme';
-import { JsonCamsRepository } from '@/lib/JsonCamsRepository';
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { Stack, useLocalSearchParams, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { formatKilometer } from '../../lib/utils/formatters';
+
+const camsRepository = JsonCamsRepository.getInstance();
 
 export default function CamDetailScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
@@ -14,7 +16,6 @@ export default function CamDetailScreen() {
   const insets = useSafeAreaInsets();
   const colorScheme = useColorScheme();
 
-  const camsRepository = JsonCamsRepository.getInstance();
   const { data: cam, isLoading } = useCamById(camsRepository, id);
   const [isNavigatingToMap, setIsNavigatingToMap] = useState(false);
 

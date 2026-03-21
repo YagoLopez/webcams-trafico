@@ -1,4 +1,4 @@
-import { Cam } from '@/types/cam';
+import { Cam } from '@/architecture/domain/entities/cam';
 import { render } from '@testing-library/react-native';
 import React from 'react';
 import TrafficMap from '../traffic-map/traffic-map';
@@ -20,6 +20,11 @@ jest.mock('react-native-map-clustering', () => {
   MockClustering.displayName = 'MockClustering';
   return MockClustering;
 });
+
+jest.mock('@/architecture/infrastructure/use-cams', () => ({
+  useNextCam: jest.fn(() => ({ data: null })),
+  usePrevCam: jest.fn(() => ({ data: null })),
+}));
 
 jest.mock('react-native-maps', () => {
   // eslint-disable-next-line @typescript-eslint/no-require-imports

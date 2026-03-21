@@ -1,4 +1,4 @@
-import { Cam } from '../types/cam';
+import { Cam } from '@/architecture/domain/entities/cam';
 import WEBCAMS_JSON from './webcams.json';
 
 // Ensure the imported JSON matches the interface, or cast it if necessary.
