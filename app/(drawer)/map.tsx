@@ -7,12 +7,22 @@ import TrafficMap from '../../components/traffic-map';
 import { JsonCamsRepository } from '@/architecture/infrastructure/repositories/JsonCamsRepository';
 import { useFilteredCams } from '@/architecture/infrastructure/use-cams';
 
+import { useAppStore } from '@/store/use-app-store';
+
 const camsRepository = JsonCamsRepository.getInstance();
 
 export default function MapScreen() {
   const params = useLocalSearchParams();
 
-  const { data: cams = [], isLoading: camsLoading } = useFilteredCams(camsRepository, {});
+  const selectedProvince = useAppStore((state) => state.selectedProvince);
+  const selectedRoadName = useAppStore((state) => state.selectedRoadName);
+
+  const { data: cams = [], isLoading: camsLoading } = useFilteredCams(camsRepository, {
+    province: selectedProvince,
+    roadName: selectedRoadName,
+  });
+
+  console.log('Map cams length:', cams.length, 'Filters:', { selectedProvince, selectedRoadName });
 
   // We need to fetch basic data for the filters modal here since it's now living in the layout
   const [center, setCenter] = useState<{ lat: number; lon: number } | undefined>();
@@ -61,7 +71,7 @@ export default function MapScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-      <TrafficMap cams={cams} center={center} selectedCameraId={params.cameraId as string} />
+      <TrafficMap cams={cams} center={center} selectedCameraId={params.cameraId as string} filterKey={`${selectedProvince}-${selectedRoadName}`} />
     </View>
   );
 }

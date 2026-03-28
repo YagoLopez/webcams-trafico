@@ -17,12 +17,13 @@ interface TrafficMapProps {
   selectedCameraId?: string;
   /** Delta used when animating to `center`. Smaller = more zoomed-in. Default: 0.05 */
   centerDelta?: number;
+  filterKey?: string;
 }
 const camIcon = require('@/assets/images/cam-icon4.png');
 const selectedCamIcon = require('@/assets/images/cam-icon7.png');
 const camsRepository = JsonCamsRepository.getInstance();
 
-export default function TrafficMapNative({ cams, center, selectedCameraId, centerDelta = 0.05 }: TrafficMapProps) {
+export default function TrafficMapNative({ cams, center, selectedCameraId, centerDelta = 0.05, filterKey }: TrafficMapProps) {
   const mapRef = useRef<MapView>(null);
   const router = useRouter();
   const activeCam = React.useMemo(() => {
@@ -124,6 +125,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
     <View className="absolute inset-0">
       <MapViewClustered
         ref={mapRef}
+        key={filterKey || 'map'}
         style={{ flex: 1 }}
         initialRegion={{
           latitude: center?.lat || 40.4168,
