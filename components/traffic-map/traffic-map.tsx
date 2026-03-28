@@ -31,6 +31,9 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
     return cams.find((c) => String(c.id) === String(selectedCameraId)) || null;
   }, [selectedCameraId, cams]);
 
+  console.log(`
+      Cámara seleccionada: ID=${activeCam?.id}, Provincia="${activeCam?.location}", Carretera="${activeCam?.roadName}", Km: ${activeCam?.kilometer}, Destination: ${activeCam?.roadDestination}`
+    )
 
   const { data: nextCam } = useNextCam(camsRepository, activeCam);
   const { data: prevCam } = usePrevCam(camsRepository, activeCam);

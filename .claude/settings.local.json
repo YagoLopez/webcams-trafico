@@ -1,13 +1,31 @@
 {
   "env": {
-    "ANTHROPIC_DEFAULT_SONNET_MODEL": "nvidia/nemotron-3-nano-30b-a3b:free",
+    "ANTHROPIC_DEFAULT_SONNET_MODEL": "openrouter/free",
     "ANTHROPIC_BASE_URL": "https://openrouter.ai/api",
     "ANTHROPIC_AUTH_TOKEN": "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",
     "ANTHROPIC_API_KEY": ""
   },
   "permissions": {
     "allow": [
-      "Bash(sort -k2,2n)"
-    ]
+      "Bash(sort -k2,2n)",
+	  "Bash(ls*)",
+      "Bash(pwd)",
+      "Bash(git status)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(cat *)",
+      "Bash(grep *)",
+      "Bash(find *)",
+      "Bash(npm test*)",
+      "Read(*)",
+      "Write(src/*)"
+    ],
+	"deny": [
+		"Bash(rm *)",
+      "Bash(sudo *)",
+      "Bash(mv *)",
+      "Bash(git push*)",
+      "Bash(git commit*)"
+	]
   }
 }

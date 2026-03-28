@@ -22,7 +22,7 @@ export default function MapScreen() {
     roadName: selectedRoadName,
   });
 
-  console.log('Map cams length:', cams.length, 'Filters:', { selectedProvince, selectedRoadName });
+  // console.log('Map cams length:', cams.length, 'Filters:', { selectedProvince, selectedRoadName });
 
   // We need to fetch basic data for the filters modal here since it's now living in the layout
   const [center, setCenter] = useState<{ lat: number; lon: number } | undefined>();

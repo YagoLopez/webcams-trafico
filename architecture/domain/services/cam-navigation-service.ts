@@ -40,10 +40,8 @@ export class CamNavigationService {
    */
   public static getNextCamOnRoad(currentCam: Cam, allCams: Cam[]): Cam | null {
     const sorted = this.sortSameRoadCams(currentCam, allCams);
-    const currentIndex = sorted.findIndex((c) => c.id === currentCam.id);
-    return currentIndex >= 0 && currentIndex < sorted.length - 1
-      ? sorted[currentIndex + 1]
-      : null;
+    // Find the first camera with kilometer > currentCam.kilometer
+    return sorted.find(cam => cam.kilometer > currentCam.kilometer) || null;
   }
 
   /**
@@ -53,7 +51,8 @@ export class CamNavigationService {
    */
   public static getPrevCamOnRoad(currentCam: Cam, allCams: Cam[]): Cam | null {
     const sorted = this.sortSameRoadCams(currentCam, allCams);
-    const currentIndex = sorted.findIndex((c) => c.id === currentCam.id);
-    return currentIndex > 0 ? sorted[currentIndex - 1] : null;
+    // Find cameras with kilometer < currentCam.kilometer and return the last one (largest km)
+    const candidates = sorted.filter(cam => cam.kilometer < currentCam.kilometer);
+    return candidates.length > 0 ? candidates[candidates.length - 1] : null;
   }
 }
