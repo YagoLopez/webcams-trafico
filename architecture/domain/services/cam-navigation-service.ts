@@ -12,7 +12,10 @@ export class CamNavigationService {
    * sorted by ascending kilometer, excluding `currentCam` itself and any camera
    * that lacks GPS coordinates.
    */
-  private static getSameRoadCams(currentCam: Cam, allCams: Cam[]): Cam[] {
+  private static sortSameRoadCams(
+    currentCam: Cam,
+    allCams: Cam[],
+  ): Cam[] {
     const road = this.norm(currentCam.roadName);
 
     return allCams
@@ -23,7 +26,11 @@ export class CamNavigationService {
           cam.latitude !== undefined &&
           cam.longitude !== undefined,
       )
-      .sort((cam1, cam2) => cam1.kilometer - cam2.kilometer);
+      .sort((a, b) => {
+        // Sort primarily by kilometer, then by id for deterministic order
+        const kmDiff = a.kilometer - b.kilometer;
+        return kmDiff !== 0 ? kmDiff : a.id.localeCompare(b.id);
+      });
   }
 
   /**
@@ -32,11 +39,9 @@ export class CamNavigationService {
    * Returns `null` if `currentCam` is already the last camera on this road.
    */
   public static getNextCamOnRoad(currentCam: Cam, allCams: Cam[]): Cam | null {
-    return (
-      this.getSameRoadCams(currentCam, allCams).find(
-        (cam) => cam.kilometer > currentCam.kilometer,
-      ) ?? null
-    );
+    const sorted = this.sortSameRoadCams(currentCam, allCams);
+    // Find the first camera with kilometer > currentCam.kilometer
+    return sorted.find(cam => cam.kilometer > currentCam.kilometer) || null;
   }
 
   /**
@@ -45,8 +50,12 @@ export class CamNavigationService {
    * Returns `null` if `currentCam` is already the first camera on this road.
    */
   public static getPrevCamOnRoad(currentCam: Cam, allCams: Cam[]): Cam | null {
-    const sameRoadCams = this.getSameRoadCams(currentCam, allCams);
-    const prevCams = sameRoadCams.filter((cam) => cam.kilometer < currentCam.kilometer);
-    return prevCams.length > 0 ? prevCams[prevCams.length - 1] : null;
+    const sorted = this.sortSameRoadCams(currentCam, allCams);
+    for (let i = sorted.length - 1; i >= 0; i--) {
+      if (sorted[i].kilometer < currentCam.kilometer) {
+        return sorted[i];
+      }
+    }
+    return null;
   }
 }

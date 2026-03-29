@@ -51,4 +51,5 @@ app-example
 
 # coverage
 coverage/
-
+# Ignorar archivo de configuración local
+/.claude/settings.local.json
