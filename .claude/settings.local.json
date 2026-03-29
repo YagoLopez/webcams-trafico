@@ -2,13 +2,13 @@
   "env": {
     "ANTHROPIC_DEFAULT_SONNET_MODEL": "openrouter/free",
     "ANTHROPIC_BASE_URL": "https://openrouter.ai/api",
-    "ANTHROPIC_AUTH_TOKEN": "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",
+    "ANTHROPIC_AUTH_TOKEN": "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",
     "ANTHROPIC_API_KEY": ""
   },
   "permissions": {
     "allow": [
       "Bash(sort -k2,2n)",
-	  "Bash(ls*)",
+      "Bash(ls*)",
       "Bash(pwd)",
       "Bash(git status)",
       "Bash(git diff*)",
@@ -18,14 +18,16 @@
       "Bash(find *)",
       "Bash(npm test*)",
       "Read(*)",
-      "Write(src/*)"
+      "Write(src/*)",
+      "Bash(git add:*)",
+      "Bash(git reset:*)"
     ],
-	"deny": [
-		"Bash(rm *)",
+    "denay": [
+      "Bash(rm *)",
       "Bash(sudo *)",
       "Bash(mv *)",
       "Bash(git push*)",
       "Bash(git commit*)"
-	]
+    ]
   }
 }
