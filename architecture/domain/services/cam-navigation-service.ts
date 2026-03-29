@@ -51,8 +51,11 @@ export class CamNavigationService {
    */
   public static getPrevCamOnRoad(currentCam: Cam, allCams: Cam[]): Cam | null {
     const sorted = this.sortSameRoadCams(currentCam, allCams);
-    // Find cameras with kilometer < currentCam.kilometer and return the last one (largest km)
-    const candidates = sorted.filter(cam => cam.kilometer < currentCam.kilometer);
-    return candidates.length > 0 ? candidates[candidates.length - 1] : null;
+    for (let i = sorted.length - 1; i >= 0; i--) {
+      if (sorted[i].kilometer < currentCam.kilometer) {
+        return sorted[i];
+      }
+    }
+    return null;
   }
 }
