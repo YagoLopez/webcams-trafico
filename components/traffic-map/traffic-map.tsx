@@ -8,8 +8,8 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Cam } from '@/architecture/domain/entities/Cam';
 import { JsonCamsRepository } from '@/architecture/infrastructure/repositories/JsonCamsRepository';
 import { useNextCam, usePrevCam } from '@/architecture/infrastructure/use-cams';
-import { getButtonLabel } from '@/architecture/infrastructure/utils/road-directions';
 import { formatKilometer } from '@/architecture/infrastructure/utils/formatters';
+import { getButtonLabel } from '@/architecture/infrastructure/utils/road-directions';
 
 
 interface TrafficMapProps {
@@ -34,7 +34,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
 
   console.log(`
       Cámara seleccionada: ID=${activeCam?.id}, Provincia="${activeCam?.location}", Carretera="${activeCam?.roadName}", Km: ${activeCam?.kilometer}, Destination: ${activeCam?.roadDestination}`
-    )
+  )
 
   const { data: nextCam } = useNextCam(camsRepository, activeCam);
   const { data: prevCam } = usePrevCam(camsRepository, activeCam);
@@ -82,8 +82,18 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
         bounciness: 4,
         speed: 12,
       }).start();
+
+      if (mapRef.current && activeCam.latitude !== undefined && activeCam.longitude !== undefined) {
+        // Offset latitude so the marker appears above the center, avoiding the callout
+        mapRef.current.animateToRegion({
+          latitude: activeCam.latitude - (centerDelta * 0.15),
+          longitude: activeCam.longitude,
+          latitudeDelta: centerDelta,
+          longitudeDelta: centerDelta,
+        }, 500);
+      }
     }
-  }, [selectedCameraId, activeCam, pan]);
+  }, [selectedCameraId, activeCam, pan, centerDelta]);
 
   const isInitialCenter = useRef(true);
 
@@ -154,7 +164,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
         <GestureDetector gesture={panGesture}>
           <Animated.View
             testID="pseudo-callout"
-            className="absolute bottom-10 left-5 right-5 bg-white rounded-xl p-3 shadow-lg elevation-5 flex-col"
+            className="absolute bottom-0 left-5 right-5 bg-white rounded-xl p-3 shadow-lg flex-col"
             style={{ transform: [{ translateY: pan.y }] }}
           >
             <Pressable
@@ -175,7 +185,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
                     className="w-full bg-[#137fec] py-3 rounded-lg active:opacity-70"
                     onPress={() => {
                       mapRef.current?.animateToRegion({
-                        latitude: prevCam.latitude!,
+                        latitude: prevCam.latitude! - (0.005 * 0.15),
                         longitude: prevCam.longitude!,
                         latitudeDelta: 0.005,
                         longitudeDelta: 0.005,
@@ -194,7 +204,7 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
                     className="w-full bg-[#137fec] py-3 rounded-lg active:opacity-70"
                     onPress={() => {
                       mapRef.current?.animateToRegion({
-                        latitude: nextCam.latitude!,
+                        latitude: nextCam.latitude! - (0.005 * 0.15),
                         longitude: nextCam.longitude!,
                         latitudeDelta: 0.005,
                         longitudeDelta: 0.005,
