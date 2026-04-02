@@ -8,6 +8,7 @@ import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
 import { Cam } from '@/architecture/domain/entities/Cam';
 import { JsonCamsRepository } from '@/architecture/infrastructure/repositories/JsonCamsRepository';
 import { useNextCam, usePrevCam } from '@/architecture/infrastructure/use-cams';
+import { getButtonLabel } from '@/architecture/infrastructure/utils/road-directions';
 import { formatKilometer } from '@/architecture/infrastructure/utils/formatters';
 
 
@@ -37,6 +38,9 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
 
   const { data: nextCam } = useNextCam(camsRepository, activeCam);
   const { data: prevCam } = usePrevCam(camsRepository, activeCam);
+
+  const buttonPrevDesc = activeCam ? getButtonLabel(prevCam, 'start', activeCam.roadName) : '';
+  const buttonNextDesc = activeCam ? getButtonLabel(nextCam, 'end', activeCam.roadName) : '';
 
   const pan = useRef(new Animated.ValueXY()).current;
   const cacheBuster = Math.floor(Date.now() / (1000 * 60 * 5));
@@ -162,51 +166,51 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
             <View className="justify-between">
               <Text className="text-base font-bold text-[#333] mb-1" numberOfLines={1}>{activeCam.location}</Text>
               <Text className="text-sm text-[#666] mb-2">{activeCam.roadName} - {formatKilometer(activeCam.kilometer)}</Text>
-              <View className="flex-row mt-2 gap-1.5">
-                <Pressable
-                  className={`flex-1 bg-[#137fec] py-3 rounded-lg active:opacity-70 ${!prevCam ? 'opacity-35' : ''}`}
-                  disabled={!prevCam}
-                  onPress={() => {
-                    if (!prevCam) return;
-                    mapRef.current?.animateToRegion({
-                      latitude: prevCam.latitude!,
-                      longitude: prevCam.longitude!,
-                      latitudeDelta: 0.005,
-                      longitudeDelta: 0.005,
-                    }, 500);
-                    router.setParams({ cameraId: String(prevCam.id) });
-                  }}
-                >
-                  <Text className="color-white text-sm font-bold text-center">
-                    ← Anterior
-                  </Text>
-                </Pressable>
+              <View className="flex-col mt-3 gap-2">
+                {prevCam ? (
+                  <Pressable
+                    className="w-full bg-[#137fec] py-3 rounded-lg active:opacity-70"
+                    onPress={() => {
+                      mapRef.current?.animateToRegion({
+                        latitude: prevCam.latitude!,
+                        longitude: prevCam.longitude!,
+                        latitudeDelta: 0.005,
+                        longitudeDelta: 0.005,
+                      }, 500);
+                      router.setParams({ cameraId: String(prevCam.id) });
+                    }}
+                  >
+                    <Text className="color-white text-[13px] font-bold text-center" numberOfLines={1} adjustsFontSizeToFit>
+                      {buttonPrevDesc}
+                    </Text>
+                  </Pressable>
+                ) : null}
+
+                {nextCam ? (
+                  <Pressable
+                    className="w-full bg-[#137fec] py-3 rounded-lg active:opacity-70"
+                    onPress={() => {
+                      mapRef.current?.animateToRegion({
+                        latitude: nextCam.latitude!,
+                        longitude: nextCam.longitude!,
+                        latitudeDelta: 0.005,
+                        longitudeDelta: 0.005,
+                      }, 500);
+                      router.setParams({ cameraId: String(nextCam.id) });
+                    }}
+                  >
+                    <Text className="color-white text-[13px] font-bold text-center" numberOfLines={1} adjustsFontSizeToFit>
+                      {buttonNextDesc}
+                    </Text>
+                  </Pressable>
+                ) : null}
 
                 <Pressable
-                  className="flex-1 bg-[#137fec] py-3 rounded-lg active:opacity-70"
+                  className="w-full bg-[#2563eb] py-3 rounded-lg active:opacity-70 mt-1"
                   onPress={() => router.push(`/cam/${activeCam.id}`)}
                 >
                   <Text className="color-white text-[13px] font-bold text-center">
-                    Ver detalles
-                  </Text>
-                </Pressable>
-
-                <Pressable
-                  className={`flex-1 bg-[#137fec] py-3 rounded-lg active:opacity-70 ${!nextCam ? 'opacity-35' : ''}`}
-                  disabled={!nextCam}
-                  onPress={() => {
-                    if (!nextCam) return;
-                    mapRef.current?.animateToRegion({
-                      latitude: nextCam.latitude!,
-                      longitude: nextCam.longitude!,
-                      latitudeDelta: 0.005,
-                      longitudeDelta: 0.005,
-                    }, 500);
-                    router.setParams({ cameraId: String(nextCam.id) });
-                  }}
-                >
-                  <Text className="color-white text-sm font-bold text-center">
-                    Siguiente →
+                    Ver Detalles
                   </Text>
                 </Pressable>
               </View>
