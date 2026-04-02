@@ -163,10 +163,13 @@ export default function TrafficMapNative({ cams, center, selectedCameraId, cente
             >
               <Image className="w-full h-[200px] rounded-lg bg-[#e1e4e8] mb-3" source={{ uri: `${activeCam.imageUrl}?t=${cacheBuster}` }} resizeMode="cover" />
             </Pressable>
-            <View className="justify-between">
-              <Text className="text-base font-bold text-[#333] mb-1" numberOfLines={1}>{activeCam.location}</Text>
-              <Text className="text-sm text-[#666] mb-2">{activeCam.roadName} - {formatKilometer(activeCam.kilometer)}</Text>
-              <View className="flex-col mt-3 gap-2">
+            <View className="flex-col">
+              <View className="flex-row items-baseline mb-2 flex-wrap">
+                <Text className="font-bold text-[#333] text-base mr-2">{activeCam.location}</Text>
+                <Text className="text-[#666] text-sm">{activeCam.roadName} - {formatKilometer(activeCam.kilometer)}</Text>
+              </View>
+
+              <View className="flex-col gap-2">
                 {prevCam ? (
                   <Pressable
                     className="w-full bg-[#137fec] py-3 rounded-lg active:opacity-70"
